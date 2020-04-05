@@ -58,6 +58,7 @@ describe('Webhook node', () => {
                 },
                 passedData: {
                     path: filePath,
+                    fileName: 'test.json',
                     contentType: 'application/json'
                 }
             },

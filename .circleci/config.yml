@@ -62,8 +62,10 @@ jobs:
 
       # remove slash
       - run: echo 'export CLEANED_BRANCH=${CIRCLE_BRANCH//\/}' >> $BASH_ENV
-      - run: docker build -t "gcr.io/$GOOGLE_PROJECT_ID/backend:latest" .
-      - run: docker push "gcr.io/$GOOGLE_PROJECT_ID/backend:latest"
+      - run:
+          command: |
+            docker build -t "gcr.io/$GOOGLE_PROJECT_ID/backend:latest" -f packages/backend/Dockerfile .
+            docker push "gcr.io/$GOOGLE_PROJECT_ID/backend:latest"
 
   build-frontend:
     docker:
@@ -80,9 +82,10 @@ jobs:
 
       # remove slash
       - run: echo 'export CLEANED_BRANCH=${CIRCLE_BRANCH//\/}' >> $BASH_ENV
-      - run: docker build -t "gcr.io/$GOOGLE_PROJECT_ID/frontend:latest" --build-arg BACKEND=${BACKEND} .
-      - run: docker push "gcr.io/$GOOGLE_PROJECT_ID/frontend:latest"
-
+      - run:
+          command: |
+            docker build -t "gcr.io/$GOOGLE_PROJECT_ID/frontend:latest" --build-arg BACKEND=${BACKEND} -f packages/frontend/Dockerfile .
+            docker push "gcr.io/$GOOGLE_PROJECT_ID/frontend:latest"
 
   push-and-deploy:
     docker:

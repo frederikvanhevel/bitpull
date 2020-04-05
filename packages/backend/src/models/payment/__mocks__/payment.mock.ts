@@ -20,7 +20,8 @@ export const PaymentFactory = new InstanceFactory<Payment>(
             sourceBrand: faker.random.word(),
             disabled: false,
             credits: 0,
-            earnedCredits: 0
+            earnedCredits: 0,
+            meteredPlanId: faker.random.uuid()
         }
     }
 )
