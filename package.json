@@ -1,0 +1,19 @@
+{
+  "name": "bitpull",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Frederik Vanhevel",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "lerna run test",
+    "version": "lerna version",
+    "diff": "lerna diff"
+  },
+  "devDependencies": {
+    "lerna": "^3.20.2"
+  }
+}

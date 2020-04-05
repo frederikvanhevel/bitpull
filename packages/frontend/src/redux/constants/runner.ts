@@ -1,0 +1,3 @@
+export const RUN_NODE = 'RUN_NODE'
+export const RUN_NODE_CANCEL = 'RUN_NODE_CANCEL'
+export const RUN_NODE_COMPLETE = 'RUN_NODE_COMPLETE'

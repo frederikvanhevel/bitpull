@@ -1,0 +1,70 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "jsx": "react",
+    "lib": [
+        "dom",
+        "es6"
+    ],
+    "moduleResolution": "node",
+    // "noEmit": true,
+    "strict": true,
+    // "module": "esnext",
+    "target": "es2018",
+    "resolveJsonModule": true,
+    "baseUrl": "src",
+    "skipLibCheck":true,
+    "rootDir": "src",
+    "incremental": true,
+    // "sourceMap": true,
+    "typeRoots": [
+      "./typings",
+      "./node_modules/@types"
+    ],
+    "outDir": "lib",
+    "paths": {
+      "components/*": [
+        "components/*"
+      ],
+      "utils/*": [
+          "utils/*"
+      ],
+      "queries/*": [
+          "graphql/queries/*"
+      ],
+      "mutations/*": [
+          "graphql/mutations/*"
+      ],
+      "subscriptions/*": [
+        "graphql/subscriptions/*"
+      ],
+      "constants/*": [
+          "constants/*"
+      ],
+      "typings/*": [
+          "typings/*"
+      ],
+      "actions/*": [
+          "redux/actions/*"
+      ],
+      "reducers/*": [
+          "redux/reducers/*"
+      ],
+      "hooks/*": [
+          "hooks/*"
+      ]
+    }
+  },
+  "exclude": [
+      "node_modules",
+      "build",
+      "dist"
+  ],
+  "include": [
+    "src",
+    "typings/index.d.ts"
+  ],
+  "files": ["src/App.tsx", "src/server.ts"]
+}

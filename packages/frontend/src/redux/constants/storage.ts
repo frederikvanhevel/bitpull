@@ -1,0 +1,3 @@
+export const SET_FILTER = 'SET_FILTER'
+export const STORAGE_ITEM_ADDED = 'STORAGE_ITEM_ADDED'
+export const CLEAR_NEW_ITEMS = 'CLEAR_NEW_ITEMS'

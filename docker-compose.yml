@@ -1,0 +1,75 @@
+version: '3'
+
+services:
+    backend:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: bitpull-backend:latest
+        restart: always
+        # volumes:
+        #     - "./app:/src"
+        ports:
+            - 5000:5000
+        depends_on:
+            # - mongo
+            - chrome
+        links:
+            # - mongo
+            - chrome
+        env_file: './.env'
+        environment:
+            - PORT=5000
+            # - DATABASE_URI=mongodb://mongo:27017/scrippy
+            - PUPPETEER_ENDPOINT=ws://chrome:3000
+
+    frontend:
+        build:
+            context: packages/client
+            dockerfile: Dockerfile
+        image: bitpull-frontend:latest
+        restart: always
+        # volumes:
+        #     - "./app:/src"
+        ports:
+            - 8080:8080
+        depends_on:
+            # - mongo
+            - backend
+        links:
+            # - mongo
+            - backend
+        env_file: '../client/.env'
+        environment:
+            - PORT=8080
+
+    chrome:
+        image: browserless/chrome:latest
+        environment:
+            - HOST=chrome
+            # - PREBOOT_CHROME=true
+            - MAX_CONCURRENT_SESSIONS=10
+            - CONNECTION_TIMEOUT=900000 # 15 minutes
+            # - KEEP_ALIVE=true
+            # - CHROME_REFRESH_TIME=3600000
+            - DEBUG=browserless/chrome*
+            - ENABLE_DEBUGGER=false
+            - EXIT_ON_HEALTH_FAILURE=true
+            - DEFAULT_IGNORE_HTTPS_ERRORS=true
+        ports:
+            - 3000:3000
+        expose:
+            - 3000
+
+    # mongo:
+    #     image: mongo
+    #     expose:
+    #         - 27017
+    #     volumes:
+    #         - ./data/db:/data/db
+    #     healthcheck:
+    #         test: echo 'db.runCommand("ping").ok' | mongo mongo:27017/scrippy --quiet
+    #         interval: 10s
+    #         timeout: 10s
+    #         retries: 5
+    #     command: mongod --smallfiles

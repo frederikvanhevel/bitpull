@@ -1,0 +1,9 @@
+export const SVG_NODE_HEIGHT = 40
+export const SVG_NODE_WIDTH = 150
+export const ANIMATION_SPEED = 500
+export const VERTICAL_SPACING = 135
+export const HORIZONTAL_SPACING = SVG_NODE_WIDTH + 15
+export const NODE_TEXT_MAX_LENGTH = 15
+export const SVG_NODE_PADDING = 8
+export const ICON_SIZE = 24
+export const CLICK_THRESHOLD = 10
