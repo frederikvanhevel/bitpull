@@ -1,0 +1,126 @@
+version: 2
+jobs:
+  node-tests:
+    working_directory: ~/build
+    docker:
+        - image: circleci/node:12
+    steps:
+        - checkout
+
+        - restore_cache:
+              key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+
+        - restore_cache:
+              key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+
+        - run: yarn install
+        - run: npx lerna bootstrap
+
+        - save_cache:
+              key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+              paths:
+                  - ~/.cache/yarn
+
+        - save_cache:
+              key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+              paths:
+                  - node_modules
+
+        - run:
+              name: jest tests
+              command: |
+                  mkdir -p test-results/jest
+                  yarn run test
+              environment:
+                  JEST_JUNIT_OUTPUT: test-results/jest/junit.xml
+
+
+        - persist_to_workspace:
+              root: ~/build
+              paths:
+                  - node_modules
+
+        - store_test_results:
+              path: test-results
+
+        - store_artifacts:
+              path: test-results
+
+
+  build-backend:
+    docker:
+      - image: google/cloud-sdk
+
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: |
+          printenv
+          echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+      - run: gcloud auth configure-docker
+      - run: gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+
+      # remove slash
+      - run: echo 'export CLEANED_BRANCH=${CIRCLE_BRANCH//\/}' >> $BASH_ENV
+      - run: docker build -t "gcr.io/$GOOGLE_PROJECT_ID/backend:latest" .
+      - run: docker push "gcr.io/$GOOGLE_PROJECT_ID/backend:latest"
+
+  build-frontend:
+    docker:
+      - image: google/cloud-sdk
+
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: |
+          printenv
+          echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+      - run: gcloud auth configure-docker
+      - run: gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+
+      # remove slash
+      - run: echo 'export CLEANED_BRANCH=${CIRCLE_BRANCH//\/}' >> $BASH_ENV
+      - run: docker build -t "gcr.io/$GOOGLE_PROJECT_ID/frontend:latest" --build-arg BACKEND=${BACKEND} .
+      - run: docker push "gcr.io/$GOOGLE_PROJECT_ID/frontend:latest"
+
+
+  push-and-deploy:
+    docker:
+      - image: google/cloud-sdk
+
+    steps:
+      # deploy the image
+      - checkout
+      - run: |
+            printenv
+            echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+      - run: gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+      - run: gcloud container clusters get-credentials production --zone us-east1-b
+      - run: kubectl apply -f k8s_config/backend
+      - run: kubectl rollout status deployment/backend
+      - run: kubectl apply -f k8s_config/frontend
+      - run: kubectl rollout status deployment/frontend
+
+workflows:
+  version: 2
+  pull-request:
+    jobs:
+      # - node-tests
+      - build-backend:
+          context: BITPULL_DEVELOPMENT
+          # requires:
+          #   - node-tests
+      - build-frontend:
+          context: BITPULL_DEVELOPMENT
+          # requires:
+          #   - node-tests
+      - push-and-deploy:
+          context: BITPULL_DEVELOPMENT
+          requires:
+            - build-backend
+            - build-frontend
+          filters:
+            branches:
+              only: master
+
+
