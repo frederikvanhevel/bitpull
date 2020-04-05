@@ -1,0 +1,7 @@
+enum SettingsConstants {
+    UPDATE_SETTINGS = 'UPDATE_SETTINGS',
+    UPDATE_SETTINGS_SUCCESS = 'UPDATE_SETTINGS_SUCCESS',
+    UPDATE_SETTINGS_FAILED = 'UPDATE_SETTINGS_FAILED'
+}
+
+export default SettingsConstants
