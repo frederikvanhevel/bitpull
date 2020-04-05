@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"eslint.workingDirectories": [
+			{
+				"directory": "packages/backend",
+				"changeProcessCWD": true
+			},
+			{
+				"directory": "packages/frontend",
+				"changeProcessCWD": true
+			},
+			{
+				"directory": "packages/worker",
+				"changeProcessCWD": true
+			}
+		]
+	}
+}

@@ -53,7 +53,8 @@ describe('Payment service', () => {
             'METERED'
         )
         expect(mockedPaymentModel).toHaveBeenCalledWith({
-            owner: user.id
+            owner: user.id,
+            plan: "METERED"
         })
         // @ts-ignore
         expect(mockedPaymentModel.prototype.save).toHaveBeenCalled()
@@ -97,7 +98,7 @@ describe('Payment service', () => {
             await PaymentService.reportUsage(payment.owner, usage)
 
             expect(mockedStripe.reportUsage).toHaveBeenCalledWith(
-                payment.subscriptionId,
+                payment.meteredPlanId,
                 usage
             )
             expect(returnedPayment.save).not.toHaveBeenCalled()
@@ -137,7 +138,7 @@ describe('Payment service', () => {
             await PaymentService.reportUsage(payment.owner, usage)
 
             expect(mockedStripe.reportUsage).toHaveBeenCalledWith(
-                payment.subscriptionId,
+                payment.meteredPlanId,
                 15
             )
             expect(returnedPayment.credits).toEqual(0)
@@ -324,7 +325,7 @@ describe('Payment service', () => {
         await PaymentService.getUsageSummary(payment.owner)
 
         expect(mockedStripe.getUsageSummary).toHaveBeenCalledWith(
-            payment.subscriptionId
+            payment.meteredPlanId
         )
     })
 
@@ -397,7 +398,7 @@ describe('Payment service', () => {
         await PaymentService.changePlan(payment.owner, PaymentPlan.MONTHLY)
 
         expect(mockedStripe.changePlan).toHaveBeenCalledWith(
-            payment.subscriptionId,
+            returnedPayment,
             PaymentPlan.MONTHLY
         )
     })

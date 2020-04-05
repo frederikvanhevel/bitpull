@@ -1,6 +1,6 @@
 {
   "name": "bitpull",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "author": "Frederik Vanhevel",
   "license": "MIT",
@@ -10,6 +10,8 @@
   ],
   "scripts": {
     "test": "lerna run test",
+    "test:backend": "cd packages/backend && yarn test",
+    "test:worker": "cd packages/worker && yarn test",
     "version": "lerna version",
     "diff": "lerna diff"
   },
