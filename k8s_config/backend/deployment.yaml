@@ -131,6 +131,16 @@ spec:
             configMapKeyRef:
               key: ONEDRIVE_CLIENT_SECRET
               name: backend-env
+        - name: GITHUB_CLIENT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: GITHUB_CLIENT_ID
+              name: backend-env
+        - name: GITHUB_CLIENT_SECRET
+          valueFrom:
+            configMapKeyRef:
+              key: GITHUB_CLIENT_SECRET
+              name: backend-env
         - name: SENDGRID_API_KEY
           valueFrom:
             configMapKeyRef:
