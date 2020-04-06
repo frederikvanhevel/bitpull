@@ -130,14 +130,21 @@ workflows:
   version: 2
   pull-request:
     jobs:
-      # - node-tests
-      - build-backend:
+       # - node-tests
+      - setup-infra:
           context: BITPULL_DEVELOPMENT
           # requires:
           #   - node-tests
+      # - node-tests
+      - build-backend:
+          context: BITPULL_DEVELOPMENT
+          requires:
+            - setup-infra
+            # - node-tests
       - build-frontend:
           context: BITPULL_DEVELOPMENT
-          # requires:
+          requires:
+            - setup-infra
           #   - node-tests
       - push-and-deploy:
           context: BITPULL_DEVELOPMENT
