@@ -4,17 +4,12 @@ import {
     Configuration as WebpackConfiguration
     // DllPlugin
 } from 'webpack'
-import { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server'
 import Dotenv from 'dotenv-webpack'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 // import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 
-interface Configuration extends WebpackConfiguration {
-    devServer?: WebpackDevServerConfiguration
-}
-
-const config: Configuration = {
+const config: WebpackConfiguration = {
     mode: 'production',
 
     entry: path.resolve(__dirname, '../src/index.tsx'),
@@ -56,12 +51,12 @@ const config: Configuration = {
                 ]
             },
             // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-            {
-                enforce: 'pre',
-                test: /\.js$/,
-                loader: 'source-map-loader',
-                exclude: /node_modules/
-            },
+            // {
+            //     enforce: 'pre',
+            //     test: /\.js$/,
+            //     loader: 'source-map-loader',
+            //     exclude: /node_modules/
+            // },
             {
                 test: /\.(png|jpg|gif|svg)$/,
                 use: [

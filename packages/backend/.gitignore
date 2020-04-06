@@ -1,5 +1,5 @@
 # Logs
-# ./logs
+
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -50,6 +50,6 @@ jspm_packages/
 # macos-specific
 .DS_Store
 
-./build
-./dist
-./lib
+.env
+
+build
