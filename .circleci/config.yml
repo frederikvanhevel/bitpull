@@ -47,6 +47,28 @@ jobs:
               path: test-results
 
 
+
+  setup-infra:
+    docker:
+      - image: hashicorp/terraform:light
+
+    steps:
+      - checkout
+
+      - setup_remote_docker:
+          docker_layer_caching: true 
+
+      - run:
+          name: Apply terraform configuration
+          working_directory: terraform
+          command: |
+            terraform init \
+              -input=false \
+              -backend-config="bucket=${TF_VAR_GCLOUD_STORAGE_BUCKET}" \
+              -backend-config="credentials=${TF_VAR_GCLOUD_SERVICE_KEY}"
+            terraform apply -input=false -auto-approve
+
+
   build-backend:
     docker:
       - image: google/cloud-sdk

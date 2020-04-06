@@ -1,5 +1,6 @@
+import { select, event } from 'd3-selection'
+import { zoom as d3Zoom } from 'd3-zoom'
 import React, { useEffect, useRef, useState } from 'react'
-import * as d3 from 'd3'
 import { makeStyles, Paper, Button } from '@material-ui/core'
 import { ZoomOut, ZoomIn } from '@material-ui/icons'
 
@@ -43,7 +44,7 @@ const Zoomable: React.FC<Props> = ({
     const zoom = useRef<any>()
 
     useEffect(() => {
-        svg.current = d3.select(ref.current).select(`svg`)
+        svg.current = select(ref.current).select(`svg`)
         svg.current.classed(classes.grab, true)
 
         if (!svg.current.empty()) setValidSvg(true)
@@ -51,10 +52,9 @@ const Zoomable: React.FC<Props> = ({
         const svgGroup = svg.current.append('g')
         const size = (svg.current.node() as any).getBoundingClientRect()
 
-        zoom.current = d3
-            .zoom()
+        zoom.current = d3Zoom()
             .scaleExtent(scaleExtent)
-            .on('zoom', () => svgGroup.attr('transform', d3.event.transform))
+            .on('zoom', () => svgGroup.attr('transform', event.transform))
             .on('start', () => svg.current.classed(classes.grabbing, true))
             .on('end', () => svg.current.classed(classes.grabbing, false))
 
