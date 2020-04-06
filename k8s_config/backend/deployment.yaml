@@ -53,18 +53,13 @@ spec:
           value: ws://chrome:3000
         - name: GROWSURF_API_TOKEN
           valueFrom:
-            configMapKeyRef:
-              key: GROWSURF_API_TOKEN
-              name: backend-env
+            secretKeyRef:
+              key: growsurf
+              name: token
         - name: GROWSURF_CAMPAIGN_ID
           valueFrom:
             configMapKeyRef:
               key: GROWSURF_CAMPAIGN_ID
-              name: backend-env
-        - name: GROWSURF_WEBHOOK_SECRET
-          valueFrom:
-            configMapKeyRef:
-              key: GROWSURF_WEBHOOK_SECRET
               name: backend-env
         - name: AWS_ACCESS_KEY_ID
           valueFrom:
@@ -83,9 +78,9 @@ spec:
               name: backend-env
         - name: AWS_SECRET_ACCESS_KEY
           valueFrom:
-            configMapKeyRef:
-              key: AWS_SECRET_ACCESS_KEY
-              name: backend-env
+            secretKeyRef:
+              key: aws
+              name: key
         - name: DROPBOX_CLIENT_ID
           valueFrom:
             configMapKeyRef:
@@ -93,9 +88,9 @@ spec:
               name: backend-env
         - name: DROPBOX_CLIENT_SECRET
           valueFrom:
-            configMapKeyRef:
-              key: DROPBOX_CLIENT_SECRET
-              name: backend-env
+            secretKeyRef:
+              key: dropbox
+              name: secret
         - name: EMAIL_FROM_ADDRESS
           valueFrom:
             configMapKeyRef:
@@ -108,19 +103,19 @@ spec:
               name: backend-env
         - name: GOOGLE_CLIENT_SECRET
           valueFrom:
-            configMapKeyRef:
-              key: GOOGLE_CLIENT_SECRET
-              name: backend-env
+            secretKeyRef:
+              key: google
+              name: secret
         - name: JWT_SECRET
           valueFrom:
-            configMapKeyRef:
-              key: JWT_SECRET
-              name: backend-env
+            secretKeyRef:
+              key: jwt-secret
+              name: key
         - name: ENCRYPTION_KEY
           valueFrom:
-            configMapKeyRef:
-              key: ENCRYPTION_KEY
-              name: backend-env
+            secretKeyRef:
+              key: encryption-key
+              name: key
         - name: ONEDRIVE_CLIENT_ID
           valueFrom:
             configMapKeyRef:
@@ -128,9 +123,9 @@ spec:
               name: backend-env
         - name: ONEDRIVE_CLIENT_SECRET
           valueFrom:
-            configMapKeyRef:
-              key: ONEDRIVE_CLIENT_SECRET
-              name: backend-env
+            secretKeyRef:
+              key: onedrive
+              name: secret
         - name: GITHUB_CLIENT_ID
           valueFrom:
             configMapKeyRef:
@@ -138,14 +133,14 @@ spec:
               name: backend-env
         - name: GITHUB_CLIENT_SECRET
           valueFrom:
-            configMapKeyRef:
-              key: GITHUB_CLIENT_SECRET
-              name: backend-env
+            secretKeyRef:
+              key: github
+              name: key
         - name: SENDGRID_API_KEY
           valueFrom:
-            configMapKeyRef:
-              key: SENDGRID_API_KEY
-              name: backend-env
+            secretKeyRef:
+              key: sendgrid
+              name: key
         - name: SLACK_CLIENT_ID
           valueFrom:
             configMapKeyRef:
@@ -153,16 +148,16 @@ spec:
               name: backend-env
         - name: SLACK_CLIENT_SECRET
           valueFrom:
-            configMapKeyRef:
-              key: SLACK_CLIENT_SECRET
-              name: backend-env
+            secretKeyRef:
+              key: slack
+              name: key
         - name: STRIPE_SECRET_KEY
           valueFrom:
-            configMapKeyRef:
-              key: STRIPE_SECRET_KEY
-              name: backend-env
+            secretKeyRef:
+              key: stripe
+              name: key
         - name: STRIPE_WEBHOOK_SECRET
           valueFrom:
-            configMapKeyRef:
-              key: STRIPE_WEBHOOK_SECRET
-              name: backend-env
+            secretKeyRef:
+              key: stripe
+              name: webhook

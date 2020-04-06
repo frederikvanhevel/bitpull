@@ -23,9 +23,9 @@ const Wrapper: React.FC = () => {
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <SnackbarProvider maxSnack={3}>
                             <>
-                            <CssBaseline />
-                            <Notifications />
-                            <Initializer />
+                                <CssBaseline />
+                                <Notifications />
+                                <Initializer />
                             </>
                         </SnackbarProvider>
                     </MuiPickersUtilsProvider>

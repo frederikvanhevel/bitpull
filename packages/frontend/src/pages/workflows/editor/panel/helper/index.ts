@@ -137,15 +137,19 @@ export const getNewNode = (type: NodeType, parent?: Node): Node => {
                 ? { linkedField: '' }
                 : { link: ' ' }
 
-        return {
-            ...newNode,
-            ...props
-        } as RootNode
+        return (
+            {
+                ...newNode,
+                ...props
+            } as RootNode
+        )
     } else if (type === NodeType.COLLECT) {
-        return {
-            ...newNode,
-            fields: [getNewCollectField()]
-        } as CollectNode
+        return (
+            {
+                ...newNode,
+                fields: [getNewCollectField()]
+            } as CollectNode
+        )
     }
 
     return newNode

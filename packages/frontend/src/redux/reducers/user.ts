@@ -99,10 +99,11 @@ export default (state = initialState, action: Actions): UserState => {
             return {
                 ...state,
                 loading: false,
-                user: {
-                    ...state.user,
-                    verified: true
-                } as User
+                user:
+                    {
+                        ...state.user,
+                        verified: true
+                    } as User
             }
         case LoginConstants.UPDATE_INFORMATION:
             return {
