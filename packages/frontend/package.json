@@ -6,7 +6,7 @@
   "scripts": {
     "start": "ts-node --transpile-only src/server.ts",
     "dev": "TSC_WATCHFILE=UseFsEventsWithFallbackDynamicPolling cp env_config/.env.default .env && webpack-dev-server --mode development --hot --inline --config config/webpack.dev.config.ts",
-    "build": "cp env_config/.env.prod .env && webpack --config config/webpack.dev.config.ts --mode production",
+    "build": "cp env_config/.env.prod .env && webpack --config config/webpack.prod.config.ts --mode production",
     "build:selector": "webpack --config config/selector.config.ts",
     "build:all": "yarn build && yarn build:selector",
     "typegen": "apollo client:codegen --config apollo.config.js --target typescript --globalTypesFile ./src/typedefs/graphql.ts typedefs",

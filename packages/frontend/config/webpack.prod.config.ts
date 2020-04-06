@@ -1,5 +1,4 @@
 import path from 'path'
-import nodeExternals from 'webpack-node-externals'
 import {
     Configuration as WebpackConfiguration
     // DllPlugin
@@ -71,26 +70,36 @@ const config: WebpackConfiguration = {
         ]
     },
 
-    externals: [
-        nodeExternals({
-            modulesDir: path.resolve(__dirname, '../../../node_modules'),
-        }),
-    ],
-
     optimization: {
-        // splitChunks: {
-        //     cacheGroups: {
-        //         commons: {
-        //             test: /[\\/]node_modules[\\/]/,
-        //             name: 'vendors',
-        //             chunks: 'all'
-        //         }
-        //     }
-        // },
-        // removeAvailableModules: false,
-        // removeEmptyChunks: false,
-        // splitChunks: false
+        splitChunks: {
+            // chunks: 'all',
+            // minChunks: 2
+            cacheGroups: {
+                vendor: {
+                    // chunks: 'initial',
+                    name: 'vendor',
+                    test: /[\\/]node_modules[\\/]/,
+                    chunks: 'initial'
+                },
+                // auth: {
+                //     // chunks: 'initial',
+                //     name: 'auth',
+                //     test: /[\\/]pages\/auth[\\/]/,
+                //     chunks: 'all'
+                //     // enforce: true
+                // },
+                pages: {
+                    // chunks: 'initial',
+                    name: 'pages',
+                    test: /[\\/]pages[\\/]/,
+                    chunks: 'all'
+                    // enforce: true
+                }
+            }
+        },
+        runtimeChunk: true
     },
+
 
     plugins: [
         // new ForkTsCheckerWebpackPlugin(),

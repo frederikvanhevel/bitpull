@@ -1,5 +1,4 @@
 import path from 'path'
-import nodeExternals from 'webpack-node-externals'
 import {
     HotModuleReplacementPlugin,
     Configuration as WebpackConfiguration
@@ -81,12 +80,6 @@ const config: Configuration = {
             }
         ]
     },
-
-    externals: [
-        nodeExternals({
-            modulesDir: path.resolve(__dirname, '../../../node_modules'),
-        }),
-    ],
 
     // optimization: {
     //     // splitChunks: {
