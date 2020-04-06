@@ -1,6 +1,6 @@
 {
   "name": "@bitpull/backend",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
@@ -19,7 +19,7 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@bitpull/worker": "^1.0.0",
+    "@bitpull/worker": "^1.0.1",
     "@sendgrid/mail": "^7.0.0",
     "absolutify": "^0.1.0",
     "agenda": "^3.0.0",
