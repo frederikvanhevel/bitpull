@@ -1,4 +1,5 @@
 import path from 'path'
+import nodeExternals from 'webpack-node-externals'
 import {
     Configuration as WebpackConfiguration
     // DllPlugin
@@ -74,6 +75,12 @@ const config: Configuration = {
             }
         ]
     },
+
+    externals: [
+        nodeExternals({
+            modulesDir: path.resolve(__dirname, '../../../node_modules'),
+        }),
+    ],
 
     optimization: {
         // splitChunks: {

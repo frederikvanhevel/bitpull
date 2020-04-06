@@ -63,8 +63,9 @@
       "dist"
   ],
   "include": [
+    "config",
     "src",
     "typings/index.d.ts"
   ],
-  "files": ["src/App.tsx", "src/server.ts"]
+  "files": ["src/index.tsx", "src/server.ts"]
 }

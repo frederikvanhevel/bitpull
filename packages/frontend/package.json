@@ -69,6 +69,7 @@
     "@types/recharts": "^1.8.9",
     "@types/webpack": "^4.41.10",
     "@types/webpack-dev-server": "^3.10.1",
+    "@types/webpack-node-externals": "^1.7.1",
     "@types/yup": "^0.26.34",
     "css-loader": "^3.4.2",
     "diff-match-patch": "^1.0.4",
@@ -93,6 +94,7 @@
     "webpack": "^4.42.1",
     "webpack-bundle-analyzer": "^3.6.1",
     "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3"
+    "webpack-dev-server": "^3.10.3",
+    "webpack-node-externals": "^1.7.2"
   }
 }

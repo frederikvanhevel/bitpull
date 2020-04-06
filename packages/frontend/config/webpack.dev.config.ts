@@ -1,4 +1,5 @@
 import path from 'path'
+import nodeExternals from 'webpack-node-externals'
 import {
     HotModuleReplacementPlugin,
     Configuration as WebpackConfiguration
@@ -8,6 +9,7 @@ import { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-serv
 import Dotenv from 'dotenv-webpack'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
+
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
     .BundleAnalyzerPlugin
 
@@ -79,6 +81,12 @@ const config: Configuration = {
             }
         ]
     },
+
+    externals: [
+        nodeExternals({
+            modulesDir: path.resolve(__dirname, '../../../node_modules'),
+        }),
+    ],
 
     // optimization: {
     //     // splitChunks: {
