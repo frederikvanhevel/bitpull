@@ -10,7 +10,7 @@ spec:
     - port: 80
       targetPort: 5000
   selector:
-    backend: backend
+    app: backend
 ---
 apiVersion: apps/v1beta1
 kind: Deployment
@@ -54,13 +54,18 @@ spec:
         - name: GROWSURF_API_TOKEN
           valueFrom:
             secretKeyRef:
-              key: growsurf
-              name: token
+              name: growsurf
+              key: token
         - name: GROWSURF_CAMPAIGN_ID
           valueFrom:
             configMapKeyRef:
               key: GROWSURF_CAMPAIGN_ID
               name: backend-env
+        - name: GROWSURF_WEBHOOK_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: growsurf
+              key: webhook
         - name: AWS_ACCESS_KEY_ID
           valueFrom:
             configMapKeyRef:
@@ -79,8 +84,8 @@ spec:
         - name: AWS_SECRET_ACCESS_KEY
           valueFrom:
             secretKeyRef:
-              key: aws
-              name: key
+              name: aws
+              key: key
         - name: DROPBOX_CLIENT_ID
           valueFrom:
             configMapKeyRef:
@@ -89,8 +94,8 @@ spec:
         - name: DROPBOX_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
-              key: dropbox
-              name: secret
+              name: dropbox
+              key: secret
         - name: EMAIL_FROM_ADDRESS
           valueFrom:
             configMapKeyRef:
@@ -104,18 +109,18 @@ spec:
         - name: GOOGLE_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
-              key: google
-              name: secret
+              name: google
+              key: secret
         - name: JWT_SECRET
           valueFrom:
             secretKeyRef:
-              key: jwt-secret
-              name: key
+              name: jwt-secret
+              key: key
         - name: ENCRYPTION_KEY
           valueFrom:
             secretKeyRef:
-              key: encryption-key
-              name: key
+              name: encryption-key
+              key: key
         - name: ONEDRIVE_CLIENT_ID
           valueFrom:
             configMapKeyRef:
@@ -124,8 +129,8 @@ spec:
         - name: ONEDRIVE_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
-              key: onedrive
-              name: secret
+              name: onedrive
+              key: secret
         - name: GITHUB_CLIENT_ID
           valueFrom:
             configMapKeyRef:
@@ -134,13 +139,13 @@ spec:
         - name: GITHUB_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
-              key: github
-              name: key
+              name: github
+              key: secret
         - name: SENDGRID_API_KEY
           valueFrom:
             secretKeyRef:
-              key: sendgrid
-              name: key
+              name: sendgrid
+              key: key
         - name: SLACK_CLIENT_ID
           valueFrom:
             configMapKeyRef:
@@ -149,15 +154,15 @@ spec:
         - name: SLACK_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
-              key: slack
-              name: key
+              name: slack
+              key: secret
         - name: STRIPE_SECRET_KEY
           valueFrom:
             secretKeyRef:
-              key: stripe
-              name: key
+              name: stripe
+              key: key
         - name: STRIPE_WEBHOOK_SECRET
           valueFrom:
             secretKeyRef:
-              key: stripe
-              name: webhook
+              name: stripe
+              key: webhook
