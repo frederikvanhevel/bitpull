@@ -43,8 +43,7 @@ const config: WebpackConfiguration = {
                     {
                         loader: 'ts-loader',
                         options: {
-                            transpileOnly: true,
-                            experimentalWatchApi: true
+                            transpileOnly: true
                         }
                     }
                 ]
