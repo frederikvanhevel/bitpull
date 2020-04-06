@@ -2,21 +2,23 @@ FROM mhart/alpine-node:12
 
 # Create app directory
 WORKDIR /usr/src/app
-ENV NODE_ENV=production
 
 # Install app dependencies
 COPY package.json .
 COPY yarn.lock .
 COPY lerna.json .
 
-COPY packages/frontend/package.json ./packages/frontend
+COPY ./packages/frontend ./packages/frontend
+COPY ./packages/worker ./packages/worker
 
-RUN yarn global add lerna
-RUN lerna bootstrap
+RUN yarn install
+RUN npx lerna bootstrap
 
-COPY . .
+RUN cd node_modules && ls -l
 
 WORKDIR /usr/src/app/packages/frontend
+
+ENV NODE_ENV=production
 
 # Build
 RUN yarn build:all
