@@ -9,12 +9,12 @@ COPY package.json .
 COPY yarn.lock .
 COPY lerna.json .
 
-COPY packages/backend/package.json ./packages/backend
+COPY ./packages/backend ./packages/backend
+COPY ./packages/worker ./packages/worker
 
+RUN yarn install
 RUN yarn global add lerna
 RUN lerna bootstrap
-
-COPY . .
 
 WORKDIR /usr/src/app/packages/backend
 

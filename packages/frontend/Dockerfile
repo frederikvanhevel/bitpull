@@ -12,9 +12,6 @@ COPY ./packages/frontend ./packages/frontend
 COPY ./packages/worker ./packages/worker
 
 RUN yarn install
-# RUN npx lerna bootstrap
-
-# RUN cd node_modules && ls -l
 
 WORKDIR /usr/src/app/packages/frontend
 
