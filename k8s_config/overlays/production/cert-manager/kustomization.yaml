@@ -1,5 +1,4 @@
 bases:
-  - ../globals
   - ../../../base/cert-manager
 
 patchesStrategicMerge:
