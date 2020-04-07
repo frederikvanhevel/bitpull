@@ -1,0 +1,6 @@
+commonLabels:
+    app: chrome
+
+resources:
+- deployment.yaml
+- service.yaml

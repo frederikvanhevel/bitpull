@@ -1,5 +1,6 @@
 bases:
   - ../globals
+  - ../../../base/chrome
 
 configMapGenerator:
   - name: env-vars
