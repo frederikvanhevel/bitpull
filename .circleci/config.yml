@@ -7,7 +7,7 @@ aliases:
       echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
       gcloud auth configure-docker
       gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-      gcloud container clusters get-credentials ${GOOGLE_CLUSTER_NAME} --region ${GOOGLE_CLUSTER_REGION} --project ${GOOGLE_PROJECT_ID}
+      gcloud container clusters get-credentials production --zone us-east1-b
 
 jobs:
   node-tests:
