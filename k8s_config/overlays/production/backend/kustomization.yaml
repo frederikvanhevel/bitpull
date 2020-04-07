@@ -12,6 +12,7 @@ configMapGenerator:
     literals:
       - API_URL=https://api.bitpull.io
       - APP_URL=https://bitpull.io
+      - PUPPETEER_ENDPOINT=ws://chrome:3000
       - GROWSURF_CAMPAIGN_ID=89ynio
       - DATABASE_URI=mongodb://nodeflow:iAXxgbCLF63EF@ds237588.mlab.com:37588/nodeflow
       - SLACK_CLIENT_ID='624946163541.613527388019'

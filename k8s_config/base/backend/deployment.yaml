@@ -47,6 +47,11 @@ spec:
                 configMapKeyRef:
                   key: APP_URL
                   name: env-vars
+            - name: PUPPETEER_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: env-vars
+                  key: PUPPETEER_ENDPOINT
             - name: DATABASE_URI
               valueFrom:
                 configMapKeyRef:

@@ -91,8 +91,10 @@ jobs:
             kubectl apply -f k8s_config/base/nginx/mandatory.yaml
             kubectl apply -f k8s_config/base/nginx/cloud-generic.yaml
             kubectl apply -k k8s_config/overlays/production/cluster-issuer
+            kubectl apply -k k8s_config/overlays/production/chrome
             kubectl rollout status deployment/cert-manager --namespace cert-manager
             kubectl rollout status deployment/nginx-ingress-controller --namespace ingress-nginx
+            kubectl rollout status deployment/chrome
 
   build-backend:
     docker:
@@ -133,8 +135,8 @@ jobs:
       - checkout
       - run: *setup-cloud-sdk
       - run: kubectl apply -k k8s_config/overlays/production/backend
-      - run: kubectl rollout status deployment/backend
       - run: kubectl apply -k k8s_config/overlays/production/frontend
+      - run: kubectl rollout status deployment/backend
       - run: kubectl rollout status deployment/frontend
 
 workflows:
