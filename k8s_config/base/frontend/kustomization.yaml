@@ -1,0 +1,8 @@
+commonLabels:
+    app: sable-webflow
+
+resources:
+- deployment.yaml
+- service.yaml
+- cert.yaml
+- ingress.yaml

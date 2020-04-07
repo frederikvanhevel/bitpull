@@ -1,0 +1,7 @@
+bases:
+  - ../globals
+
+configMapGenerator:
+  - name: env-vars
+    literals:
+      - MAX_CONCURRENT_SESSIONS=10

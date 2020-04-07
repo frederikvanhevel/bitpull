@@ -1,0 +1,8 @@
+commonLabels:
+    app: sable-backend
+
+resources:
+- cert.yaml
+- ingress.yaml
+- deployment.yaml
+- service.yaml

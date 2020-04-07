@@ -1,0 +1,41 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    name: chrome
+  name: chrome
+spec:
+  selector:
+    matchLabels:
+      app: chrome
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: chrome
+    spec:
+      containers:
+        - image: browserless/chrome:latest
+          name: chrome
+          ports:
+            - name: chrome
+              containerPort: 3000
+          env:
+            - name: HOST
+              value: "0.0.0.0"
+            - name: DEBUG
+              value: "browserless/chrome*"
+            - name: EXIT_ON_HEALTH_FAILURE
+              value: "true"
+            - name: ENABLE_DEBUGGER
+              value: "false"
+            - name: MAX_CONCURRENT_SESSIONS
+              valueFrom:
+                configMapKeyRef:
+                  key: MAX_CONCURRENT_SESSIONS
+                  name: env-vars
+            # - name: CONNECTION_TIMEOUT
+            #   value: "900000"
+            # - name: PREBOOT_CHROME
+            #   value: "true"

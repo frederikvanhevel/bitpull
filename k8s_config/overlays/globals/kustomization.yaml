@@ -1,0 +1,4 @@
+configMapGenerator:
+  - name: globals
+    literals:
+      - EMAIL_FROM_ADDRESS=help@bitpull.io

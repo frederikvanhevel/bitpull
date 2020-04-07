@@ -1,0 +1,169 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  progressDeadlineSeconds: 300
+  selector:
+    matchLabels:
+      app: backend
+      tier: backend
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: backend
+        tier: backend
+    spec:
+      containers:
+        - name: backend
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh", "-c"]
+          args:
+            - "npm run start"
+          ports:
+            - containerPort: 4000
+              name: backend
+          resources:
+            requests:
+              memory: "124Mi"
+              cpu: "300m"
+            limits:
+              memory: "1280Mi"
+              cpu: "1000m"
+          env:
+            - name: PUPPETEER_ENDPOINT
+              value: ws://chrome:3000
+            - name: API_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: API_URL
+                  name: env-vars
+            - name: APP_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: APP_URL
+                  name: env-vars
+            - name: DATABASE_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: DATABASE_URI
+                  name: env-vars
+            - name: GROWSURF_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: growsurf
+                  key: token
+            - name: GROWSURF_CAMPAIGN_ID
+              valueFrom:
+                configMapKeyRef:
+                  key: GROWSURF_CAMPAIGN_ID
+                  name: env-vars
+            - name: GROWSURF_WEBHOOK_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: growsurf
+                  key: webhook
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                configMapKeyRef:
+                  key: AWS_ACCESS_KEY_ID
+                  name: env-vars
+            - name: AWS_REGION
+              valueFrom:
+                configMapKeyRef:
+                  key: AWS_REGION
+                  name: env-vars
+            - name: AWS_S3_BUCKET
+              valueFrom:
+                configMapKeyRef:
+                  key: AWS_S3_BUCKET
+                  name: env-vars
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws
+                  key: key
+            - name: DROPBOX_CLIENT_ID
+              valueFrom:
+                configMapKeyRef:
+                  key: DROPBOX_CLIENT_ID
+                  name: env-vars
+            - name: DROPBOX_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: dropbox
+                  key: secret
+            - name: EMAIL_FROM_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  key: EMAIL_FROM_ADDRESS
+                  name: globals
+            - name: GOOGLE_CLIENT_ID
+              valueFrom:
+                configMapKeyRef:
+                  key: GOOGLE_CLIENT_ID
+                  name: env-vars
+            - name: GOOGLE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: google
+                  key: secret
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: key
+            - name: ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: encryption-key
+                  key: key
+            - name: ONEDRIVE_CLIENT_ID
+              valueFrom:
+                configMapKeyRef:
+                  key: ONEDRIVE_CLIENT_ID
+                  name: env-vars
+            - name: ONEDRIVE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: onedrive
+                  key: secret
+            - name: GITHUB_CLIENT_ID
+              valueFrom:
+                configMapKeyRef:
+                  key: GITHUB_CLIENT_ID
+                  name: env-vars
+            - name: GITHUB_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: github
+                  key: secret
+            - name: SENDGRID_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: sendgrid
+                  key: key
+            - name: SLACK_CLIENT_ID
+              valueFrom:
+                configMapKeyRef:
+                  key: SLACK_CLIENT_ID
+                  name: env-vars
+            - name: SLACK_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: slack
+                  key: secret
+            - name: STRIPE_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: stripe
+                  key: key
+            - name: STRIPE_WEBHOOK_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: stripe
+                  key: webhook

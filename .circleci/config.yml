@@ -1,52 +1,59 @@
 version: 2
+
+aliases:
+  - &setup-cloud-sdk
+    name: Setup Google Cloud SDK
+    command: |
+      echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+      gcloud auth configure-docker
+      gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+      gcloud container clusters get-credentials ${GOOGLE_CLUSTER_NAME} --region ${GOOGLE_CLUSTER_REGION} --project ${GOOGLE_PROJECT_ID}
+
 jobs:
   node-tests:
     working_directory: ~/build
     docker:
-        - image: circleci/node:12
+      - image: circleci/node:12
     steps:
-        - checkout
+      - checkout
 
-        - restore_cache:
-              key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+      - restore_cache:
+          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
 
-        - restore_cache:
-              key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+      - restore_cache:
+          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
 
-        - run: yarn install
-        - run: npx lerna bootstrap
+      - run: yarn install
+      - run: npx lerna bootstrap
 
-        - save_cache:
-              key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
-              paths:
-                  - ~/.cache/yarn
+      - save_cache:
+          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+          paths:
+            - ~/.cache/yarn
 
-        - save_cache:
-              key: node-v1-{{ checksum "package.json" }}-{{ arch }}
-              paths:
-                  - node_modules
+      - save_cache:
+          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+          paths:
+            - node_modules
 
-        - run:
-              name: jest tests
-              command: |
-                  mkdir -p test-results/jest
-                  yarn run test
-              environment:
-                  JEST_JUNIT_OUTPUT: test-results/jest/junit.xml
+      - run:
+          name: jest tests
+          command: |
+            mkdir -p test-results/jest
+            yarn run test
+          environment:
+            JEST_JUNIT_OUTPUT: test-results/jest/junit.xml
 
+      - persist_to_workspace:
+          root: ~/build
+          paths:
+            - node_modules
 
-        - persist_to_workspace:
-              root: ~/build
-              paths:
-                  - node_modules
+      - store_test_results:
+          path: test-results
 
-        - store_test_results:
-              path: test-results
-
-        - store_artifacts:
-              path: test-results
-
-
+      - store_artifacts:
+          path: test-results
 
   setup-infra:
     docker:
@@ -66,6 +73,27 @@ jobs:
               -backend-config="credentials=${TF_VAR_GCLOUD_SERVICE_KEY}"
             terraform apply -input=false -auto-approve
 
+  ops-deployment:
+    docker:
+      - image: google/cloud-sdk
+
+    steps:
+      - checkout
+
+      - setup_remote_docker:
+          docker_layer_caching: true
+
+      - run: *setup-cloud-sdk
+
+      - run:
+          name: Configure Third Party Applications
+          command: |
+            kubectl apply -f k8s_config/base/cert-manager/cert-manager.yaml
+            kubectl apply -f k8s_config/base/nginx/mandatory.yaml
+            kubectl apply -f k8s_config/base/nginx/cloud-generic.yaml
+            kubectl apply -k k8s_config/overlays/production/cluster-issuer
+            kubectl rollout status deployment/cert-manager --namespace cert-manager
+            kubectl rollout status deployment/nginx-ingress-controller --namespace ingress-nginx
 
   build-backend:
     docker:
@@ -74,14 +102,9 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: |
-          printenv
-          echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
-      - run: gcloud auth configure-docker
-      - run: gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+      - run: *setup-cloud-sdk
 
-      # remove slash
-      - run: echo 'export CLEANED_BRANCH=${CIRCLE_BRANCH//\/}' >> $BASH_ENV
+      # - run: echo 'export CLEANED_BRANCH=${CIRCLE_BRANCH//\/}' >> $BASH_ENV
       - run:
           command: |
             docker build -t "gcr.io/$GOOGLE_PROJECT_ID/backend:latest" -f packages/backend/Dockerfile .
@@ -94,14 +117,9 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: |
-          printenv
-          echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
-      - run: gcloud auth configure-docker
-      - run: gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+      - run: *setup-cloud-sdk
 
-      # remove slash
-      - run: echo 'export CLEANED_BRANCH=${CIRCLE_BRANCH//\/}' >> $BASH_ENV
+      # - run: echo 'export CLEANED_BRANCH=${CIRCLE_BRANCH//\/}' >> $BASH_ENV
       - run:
           command: |
             docker build -t "gcr.io/$GOOGLE_PROJECT_ID/frontend:latest" -f packages/frontend/Dockerfile .
@@ -114,35 +132,35 @@ jobs:
     steps:
       # deploy the image
       - checkout
-      - run: |
-            printenv
-            echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
-      - run: gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-      - run: gcloud container clusters get-credentials production --zone us-east1-b
-      - run: kubectl apply -f k8s_config/backend
+      - run: *setup-cloud-sdk
+      - run: kubectl apply -k k8s_config/overlays/production/backend
       - run: kubectl rollout status deployment/backend
-      - run: kubectl apply -f k8s_config/frontend
+      - run: kubectl apply -k k8s_config/overlays/production/frontend
       - run: kubectl rollout status deployment/frontend
 
 workflows:
   version: 2
   pull-request:
     jobs:
-       # - node-tests
+      # - node-tests
       - setup-infra:
           context: BITPULL_DEVELOPMENT
           # requires:
           #   - node-tests
       # - node-tests
-      - build-backend:
+      - ops-deployment:
           context: BITPULL_DEVELOPMENT
           requires:
             - setup-infra
+      - build-backend:
+          context: BITPULL_DEVELOPMENT
+          requires:
+            - ops-deployment
             # - node-tests
       - build-frontend:
           context: BITPULL_DEVELOPMENT
           requires:
-            - setup-infra
+            - ops-deployment
           #   - node-tests
       - push-and-deploy:
           context: BITPULL_DEVELOPMENT
@@ -152,5 +170,3 @@ workflows:
           filters:
             branches:
               only: master
-
-

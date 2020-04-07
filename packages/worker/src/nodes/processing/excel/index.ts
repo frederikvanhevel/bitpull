@@ -1,4 +1,3 @@
-// @ts-ignore
 import json2xls from 'p3x-json2xls-worker-thread'
 import { NodeParser } from '../../../typedefs/node'
 import {

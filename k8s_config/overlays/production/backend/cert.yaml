@@ -1,0 +1,11 @@
+apiVersion: networking.gke.io/v1beta1
+kind: ManagedCertificate
+metadata:
+  name: backend-certificate
+spec:
+  domains:
+    - api.bitpull.io
+resource:
+  managed:
+    domains:
+      - api.bitpull.io

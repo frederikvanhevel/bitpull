@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sable-webflow
+spec:
+  ports:
+    - port: 7000
+      targetPort: 8080
+      name: http
+  type: NodePort

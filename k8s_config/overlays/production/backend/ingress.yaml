@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: backend-ingress
+  annotations:
+    networking.gke.io/managed-certificates: backend-certificate
+    # kubernetes.io/ingress.global-static-ip-name: "bitpull-api" # created manually in GCP
+spec:
+  rules:
+  - host: api.bitpull.io
+    http:
+      paths:
+      - path: /*
+        backend:
+          serviceName: backend
+          servicePort: 4000

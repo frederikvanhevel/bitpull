@@ -1,0 +1,6 @@
+bases:
+  - ../globals
+  - ../../../base/cert-manager
+
+patchesStrategicMerge:
+  - issuer-resource.yaml
