@@ -7,17 +7,17 @@ metadata:
 spec:
   tls:
     - hosts:
-      - app.bitpull.io
+        - app.bitpull.io
       secretName: letsencrypt
   rules:
-  - host: app.bitpull.io
-    http:
-      paths:
-      - path: /*
-        backend:
-          serviceName: frontend
-          servicePort: http
-      - path: /
-        backend:
-          serviceName: frontend
-          servicePort: http
+    - host: app.bitpull.io
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: frontend
+              servicePort: http
+          - path: /
+            backend:
+              serviceName: frontend
+              servicePort: http
