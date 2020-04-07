@@ -93,7 +93,7 @@ const getProfile = async (code: string): Promise<GoogleProfile> => {
             client_id: process.env.GOOGLE_CLIENT_ID,
             client_secret: process.env.GOOGLE_CLIENT_SECRET,
             grant_type: 'authorization_code',
-            redirect_uri: 'http://localhost:8080/auth/callback/google'
+            redirect_uri: `${process.env.APP_URL}/auth/callback/google`
         }
 
         const token = await Axios({

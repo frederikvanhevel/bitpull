@@ -1,4 +1,5 @@
-apiVersion: networking.gke.io/v1beta1
-kind: ManagedCertificate
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
 metadata:
   name: backend-certificate
+

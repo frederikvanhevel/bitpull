@@ -4,11 +4,7 @@ metadata:
   name: backend
 spec:
   ports:
-    - name: http
-      port: 4000
+    - port: 5001
       targetPort: 5000
-      protocol: TCP
-  selector:
-    app: backend
-    tier: backend
+      name: http
   type: NodePort

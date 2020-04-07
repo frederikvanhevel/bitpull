@@ -2,8 +2,6 @@ bases:
   - ../globals
   - ../../../base/frontend
 
-# nameSuffix: -beta
-
 patchesStrategicMerge:
   - service.yaml
   - deployment.yaml

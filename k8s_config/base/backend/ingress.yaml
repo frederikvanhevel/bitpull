@@ -1,6 +1,7 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: backend-ingress
   annotations:
-    kubernetes.io/ingress.allow-http: "false" # stops 80 forwarding rule being created
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"

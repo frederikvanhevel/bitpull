@@ -1,5 +1,5 @@
 commonLabels:
-    app: sable-webflow
+    app: frontend
 
 resources:
 - deployment.yaml

@@ -25,7 +25,7 @@ const authLink = setContext((_, { headers }) => {
 
 // Create a WebSocket link:
 const wsLink = new WebSocketLink({
-    uri: `ws://localhost:5000/graphql`,
+    uri: process.env.WS_BACKEND + '/graphql',
     options: {
         reconnect: true,
         timeout: 30000

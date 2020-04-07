@@ -3,15 +3,16 @@ bases:
   - ../../../base/backend
 
 patchesStrategicMerge:
+  - service.yaml
   - deployment.yaml
-  - cert.yaml
   - ingress.yaml
+  - cert.yaml
 
 configMapGenerator:
   - name: env-vars
     literals:
       - API_URL=https://api.bitpull.io
-      - APP_URL=https://bitpull.io
+      - APP_URL=https://app.bitpull.io
       - PUPPETEER_ENDPOINT=ws://chrome:3000
       - GROWSURF_CAMPAIGN_ID=89ynio
       - DATABASE_URI=mongodb://nodeflow:iAXxgbCLF63EF@ds237588.mlab.com:37588/nodeflow

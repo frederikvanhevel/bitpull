@@ -1,5 +1,5 @@
 commonLabels:
-    app: sable-backend
+    app: backend
 
 resources:
 - cert.yaml
