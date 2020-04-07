@@ -8,7 +8,7 @@ spec:
   tls:
     - hosts:
         - api.bitpull.io
-      secretName: letsencrypt
+      secretName: letsencrypt-backend
   rules:
     - host: api.bitpull.io
       http:

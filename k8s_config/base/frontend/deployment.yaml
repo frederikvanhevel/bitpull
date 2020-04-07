@@ -1,20 +1,35 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
   name: frontend
-  namespace: default
+  labels:
+    app: frontend
 spec:
   selector:
     matchLabels:
       app: frontend
+      tier: frontend
   strategy:
     type: RollingUpdate
   template:
     metadata:
       labels:
         app: frontend
+        tier: frontend
     spec:
       containers:
-      - name: frontend
-        imagePullPolicy: IfNotPresent
-      restartPolicy: Always
+        - name: frontend
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh", "-c"]
+          args:
+            - "npm run start"
+          ports:
+            - containerPort: 4000
+              name: frontend
+          resources:
+            requests:
+              memory: "124Mi"
+              cpu: "300m"
+            limits:
+              memory: "1280Mi"
+              cpu: "1000m"

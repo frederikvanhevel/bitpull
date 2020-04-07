@@ -5,7 +5,6 @@ metadata:
   labels:
     app: backend
 spec:
-  progressDeadlineSeconds: 300
   selector:
     matchLabels:
       app: backend

@@ -1,16 +1,23 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
   name: frontend
 spec:
-  selector:
-    matchLabels:
-      app: frontend
+  replicas: 1
   template:
-    metadata:
-      labels:
-        app: frontend
     spec:
       containers:
-      - name: frontend
-        image: gcr.io/bitpull/frontend:latest
+        - name: frontend
+          image: gcr.io/bitpull/frontend:latest
+          # livenessProbe:
+          #   httpGet:
+          #     path: /health
+          #     port: 4000
+          #   initialDelaySeconds: 60
+          #   periodSeconds: 3
+          # readinessProbe:
+          #   httpGet:
+          #     path: /health
+          #     port: 4000
+          #   initialDelaySeconds: 60
+          #   periodSeconds: 5

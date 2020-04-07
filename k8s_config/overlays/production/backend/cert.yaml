@@ -8,4 +8,4 @@ spec:
   issuerRef:
     kind: ClusterIssuer
     name: letsencrypt
-  secretName: letsencrypt
+  secretName: letsencrypt-backend
