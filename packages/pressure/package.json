@@ -1,0 +1,30 @@
+{
+  "name": "@bitpull/pressure",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "NODE_ENV=production ts-node --transpile-only ./src/index.ts"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.21.0",
+    "@typescript-eslint/parser": "^2.21.0",
+    "delay": "^4.3.0",
+    "dotenv": "^8.2.0",
+    "eslint": "^6.8.0",
+    "eslint-config-node": "^4.0.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-prettier": "^3.1.2",
+    "got": "^10.6.0",
+    "lightship": "^6.1.0",
+    "prettier": "^1.19.1",
+    "serialize-error": "^5.0.0",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.8.2"
+  },
+  "devDependencies": {
+    "@types/got": "^9.6.9",
+    "@types/lightship": "^4.0.0"
+  }
+}

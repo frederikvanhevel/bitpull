@@ -17,6 +17,14 @@
 			{
 				"directory": "packages/worker",
 				"changeProcessCWD": true
+			},
+			{
+				"directory": "packages/scheduler",
+				"changeProcessCWD": true
+			},
+			{
+				"directory": "packages/pressure",
+				"changeProcessCWD": true
 			}
 		]
 	}

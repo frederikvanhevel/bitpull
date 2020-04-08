@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "commonjs",
+    "outDir": "./build",
+    "isolatedModules": false,
+    "strict": true,
+    "moduleResolution": "node",
+    "declaration": true,
+    "typeRoots": [
+      "./typings",
+      "./node_modules/@types"
+    ],
+    "baseUrl": "src",
+    "types": [
+      "node"
+    ],
+    "esModuleInterop": true,
+    "resolveJsonModule": true
+  },
+  "exclude": [
+    "**/build/*"
+  ]
+}

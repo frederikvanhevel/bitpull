@@ -9,12 +9,11 @@ COPY package.json .
 COPY yarn.lock .
 COPY lerna.json .
 
-COPY ./packages/backend ./packages/backend
-COPY ./packages/worker ./packages/worker
+COPY ./packages/pressure ./packages/pressure
 
 RUN yarn install
 
-WORKDIR /usr/src/app/packages/backend
+WORKDIR /usr/src/app/packages/pressure
 
 EXPOSE 8080
 

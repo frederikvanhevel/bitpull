@@ -39,3 +39,16 @@ spec:
             #   value: "900000"
             # - name: PREBOOT_CHROME
             #   value: "true"
+        - image: gcr.io/bitpull/pressure:latest
+          name: pressure
+          env:
+            - name: PUPPETEER_URL
+              value: "http://localhost:3000"
+            - name: CHECK_INTERVAL
+              value: "1"
+            - name: MAXIMUM_QUEUE_SIZE
+              valueFrom:
+                configMapKeyRef:
+                  key: MAX_CONCURRENT_SESSIONS
+                  name: env-vars
+           
