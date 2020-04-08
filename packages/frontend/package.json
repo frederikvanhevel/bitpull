@@ -1,7 +1,6 @@
 {
   "name": "@bitpull/frontend",
   "version": "1.0.1",
-  "main": "index.js",
   "license": "MIT",
   "scripts": {
     "start": "ts-node --transpile-only src/server.ts",

@@ -35,22 +35,46 @@ const validationSchema = yup.object().shape({
 const useStyles = makeStyles(theme => ({
     '@global': {
         body: {
-            backgroundColor: theme.palette.primary.dark
+            backgroundColor: theme.palette.grey[50]
+        }
+    },
+    tagline: {
+        lineHeight: 1.8,
+        fontSize: 26,
+        color: theme.palette.grey[800],
+        paddingRight: 100,
+        [theme.breakpoints.down('sm')]: {
+            fontSize: 20,
+            textAlign: 'center',
+            paddingRight: 0
         }
     },
     paper: {
-        height: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        maxWidth: 440,
-        marginLeft: 'auto',
-        marginRight: 'auto'
+        paddingTop: '30%',
+        [theme.breakpoints.down('sm')]: {
+            paddingTop: theme.spacing(2)
+        }
+        // height: '100vh'
+        // display: 'flex',
+        // flexDirection: 'column',
+        // alignItems: 'center',
+        // justifyContent: 'center',
+        // // maxWidth: 440,
+        // marginLeft: 'auto',
+        // marginRight: 'auto'
+    },
+    logoWrapper: {
+        [theme.breakpoints.down('sm')]: {
+            textAlign: 'center'
+        }
     },
     logo: {
         width: 200,
-        marginBottom: theme.spacing(2)
+        marginBottom: theme.spacing(2),
+        paddingTop: '20%',
+        [theme.breakpoints.down('sm')]: {
+            paddingTop: theme.spacing(2)
+        }
     },
     top: {
         display: 'flex',
@@ -64,7 +88,7 @@ const useStyles = makeStyles(theme => ({
     },
     content: {
         padding: theme.spacing(4),
-        background: theme.palette.grey[100]
+        borderTop: `5px solid ${theme.palette.grey[700]}`
     },
     form: {
         width: '100%', // Fix IE 11 issue.
@@ -79,9 +103,7 @@ const useStyles = makeStyles(theme => ({
     },
     footer: {
         padding: theme.spacing(4),
-        color: theme.palette.common.white,
         '& a': {
-            color: theme.palette.common.white,
             marginTop: theme.spacing(2)
         }
     },
@@ -93,6 +115,10 @@ const useStyles = makeStyles(theme => ({
         '& > a': {
             textDecoration: 'underline'
         }
+    },
+    login: {
+        textAlign: 'center',
+        width: '100%'
     }
 }))
 
@@ -120,135 +146,163 @@ const RegistrationPage: React.FC = () => {
     if (user) return <Redirect to="/" />
 
     return (
-        <Container component="main" maxWidth="sm" fixed>
+        <Container component="main" maxWidth="lg" fixed>
             <PageTitle>Sign up - BitPull</PageTitle>
 
-            <div className={classes.paper}>
-                <img src={logo} className={classes.logo} />
+            <Grid container spacing={2}>
+                <Grid
+                    item
+                    xs={12}
+                    sm={12}
+                    md={6}
+                    lg={7}
+                    className={classes.logoWrapper}
+                >
+                    <img src={logo} className={classes.logo} />
 
-                <Paper className={classes.content} elevation={0}>
-                    <div className={classes.top}>
-                        <Typography component="h1" variant="h5">
-                            Sign up
-                        </Typography>
-                        <Lock />
-                    </div>
+                    <Typography variant="h5" className={classes.tagline}>
+                        The <strong>data platform</strong> that lets you scrape
+                        website data without a hassle.{' '}
+                        <strong>No coding</strong> knowledge required.
+                    </Typography>
+                </Grid>
+                <Grid item xs={12} sm={12} md={6} lg={5}>
+                    <div className={classes.paper}>
+                        <Paper className={classes.content} elevation={2}>
+                            <div className={classes.top}>
+                                <Typography component="h1" variant="h5">
+                                    Sign up for free
+                                </Typography>
+                                <Lock />
+                            </div>
 
-                    <form
-                        className={classes.form}
-                        noValidate
-                        onSubmit={handleSubmit(onSubmit)}
-                    >
-                        <Grid container spacing={2}>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    autoComplete="fname"
-                                    name="firstName"
-                                    variant="outlined"
-                                    required
+                            <form
+                                className={classes.form}
+                                noValidate
+                                onSubmit={handleSubmit(onSubmit)}
+                            >
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            autoComplete="fname"
+                                            name="firstName"
+                                            variant="outlined"
+                                            required
+                                            fullWidth
+                                            id="firstName"
+                                            label="First Name"
+                                            autoFocus
+                                            error={!!errors.firstName}
+                                            inputRef={register()}
+                                            inputProps={{ maxLength: 30 }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            variant="outlined"
+                                            required
+                                            fullWidth
+                                            id="lastName"
+                                            label="Last Name"
+                                            name="lastName"
+                                            autoComplete="lname"
+                                            error={!!errors.lastName}
+                                            inputRef={register()}
+                                            inputProps={{ maxLength: 30 }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            variant="outlined"
+                                            required
+                                            fullWidth
+                                            id="email"
+                                            label="Email Address"
+                                            name="email"
+                                            autoComplete="email"
+                                            error={!!errors.email}
+                                            inputRef={register()}
+                                            defaultValue={email}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            variant="outlined"
+                                            required
+                                            fullWidth
+                                            name="password"
+                                            label="Password"
+                                            type="password"
+                                            id="password"
+                                            autoComplete="current-password"
+                                            error={!!errors.password}
+                                            inputRef={register({
+                                                required: 'Required'
+                                            })}
+                                        />
+                                    </Grid>
+                                </Grid>
+
+                                {error && (
+                                    <FormHelperText error>
+                                        {getError(error)}
+                                    </FormHelperText>
+                                )}
+
+                                <LoadingButton
                                     fullWidth
-                                    id="firstName"
-                                    label="First Name"
-                                    autoFocus
-                                    error={!!errors.firstName}
-                                    inputRef={register()}
-                                    inputProps={{ maxLength: 30 }}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    variant="outlined"
-                                    required
-                                    fullWidth
-                                    id="lastName"
-                                    label="Last Name"
-                                    name="lastName"
-                                    autoComplete="lname"
-                                    error={!!errors.lastName}
-                                    inputRef={register()}
-                                    inputProps={{ maxLength: 30 }}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    variant="outlined"
-                                    required
-                                    fullWidth
-                                    id="email"
-                                    label="Email Address"
-                                    name="email"
-                                    autoComplete="email"
-                                    error={!!errors.email}
-                                    inputRef={register()}
-                                    defaultValue={email}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    variant="outlined"
-                                    required
-                                    fullWidth
-                                    name="password"
-                                    label="Password"
-                                    type="password"
-                                    id="password"
-                                    autoComplete="current-password"
-                                    error={!!errors.password}
-                                    inputRef={register({
-                                        required: 'Required'
-                                    })}
-                                />
+                                    variant="contained"
+                                    color="primary"
+                                    className={classes.submit}
+                                    type="submit"
+                                    size="large"
+                                    loading={loading}
+                                    disabled={
+                                        loading ||
+                                        Object.keys(errors).length !== 0
+                                    }
+                                >
+                                    Create my account
+                                </LoadingButton>
+
+                                <Typography
+                                    variant="caption"
+                                    className={classes.terms}
+                                >
+                                    By creating an account, you agree to the{' '}
+                                    <Link
+                                        href="https://bitpull.io/tos"
+                                        target="_blank"
+                                    >
+                                        Terms of Service
+                                    </Link>
+                                    .
+                                </Typography>
+                            </form>
+                        </Paper>
+
+                        <Grid container classes={{ root: classes.footer }}>
+                            <GoogleSignIn
+                                label="Sign up with Google"
+                                size="large"
+                                referralId={grsf as string}
+                                className={classes.google}
+                            />
+
+                            <Grid item className={classes.login}>
+                                <Link
+                                    component={RouterLink}
+                                    to="/login"
+                                    variant="body2"
+                                >
+                                    Already have an account?{' '}
+                                    <strong>Sign in</strong>
+                                </Link>
                             </Grid>
                         </Grid>
-
-                        {error && (
-                            <FormHelperText error>
-                                {getError(error)}
-                            </FormHelperText>
-                        )}
-
-                        <LoadingButton
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            className={classes.submit}
-                            type="submit"
-                            loading={loading}
-                            disabled={
-                                loading || Object.keys(errors).length !== 0
-                            }
-                        >
-                            Sign Up
-                        </LoadingButton>
-                    </form>
-                </Paper>
-
-                <Grid container classes={{ root: classes.footer }}>
-                    <GoogleSignIn
-                        label="Sign up with Google"
-                        referralId={grsf as string}
-                        className={classes.google}
-                    />
-
-                    <Typography variant="caption" className={classes.terms}>
-                        By creating an account, you agree to the{' '}
-                        <Link href="https://bitpull.io/tos" target="_blank">
-                            Terms of Service
-                        </Link>
-                        .
-                    </Typography>
-
-                    <Grid item>
-                        <Link
-                            component={RouterLink}
-                            to="/login"
-                            variant="body2"
-                        >
-                            Already have an account? <strong>Sign in</strong>
-                        </Link>
-                    </Grid>
+                    </div>
                 </Grid>
-            </div>
+            </Grid>
         </Container>
     )
 }

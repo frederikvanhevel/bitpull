@@ -7,6 +7,7 @@ import googleIcon from './images/google-icon.svg'
 
 type Props = {
     label: string
+    size?: string
     referralId?: string
     className?: string
 }
@@ -23,7 +24,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }))
 
-const GoogleSignIn: React.FC<Props> = ({ label, referralId, className }) => {
+const GoogleSignIn: React.FC<Props> = ({
+    label,
+    referralId,
+    className,
+    size
+}) => {
     const classes = useStyles()
 
     function goToAuthPage() {
@@ -42,6 +48,7 @@ const GoogleSignIn: React.FC<Props> = ({ label, referralId, className }) => {
         <Button
             onClick={goToAuthPage}
             variant="contained"
+            size={size}
             classes={{ root: cx(classes.button, className) }}
         >
             <img src={googleIcon} className={classes.icon} /> {label}

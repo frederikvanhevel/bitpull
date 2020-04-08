@@ -104,7 +104,7 @@ export const getNodeIcon = (node: Node, watchedNodeId?: NodeId): ReactNode => {
 const getHostname = (link: string) => {
     try {
         const url = new URL(link)
-        return url.hostname
+        return url.hostname.replace('www.', '')
     } catch (error) {
         console.error(error)
         return link

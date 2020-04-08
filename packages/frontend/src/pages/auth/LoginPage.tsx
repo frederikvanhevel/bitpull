@@ -28,7 +28,7 @@ import { Lock } from '@material-ui/icons'
 const useStyles = makeStyles(theme => ({
     '@global': {
         body: {
-            backgroundColor: theme.palette.common.white
+            backgroundColor: theme.palette.grey[50]
         }
     },
     paper: {
@@ -57,7 +57,7 @@ const useStyles = makeStyles(theme => ({
     },
     content: {
         padding: theme.spacing(4),
-        background: theme.palette.grey[100]
+        borderTop: `5px solid ${theme.palette.grey[700]}`
     },
     form: {
         width: '100%', // Fix IE 11 issue.
@@ -100,7 +100,7 @@ const LoginPage: React.FC = () => {
             <div className={classes.paper}>
                 <img src={logo} className={classes.logo} />
 
-                <Paper className={classes.content} elevation={0}>
+                <Paper className={classes.content} elevation={2}>
                     <div className={classes.top}>
                         <Typography component="h1" variant="h5">
                             Sign in
@@ -162,6 +162,7 @@ const LoginPage: React.FC = () => {
                             color="primary"
                             className={classes.submit}
                             type="submit"
+                            size="large"
                             loading={loading}
                             disabled={
                                 loading || Object.keys(errors).length !== 0
@@ -175,6 +176,7 @@ const LoginPage: React.FC = () => {
                 <Grid container classes={{ root: classes.footer }}>
                     <GoogleSignIn
                         label="Sign in with Google"
+                        size="large"
                         className={classes.google}
                     />
 
@@ -187,6 +189,7 @@ const LoginPage: React.FC = () => {
                             Forgot password?
                         </Link>
                     </Grid>
+
                     <Grid item>
                         <Link
                             component={RouterLink}
