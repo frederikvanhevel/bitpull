@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
@@ -24,7 +24,7 @@ spec:
           args:
             - "npm run start"
           ports:
-            - containerPort: 4000
+            - containerPort: 5000
               name: backend
           resources:
             requests:

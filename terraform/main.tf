@@ -18,7 +18,7 @@ provider "google" {
 resource "google_container_cluster" "mastercluster" {
   name               = var.GCLOUD_CLUSTER_NAME
   location           = var.GCLOUD_CLUSTER_REGION
-  min_master_version = "1.15.9-gke.24"
+  min_master_version = "1.16.8-gke.4"
   # We can't create a cluster with no node pool defined, but we want to only use
   # separately managed node pools. So we create the smallest possible default
   # node pool and immediately delete it.

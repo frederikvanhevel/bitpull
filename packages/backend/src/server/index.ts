@@ -8,7 +8,7 @@ import { Strategy, ExtractJwt, StrategyOptions } from 'passport-jwt'
 import UserService from 'services/user'
 import schema from 'controllers/graphql/schema'
 import UserModel from 'models/user'
-import { connectDatabase } from 'components/data/mongodb'
+import Database from 'components/data/mongodb'
 import Logger from 'utils/logging/logger'
 import { GraphQLError } from 'graphql'
 import apiRouter from 'controllers/rest/routes'
@@ -16,7 +16,7 @@ import webhookRouter from 'controllers/webhooks'
 import JobController from 'controllers/jobs'
 
 export const startServer = async () => {
-    await connectDatabase()
+    await Database.connect()
 
     const server = new ApolloServer({
         schema,
@@ -88,6 +88,12 @@ export const startServer = async () => {
 
     app.use('/api', apiRouter)
     app.use('/webhooks', webhookRouter)
+    app.get('/health', (req, res) => {
+        const success = Database.isHealthy()
+        res.status(success ? 200 : 500).send({
+            success
+        })
+    })
 
     server.applyMiddleware({ app })
     const httpServer = createServer(app)

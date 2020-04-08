@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
@@ -9,15 +9,15 @@ spec:
       containers:
         - name: frontend
           image: gcr.io/bitpull/frontend:latest
-          # livenessProbe:
-          #   httpGet:
-          #     path: /health
-          #     port: 4000
-          #   initialDelaySeconds: 60
-          #   periodSeconds: 3
-          # readinessProbe:
-          #   httpGet:
-          #     path: /health
-          #     port: 4000
-          #   initialDelaySeconds: 60
-          #   periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 5

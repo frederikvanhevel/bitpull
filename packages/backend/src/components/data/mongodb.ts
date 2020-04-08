@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-export const connectDatabase = async () => {
+const connect = async () => {
     try {
         await mongoose.connect(process.env.DATABASE_URI!, {
             useNewUrlParser: true,
@@ -12,3 +12,13 @@ export const connectDatabase = async () => {
         throw new Error('Could not connect to database')
     }
 }
+
+const isHealthy = () =>
+    mongoose.connection.readyState === mongoose.STATES.connected
+
+const Database = {
+    connect,
+    isHealthy
+}
+
+export default Database

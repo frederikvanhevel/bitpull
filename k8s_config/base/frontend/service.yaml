@@ -6,5 +6,5 @@ spec:
   ports:
     - port: 3000
       targetPort: 8080
-      name: http
+      name: frontend-http
   type: NodePort

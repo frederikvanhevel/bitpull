@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: main-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: bitpull-address
+    networking.gke.io/managed-certificates: bitpull-cert
+spec:
+  rules:
+  - host: api.bitpull.io
+    http:
+      paths:
+      - backend:
+          serviceName: backend
+          servicePort: backendhttp
+  - host: app.bitpull.io
+    http:
+      paths:
+      - backend:
+          serviceName: frontend
+          servicePort: frontend-http

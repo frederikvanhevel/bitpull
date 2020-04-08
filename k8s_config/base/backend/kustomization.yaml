@@ -2,7 +2,6 @@ commonLabels:
     app: backend
 
 resources:
-- cert.yaml
-- ingress.yaml
+# - ingress.yaml
 - deployment.yaml
 - service.yaml
