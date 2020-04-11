@@ -57,8 +57,6 @@ function* startRunner() {
                 resultsChannel.put(result.data?.runWorkflow)
             },
             (error: ApolloError) => {
-                // TODO handle network errors
-                // console.error(error)
                 errorChannel.put({ error })
             }
         )

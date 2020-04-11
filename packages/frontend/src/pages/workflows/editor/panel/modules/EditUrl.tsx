@@ -57,7 +57,7 @@ const useStyles = makeStyles(theme => ({
 
 const EditUrl: React.FC<Props> = ({ node, onUpdate }) => {
     const classes = useStyles()
-    const { register, errors } = useForm({
+    const { register, errors } = useForm<(HtmlNode | XmlNode) & Node>({
         defaultValues: node,
         mode: 'onChange'
     })

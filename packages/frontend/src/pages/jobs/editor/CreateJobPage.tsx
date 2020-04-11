@@ -79,7 +79,6 @@ const CreateJobPage: React.FC = () => {
 
     useEffect(() => {
         if (error)
-            // TODO find an elegant way to show error message
             enqueueSnackbar(getError(error), {
                 variant: 'error'
             })

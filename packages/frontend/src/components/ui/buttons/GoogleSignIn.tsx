@@ -7,7 +7,7 @@ import googleIcon from './images/google-icon.svg'
 
 type Props = {
     label: string
-    size?: string
+    size?: 'medium' | 'large' | 'small'
     referralId?: string
     className?: string
 }

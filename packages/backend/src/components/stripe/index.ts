@@ -23,19 +23,17 @@ const createCustomer = async (
     name: string,
     plan: PaymentPlan,
     cardToken?: string
-    // trial: boolean = false
 ): Promise<StripeSubscription> => {
     const customer = await stripeHandler.customers.create({
         email,
         name,
         source: cardToken
     })
+
     const subscription = await stripeHandler.subscriptions.create({
         customer: customer.id,
         items: [{ plan: StripePaymentPlan.METERED }]
     })
-
-    // TODO add other plan
 
     return {
         customerId: customer.id,

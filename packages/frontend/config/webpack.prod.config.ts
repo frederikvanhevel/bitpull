@@ -1,12 +1,10 @@
 import path from 'path'
 import {
     Configuration as WebpackConfiguration
-    // DllPlugin
 } from 'webpack'
 import Dotenv from 'dotenv-webpack'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
-// import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 
 const config: WebpackConfiguration = {
     mode: 'production',
@@ -18,10 +16,6 @@ const config: WebpackConfiguration = {
         publicPath: '/',
         pathinfo: false
     },
-
-    // externals: {
-    //     scrippy: 'scrippy'
-    // },
 
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.jsx'],
@@ -43,18 +37,11 @@ const config: WebpackConfiguration = {
                     {
                         loader: 'ts-loader',
                         options: {
-                            transpileOnly: true
+                            transpileOnly: false
                         }
                     }
                 ]
             },
-            // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-            // {
-            //     enforce: 'pre',
-            //     test: /\.js$/,
-            //     loader: 'source-map-loader',
-            //     exclude: /node_modules/
-            // },
             {
                 test: /\.(png|jpg|gif|svg)$/,
                 use: [
@@ -101,22 +88,11 @@ const config: WebpackConfiguration = {
 
 
     plugins: [
-        // new ForkTsCheckerWebpackPlugin(),
         new Dotenv(),
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, '../src/index.html')
         })
-        // new DllPlugin({
-        //     context: __dirname,
-        //     name: '[name]_[hash]',
-        //     path: path.join(__dirname, '../statics/manifest.json')
-        // })
     ]
-
-    // externals: {
-    //     react: 'React',
-    //     'react-dom': 'ReactDOM'
-    // }
 }
 
 export default config
