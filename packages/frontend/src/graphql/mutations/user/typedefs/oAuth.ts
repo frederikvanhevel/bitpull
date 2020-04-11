@@ -16,6 +16,7 @@ export interface oAuth_oAuth_user_settings {
 
 export interface oAuth_oAuth_user {
   __typename: "User";
+  id: string;
   email: string;
   firstName: string;
   lastName: string;

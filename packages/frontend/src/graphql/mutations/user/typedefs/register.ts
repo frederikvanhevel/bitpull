@@ -16,6 +16,7 @@ export interface register_register_user_settings {
 
 export interface register_register_user {
   __typename: "User";
+  id: string;
   email: string;
   firstName: string;
   lastName: string;

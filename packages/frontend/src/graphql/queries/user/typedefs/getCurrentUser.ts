@@ -14,6 +14,7 @@ export interface getCurrentUser_getCurrentUser_settings {
 
 export interface getCurrentUser_getCurrentUser {
   __typename: "User";
+  id: string;
   email: string;
   firstName: string;
   lastName: string;

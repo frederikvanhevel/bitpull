@@ -26,9 +26,10 @@ import { nodeEvent_nodeEvent as NodeEvent } from 'subscriptions/workflow/typedef
 import { NodeEvent as NodeEventType } from 'typedefs/graphql'
 import { addNotification } from './helper'
 import { runWorkflow } from 'queries/workflow/typedefs/runWorkflow'
-import { FetchResult } from 'apollo-boost'
+import { FetchResult, ApolloError } from 'apollo-boost'
 import { RUN_NODE, RUN_NODE_CANCEL } from 'redux/constants/runner'
 import { storageItemAdded } from 'actions/storage'
+import Segment, { TrackingEvent } from 'services/segment'
 
 const resultsChannel = channel()
 const errorChannel = channel()
@@ -55,10 +56,10 @@ function* startRunner() {
             (result: FetchResult<runWorkflow>) => {
                 resultsChannel.put(result.data?.runWorkflow)
             },
-            error => {
+            (error: ApolloError) => {
                 // TODO handle network errors
-                console.error(error)
-                errorChannel.put(error)
+                // console.error(error)
+                errorChannel.put({ error })
             }
         )
 
@@ -73,9 +74,7 @@ function* watchResult() {
     while (true) {
         const data: WorkflowResult = yield take(resultsChannel)
 
-        if (!data) {
-            return
-        }
+        if (!data) return
 
         if (data.errors.length) {
             yield addNotification('warning', 'Workflow completed with errors')
@@ -89,12 +88,20 @@ function* watchResult() {
 
 function* watchErrors() {
     while (true) {
-        yield take(resultsChannel)
+        const { error } = yield take(errorChannel)
 
-        yield addNotification(
-            'error',
-            'Something went wrong, please try again later.'
-        )
+        try {
+            yield addNotification(
+                'error',
+                error.graphQLErrors[0].message
+            )
+        } catch (error) {
+            yield addNotification(
+                'error',
+                'Something went wrong, please try again later.'
+            )
+        }
+        
         yield put(setWorkflowResult(undefined))
     }
 }
@@ -102,6 +109,7 @@ function* watchErrors() {
 function* cancelRunner() {
     runnerObservable && runnerObservable.unsubscribe()
     yield put(setWorkflowResult(undefined))
+    Segment.track(TrackingEvent.WORKFLOW_CANCEL_RUN)
 }
 
 function nodeEventsChannel() {

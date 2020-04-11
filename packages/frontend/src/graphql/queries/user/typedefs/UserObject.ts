@@ -14,6 +14,7 @@ export interface UserObject_settings {
 
 export interface UserObject {
   __typename: "User";
+  id: string;
   email: string;
   firstName: string;
   lastName: string;

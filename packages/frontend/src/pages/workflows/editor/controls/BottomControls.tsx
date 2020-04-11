@@ -10,6 +10,7 @@ import LogView from 'components/logs/LogView'
 import JsonView from 'components/logs/JsonView'
 import { runNode, cancelRunNode } from 'actions/runner'
 import { WorkflowState } from 'reducers/workflow'
+import Segment, { TrackingEvent } from 'services/segment'
 
 const useStyles = makeStyles((theme: Theme) => ({
     controls: {
@@ -37,7 +38,14 @@ const BottomControls: React.FC = () => {
 
     return (
         <div className={classes.controls}>
-            <Settings running={running} onShowLogs={() => setShowLogs(true)} />
+            <Settings
+                running={running}
+                onShowLogs={() => {
+                    setShowLogs(true)
+                    Segment.track(TrackingEvent.WORKFLOW_VIEW_LOGS)
+                }}
+            />
+
             <Runner
                 run={runWorkflow}
                 running={running}

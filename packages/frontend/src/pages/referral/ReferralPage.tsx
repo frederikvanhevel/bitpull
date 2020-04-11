@@ -12,6 +12,7 @@ import { GET_REFERRAL_LINK } from 'queries/user'
 import ProgressBar from 'components/ui/ProgressBar'
 import Toolbar from 'components/navigation/Toolbar'
 import Loader from 'components/ui/Loader'
+import Segment, { TrackingEvent } from 'services/segment'
 
 const TOTAL_POSSIBLE_CREDITS = Number(
     process.env.MAX_REFERRAL_CREDITS! || 20000
@@ -69,6 +70,7 @@ const ReferralPage: React.FC = () => {
         enqueueSnackbar('Link has been copied to your clipboard', {
             variant: 'success'
         })
+        Segment.track(TrackingEvent.REFERRAL_COPY_LINK)
     }
 
     const earnedCredits = data?.getPaymentDetails.earnedCredits || 0
@@ -118,7 +120,7 @@ const ReferralPage: React.FC = () => {
                                 </Typography>
                             )}
 
-                            {referralData && !loading ? (
+                            {referralData && !loading && (
                                 <div className={classes.link}>
                                     <Typography>
                                         {referralData?.getReferralLink}
@@ -130,9 +132,9 @@ const ReferralPage: React.FC = () => {
                                         Copy
                                     </Button>
                                 </div>
-                            ) : (
-                                <Loader hideText />
                             )}
+
+                            {loading && <Loader hideText />}
                         </div>
                     </div>
                 </Paper>

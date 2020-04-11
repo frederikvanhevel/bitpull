@@ -16,6 +16,7 @@ export interface login_login_user_settings {
 
 export interface login_login_user {
   __typename: "User";
+  id: string;
   email: string;
   firstName: string;
   lastName: string;

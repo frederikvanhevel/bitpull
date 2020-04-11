@@ -12,6 +12,8 @@ import JobModel from 'models/job'
 import { WorkerArgs } from 'components/worker/typedefs'
 import Worker from 'components/worker'
 import { User } from 'models/user'
+import Segment, { TrackingEvent } from 'components/segment'
+import { ResourceType } from 'models/storage'
 import { NodeEventHandler } from './typedefs'
 
 const WORKFLOW_LIMIT = 30
@@ -50,6 +52,8 @@ const createWorkflow = async (user: User, workflowData: Partial<Workflow>) => {
         owner: user._id
     })
 
+    Segment.track(TrackingEvent.WORKFLOW_CREATE, user)
+
     return await newWorkflow.save()
 }
 
@@ -58,6 +62,8 @@ const updateWorkflow = async (
     workflowId: string,
     data: Partial<Workflow>
 ) => {
+    Segment.track(TrackingEvent.WORKFLOW_UPDATE, user)
+
     return await WorkflowModel.findOneAndUpdate(
         {
             _id: workflowId,
@@ -84,6 +90,8 @@ const removeWorkflow = async (user: User, workflowId: string) => {
     if (jobs.length) {
         throw new WorkflowInUseError()
     }
+
+    Segment.track(TrackingEvent.WORKFLOW_REMOVE, user)
 
     return await workflowToRemove.remove()
 }
@@ -121,6 +129,7 @@ const run = async (
     user: User,
     node: FlowNode,
     name: string,
+    resourceType: ResourceType,
     handler?: NodeEventHandler,
     watchedNodeId?: string
 ) => {
@@ -152,7 +161,7 @@ const run = async (
             key: process.env.ENCRYPTION_KEY!
         },
         metaData: {
-            isJob: false,
+            isJob: resourceType === ResourceType.JOB,
             name
         }
     }
@@ -165,6 +174,13 @@ const run = async (
             watchedNodeId
         }
     }
+
+    Segment.track(TrackingEvent.WORKFLOW_RUN, user, {
+        properties: {
+            name,
+            resourceType
+        }
+    })
 
     return await Worker.runWorkflow(workerArgs, (event, result) => {
         handler && handler(event, result)

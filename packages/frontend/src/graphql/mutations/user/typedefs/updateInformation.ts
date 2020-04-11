@@ -16,6 +16,7 @@ export interface updateInformation_updateInformation_settings {
 
 export interface updateInformation_updateInformation {
   __typename: "User";
+  id: string;
   email: string;
   firstName: string;
   lastName: string;

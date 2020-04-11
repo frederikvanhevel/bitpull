@@ -144,6 +144,7 @@ export const runWorkflow: GraphQLFieldResolver<
             context.user,
             args.node,
             args.name,
+            ResourceType.TEST_RUN,
             handler,
             args.watchedNodeId!
         )

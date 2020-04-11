@@ -4,6 +4,7 @@ import {
     IsAuthenticatedDirective,
     IsSuperuserDirective
 } from '../directives/auth'
+import { RateLimitDirective } from '../directives/limit'
 import userSchema from './user'
 import workflowSchema from './workflow'
 import analyticsSchema from './analytics'
@@ -30,6 +31,7 @@ export default mergeSchemas({
     ],
     schemaDirectives: {
         isAuthenticated: IsAuthenticatedDirective,
-        isSuperuser: IsSuperuserDirective
+        isSuperuser: IsSuperuserDirective,
+        RateLimit: RateLimitDirective
     }
 })

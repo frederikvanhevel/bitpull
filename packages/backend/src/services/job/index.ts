@@ -7,6 +7,7 @@ import { JobType } from 'components/scheduler/typedefs'
 import PaymentService from 'services/payment'
 import MailService from 'services/mail'
 import { User } from 'models/user'
+import Segment, { TrackingEvent } from 'components/segment'
 import { ScheduleType } from './typedefs'
 
 export const JOB_LIMIT = 50
@@ -44,13 +45,16 @@ const createJob = async (
 
     const savedJob = await agendaJob.save()
 
-    const job = {
-        name,
-        workflow: workflowId,
-        agendaJob: savedJob.attrs._id,
-        owner: user._id,
-        updatedAt: new Date()
-    } as Job
+    const job =
+        {
+            name,
+            workflow: workflowId,
+            agendaJob: savedJob.attrs._id,
+            owner: user._id,
+            updatedAt: new Date()
+        } as Job
+
+    Segment.track(TrackingEvent.JOB_CREATE, user)
 
     // only one job of the same workflow at a time
     return await JobModel.findOneAndUpdate(
@@ -71,20 +75,24 @@ const removeJob = async (user: User, jobId: string) => {
         throw new NotAllowedError()
     }
 
+    Segment.track(TrackingEvent.JOB_REMOVE, user)
+
     await AgendaJobModel.findByIdAndDelete(jobToRemove.agendaJob)
     return await jobToRemove.remove()
 }
 
-const pauseJob = async (userId: string, jobId: string) => {
+const pauseJob = async (user: User, jobId: string) => {
     const jobToUpdate = await JobModel.findById(jobId)
 
     if (!jobToUpdate) {
         throw new NotFoundError()
     }
 
-    if (!jobToUpdate.owner.equals(userId)) {
+    if (!jobToUpdate.owner.equals(user.id)) {
         throw new NotAllowedError()
     }
+
+    Segment.track(TrackingEvent.JOB_PAUSE, user)
 
     await AgendaJobModel.findByIdAndUpdate(jobToUpdate.agendaJob, {
         $set: { disabled: true }
@@ -102,6 +110,8 @@ const resumeJob = async (user: User, jobId: string) => {
     if (!jobToUpdate.owner.equals(user.id) || !paymentReady) {
         throw new NotAllowedError()
     }
+
+    Segment.track(TrackingEvent.JOB_RESUME, user)
 
     await AgendaJobModel.findByIdAndUpdate(jobToUpdate.agendaJob, {
         $unset: { disabled: 1 }
@@ -142,6 +152,7 @@ const checkIfJobNameExists = async (user: User, name: string) => {
         owner: user._id,
         name
     }).lean()
+
     return !!job
 }
 

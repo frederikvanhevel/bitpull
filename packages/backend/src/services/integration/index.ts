@@ -4,6 +4,7 @@ import { IntegrationType } from '@bitpull/worker'
 import Google from 'components/integrations/google'
 import Onedrive from 'components/integrations/onedrive'
 import { User } from 'models/user'
+import Segment, { TrackingEvent } from 'components/segment'
 
 const getActiveIntegrations = async (user: User) => {
     const integrations: Integration[] = await IntegrationModel.find({
@@ -39,6 +40,12 @@ const removeIntegration = async (user: User, integrationId: string) => {
         throw new NotAllowedError()
     }
 
+    Segment.track(TrackingEvent.INTEGRATION_REMOVE, user, {
+        properties: {
+            integration: integrationToRemove.type
+        }
+    })
+
     await integrationToRemove.remove()
 }
 
@@ -58,6 +65,13 @@ const toggleIntegration = async (
     }
 
     integrationToToggle.active = enabled
+
+    Segment.track(TrackingEvent.INTEGRATION_TOGGLE, user, {
+        properties: {
+            integration: integrationToToggle.type,
+            enabled
+        }
+    })
 
     await integrationToToggle.save()
 }

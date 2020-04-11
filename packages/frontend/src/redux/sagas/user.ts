@@ -26,6 +26,7 @@ import {
 } from 'mutations/user'
 import { addNotification } from './helper'
 import { oAuth, oAuthVariables } from 'mutations/user/typedefs/oAuth'
+import Segment, { TrackingEvent } from 'services/segment'
 
 const LOCALSTORAGE_TOKEN = 'token'
 
@@ -41,6 +42,8 @@ function* loadUser() {
         const result: FetchResult<getCurrentUser> = yield call(client.query, {
             query: GET_USER
         })
+
+        Segment.identify(result.data?.getCurrentUser)
 
         yield put({
             type: UserConstants.LOAD_USER_SUCCESS,
@@ -70,6 +73,8 @@ function* login(action: Login) {
 
         localStorage.setItem(LOCALSTORAGE_TOKEN, token)
 
+        Segment.identify(user)
+
         yield put({
             type: UserConstants.LOGIN_SUCCESS,
             payload: user
@@ -97,6 +102,8 @@ function* oAuth(action: OAuth) {
 
         localStorage.setItem(LOCALSTORAGE_TOKEN, token)
 
+        Segment.identify(user)
+
         yield put({
             type: UserConstants.OAUTH_SUCCESS,
             payload: user
@@ -123,6 +130,8 @@ function* register(action: Register) {
         const { user, token } = result.data!.register
 
         localStorage.setItem(LOCALSTORAGE_TOKEN, token)
+
+        Segment.identify(user)
 
         yield put({
             type: UserConstants.REGISTER_SUCCESS,
@@ -189,6 +198,8 @@ function* updateInformation(action: UpdateInformation) {
 }
 
 function* logout() {
+    Segment.track(TrackingEvent.USER_LOGOUT)
+    Segment.clear()
     localStorage.removeItem(LOCALSTORAGE_TOKEN)
     window.location.href = '/'
 }

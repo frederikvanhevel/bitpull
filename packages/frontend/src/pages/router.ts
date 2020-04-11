@@ -18,8 +18,13 @@ import CatalogPage from './catalog/CatalogPage'
 import ResetPasswordPage from './auth/ResetPasswordPage'
 import OAuthCallback from './auth/callbacks/OAuthCallback'
 import ReferralPage from './referral/ReferralPage'
+import Segment from 'services/segment'
 
 export const history = createBrowserHistory()
+
+history.listen(location => {
+    Segment.page(location.pathname)
+})
 
 export interface Route {
     exact: boolean

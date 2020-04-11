@@ -10,6 +10,7 @@ import { NotFoundError } from 'utils/errors'
 import UserModel, { User, UserDocument } from 'models/user'
 import MailService from 'services/mail'
 import Growwsurf from 'components/growsurf'
+import Segment, { TrackingEvent } from 'components/segment'
 
 const getDetails = async (user: User) => {
     return await PaymentModel.findOne({ owner: user._id })
@@ -125,6 +126,8 @@ const updatePayment = async (user: User, token: Token) => {
     payment.sourceBrand = token.card.brand
     payment.sourceLast4 = token.card.last4
 
+    Segment.track(TrackingEvent.PAYMENT_UPDATE, user)
+
     await payment.save()
 }
 
@@ -141,11 +144,13 @@ const disable = async (stripeCustomerId: string) => {
 
     await payment.save()
 
-    const user = await UserModel.findById(payment.owner).lean()
+    const user = await UserModel.findById(payment.owner)
 
     if (!user) {
         throw new NotFoundError()
     }
+
+    Segment.track(TrackingEvent.PAYMENT_DISABLE, user)
 
     MailService.sendPaymentFailedEmail(user.email)
 }
@@ -192,6 +197,13 @@ const addReferralCredits = async (user: User) => {
         payment.credits += REFERRED_CREDIT_AMOUNT
     }
 
+    Segment.track(TrackingEvent.PAYMENT_ADD_REFERRAL_CREDITS, user, {
+        properties: {
+            newCredits: payment.credits,
+            totalEarned: payment.earnedCredits
+        }
+    })
+
     await payment.save()
 }
 
@@ -210,6 +222,12 @@ const changePlan = async (user: User, plan: PaymentPlan) => {
 
     payment.plan = plan
     payment.recurringPlanId = planId
+
+    Segment.track(TrackingEvent.PAYMENT_CHANGE_PLAN, user, {
+        properties: {
+            plan
+        }
+    })
 
     await payment.save()
 }

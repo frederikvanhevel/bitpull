@@ -22,6 +22,7 @@ import { pubsub } from '.'
 
 const query = gql`
     directive @isAuthenticated on FIELD_DEFINITION
+    directive @RateLimit on FIELD_DEFINITION
 
     type Query {
         getWorkflow(id: String!): Workflow! @isAuthenticated
@@ -30,7 +31,7 @@ const query = gql`
             node: JSONObject
             name: String!
             watchedNodeId: String
-        ): WorkflowResult! @isAuthenticated
+        ): WorkflowResult! @isAuthenticated @RateLimit
         fetchSiteContent(url: String!): String! @isAuthenticated
     }
 

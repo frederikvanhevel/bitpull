@@ -29,6 +29,7 @@ const requiredVars = [
     'STRIPE_SECRET_KEY',
     'STRIPE_WEBHOOK_SECRET',
     'SENDGRID_API_KEY',
+    'SEGMENT_WRITE_KEY',
     'EMAIL_FROM_ADDRESS'
 ]
 

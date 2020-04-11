@@ -11,6 +11,7 @@ import Google from 'components/integrations/google'
 import Growwsurf from 'components/growsurf'
 import Logger from 'utils/logging/logger'
 import { PaymentPlan } from 'models/payment'
+import Segment, { TrackingEvent } from 'components/segment'
 import { LoginResponse } from './typedefs'
 import { generateLoginToken, generateRandomToken } from './helper'
 
@@ -25,6 +26,9 @@ const login = async (
     if (user.deleted) throw new NotFoundError()
 
     if (error) throw error
+
+    Segment.track(TrackingEvent.USER_LOGIN, user)
+    Segment.identify(user)
 
     return {
         user,
@@ -52,9 +56,10 @@ const register = async (
     lastName: string,
     referralId?: string
 ): Promise<LoginResponse> => {
-    const userData = {
-        email
-    } as UserDocument
+    const userData =
+        {
+            email
+        } as UserDocument
 
     const user = await UserModel.register(userData, password)
 
@@ -77,6 +82,9 @@ const register = async (
     } catch (error) {
         Logger.error(new Error('Could not add user to Growsurf'), error, user)
     }
+
+    Segment.track(TrackingEvent.USER_REGISTERED, user)
+    Segment.identify(user)
 
     return await login(email, password)
 }
@@ -121,8 +129,14 @@ const oAuth = async (
 
         created.payment = payment._id
 
+        Segment.track(TrackingEvent.USER_OAUTH_REGISTERED, user)
+
         user = await created.save()
+    } else {
+        Segment.track(TrackingEvent.USER_OAUTH_LOGIN, user)
     }
+
+    Segment.identify(user)
 
     return {
         user,
@@ -151,7 +165,10 @@ const forgotPassword = async (email: string) => {
         }
     )
 
-    user && MailService.sendForgotPasswordEmail(email, token)
+    if (user) {
+        Segment.track(TrackingEvent.USER_FORGOT_PASSWORD, user)
+        MailService.sendForgotPasswordEmail(email, token)
+    }
 }
 
 const resetPassword = async (token: string, password: string) => {
@@ -170,6 +187,8 @@ const resetPassword = async (token: string, password: string) => {
         resetPasswordExpires: undefined,
         updatedAt: new Date()
     })
+
+    Segment.track(TrackingEvent.USER_RESET_PASSWORD, user)
 }
 
 const updateInformation = async (
@@ -206,6 +225,9 @@ const updateInformation = async (
         )
     }
 
+    Segment.track(TrackingEvent.USER_UPDATE_INFO, user)
+    Segment.identify({ ...userModel.toJSON(), ...data })
+
     return {
         ...userModel.toJSON(),
         ...data
@@ -220,6 +242,8 @@ const verifyEmail = async (token: string) => {
     if (!user || token !== user.verificationToken) {
         throw new BadRequestError()
     }
+
+    Segment.track(TrackingEvent.USER_VERIFY_EMAIL, user)
 
     await user.update({
         verified: true,
@@ -242,6 +266,8 @@ const cancelAccount = async (user: User) => {
         deleted: true
     })
 
+    Segment.track(TrackingEvent.USER_CANCEL_ACCOUNT, user)
+
     await PaymentService.changePlan(user, PaymentPlan.METERED)
 }
 
@@ -249,6 +275,8 @@ const updateSettings = async (user: User, settings: Partial<UserSettings>) => {
     await UserModel.findByIdAndUpdate(user._id, {
         settings: Object.assign({}, user.settings, settings)
     })
+
+    Segment.track(TrackingEvent.USER_UPDATE_SETTINGS, user)
 }
 
 const UserService = {

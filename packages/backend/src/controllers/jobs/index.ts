@@ -62,6 +62,7 @@ const startJobProcessor = () => {
                 user,
                 workflow.node,
                 job.name,
+                ResourceType.JOB,
                 (event, data) => {
                     if (event === NodeEventType.STORAGE) {
                         StorageService.save(workflow.owner, {

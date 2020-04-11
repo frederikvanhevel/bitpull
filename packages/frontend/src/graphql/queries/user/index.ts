@@ -2,6 +2,7 @@ import { gql } from 'apollo-boost'
 
 export const USER_FRAGMENT = gql`
     fragment UserObject on User {
+        id
         email
         firstName
         lastName

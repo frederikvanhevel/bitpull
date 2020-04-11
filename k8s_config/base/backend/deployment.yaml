@@ -171,3 +171,9 @@ spec:
                 secretKeyRef:
                   name: stripe
                   key: webhook
+            - name: SEGMENT_WRITE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: segment
+                  key: key
+

@@ -14,6 +14,7 @@ import { GraphQLError } from 'graphql'
 import apiRouter from 'controllers/rest/routes'
 import webhookRouter from 'controllers/webhooks'
 import JobController from 'controllers/jobs'
+import Segment from 'components/segment'
 
 export const startServer = async () => {
     await Database.connect()
@@ -110,6 +111,8 @@ export const startServer = async () => {
     JobController.startJobProcessor()
     JobController.startStorageCleanup()
     JobController.startAnalyticsCleanup()
+
+    Segment.initialize()
 }
 
 // temporary workaround for workflow cancels

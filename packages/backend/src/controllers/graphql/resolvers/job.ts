@@ -70,7 +70,7 @@ export const pauseJob: GraphQLFieldResolver<
     { id: string }
 > = async (root, args, context) => {
     try {
-        await JobService.pauseJob(context.user.id, args.id)
+        await JobService.pauseJob(context.user, args.id)
         return true
     } catch (error) {
         Logger.throw(new Error('Could not pause job'), error, context.user)
