@@ -1,6 +1,8 @@
 import ReferralModel, { ReferralStatus } from 'models/referral'
 import UserModel, { User } from 'models/user'
 import PaymentService from 'services/payment'
+import MailService from 'services/mail'
+import { REFERRED_CREDIT_AMOUNT } from 'models/payment'
 
 const addEntry = async (user: User, referralId: string) => {
     const referrer = await UserModel.findOne({ referralId })
@@ -22,12 +24,19 @@ const award = async (user: User) => {
     if (!entry) return
 
     const referrer = await UserModel.findById(entry.referrer)
+    const referree = await UserModel.findById(entry.referree)
 
-    if (!referrer) return
+    if (!referrer || !referree) return
 
     await PaymentService.addReferralCredits(referrer)
 
     await entry.remove()
+
+    MailService.sendReferralAwardEmail(
+        referrer,
+        referree,
+        REFERRED_CREDIT_AMOUNT
+    )
 }
 
 const ReferralService = {

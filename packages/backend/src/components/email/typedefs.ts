@@ -21,6 +21,12 @@ export interface TrialWillEndParams {
     link: string
 }
 
+export interface ReferralAwardedParams {
+    referredUser: string
+    credits: number
+    referralLink: string
+}
+
 // Template paramaters
 type TemplateParams =
     | VerifyEmailParams
@@ -28,6 +34,7 @@ type TemplateParams =
     | JobHasErrorsParams
     | PaymentFailedParams
     | TrialWillEndParams
+    | ReferralAwardedParams
 
 export interface EmailOptions {
     to: string

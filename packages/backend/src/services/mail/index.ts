@@ -1,4 +1,3 @@
-import { Types } from 'mongoose'
 import UserModel, { User } from 'models/user'
 import Email, { Template } from 'components/email'
 import PaymentModel from 'models/payment'
@@ -105,13 +104,33 @@ const sendOutOfFreeCreditsEmail = async (user: User) => {
     })
 }
 
+const sendReferralAwardEmail = async (
+    user: User,
+    referredUser: User,
+    credits: number
+) => {
+    const APP_URL = process.env.APP_URL
+    const referralLink = `${APP_URL}/register?ref=${user.referralId}`
+
+    Email.send({
+        to: user.email,
+        template: Template.REFERRAL_AWARDED,
+        params: {
+            referredUser: referredUser.firstName,
+            credits,
+            referralLink
+        }
+    })
+}
+
 const MailService = {
     sendVerificationEmail,
     sendForgotPasswordEmail,
     sendJobHasErrorsEmail,
     sendPaymentFailedEmail,
     sendTrialWillEndEmail,
-    sendOutOfFreeCreditsEmail
+    sendOutOfFreeCreditsEmail,
+    sendReferralAwardEmail
 }
 
 export default MailService

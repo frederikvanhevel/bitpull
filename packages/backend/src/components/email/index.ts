@@ -9,7 +9,8 @@ export enum Template {
     JOB_HAS_ERRORS = 'd-87eb5df167844c8d9630891eadfee57c',
     PAYMENT_FAILED = 'd-16e03b7c501346fd909945d39aa6cd98',
     TRIAL_WILL_END = 'd-b6b390e3f8734e71a6f22bd14694caf7',
-    OUT_OF_FREE_CREDITS = 'd-a8633372461a4c11aa11f595bf0ae15c'
+    OUT_OF_FREE_CREDITS = 'd-a8633372461a4c11aa11f595bf0ae15c',
+    REFERRAL_AWARDED = 'd-49c5b5efd9744b2899d950682f5794db'
 }
 
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY!)
