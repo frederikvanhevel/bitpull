@@ -1,5 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core'
+import wave from './images/wave.svg'
 
 const useStyles = makeStyles(() => ({
     main: {
@@ -30,11 +31,7 @@ const Wave: React.FC = () => {
     return (
         <div className={classes.main}>
             <div className={classes.inner} />
-            <img
-                src="https://uploads-ssl.webflow.com/5e825e32da70701f1729a031/5e825e33fdba0f50ceb515f9_wave-bottom.svg"
-                alt=""
-                className={classes.wave}
-            />
+            <img src={wave} alt="" className={classes.wave} />
         </div>
     )
 }
