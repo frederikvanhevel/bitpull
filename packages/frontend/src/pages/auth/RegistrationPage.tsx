@@ -133,7 +133,7 @@ const RegistrationPage: React.FC = () => {
     const classes = useStyles()
     const dispatch = useDispatch()
     const location = useLocation()
-    const { grsf, email } = queryString.parse(location.search)
+    const { ref, email } = queryString.parse(location.search)
     const { handleSubmit, register, errors } = useForm<RegisterUserInput>({
         validationSchema
     })
@@ -145,7 +145,7 @@ const RegistrationPage: React.FC = () => {
         dispatch(
             registerUser({
                 ...data,
-                referralId: grsf as string
+                referralId: ref as string
             })
         )
     }
@@ -298,7 +298,7 @@ const RegistrationPage: React.FC = () => {
                                 <GoogleSignIn
                                     label="Sign up with Google"
                                     size="large"
-                                    referralId={grsf as string}
+                                    referralId={ref as string}
                                     className={classes.google}
                                 />
 

@@ -23,6 +23,7 @@ export interface login_login_user {
   picture: string | null;
   verified: boolean;
   settings: login_login_user_settings;
+  referralId: string;
 }
 
 export interface login_login {

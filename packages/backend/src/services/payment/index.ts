@@ -9,8 +9,8 @@ import { Token } from 'typedefs/graphql'
 import { NotFoundError } from 'utils/errors'
 import UserModel, { User, UserDocument } from 'models/user'
 import MailService from 'services/mail'
-import Growwsurf from 'components/growsurf'
 import Segment, { TrackingEvent } from 'components/segment'
+import ReferralService from 'services/referral'
 
 const getDetails = async (user: User) => {
     return await PaymentModel.findOne({ owner: user._id })
@@ -119,7 +119,7 @@ const updatePayment = async (user: User, token: Token) => {
     // card added for first time
     if (!payment.sourceId) {
         // TODO check fingerprint of card to make sure it wasnt already added to another user
-        await Growwsurf.triggerReferral(user)
+        await ReferralService.award(user)
     }
 
     payment.sourceId = token.id

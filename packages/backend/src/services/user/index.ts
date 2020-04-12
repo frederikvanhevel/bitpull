@@ -8,12 +8,15 @@ import { NotFoundError, BadRequestError, EmailInUseError } from 'utils/errors'
 import PaymentService from 'services/payment'
 import MailService from 'services/mail'
 import Google from 'components/integrations/google'
-import Growwsurf from 'components/growsurf'
-import Logger from 'utils/logging/logger'
 import { PaymentPlan } from 'models/payment'
 import Segment, { TrackingEvent } from 'components/segment'
+import ReferralService from 'services/referral'
 import { LoginResponse } from './typedefs'
-import { generateLoginToken, generateRandomToken } from './helper'
+import {
+    generateLoginToken,
+    generateRandomToken,
+    getReferralId
+} from './helper'
 
 const RESET_PASSWORD_TIME = 3600000 // 1 hour
 
@@ -56,10 +59,9 @@ const register = async (
     lastName: string,
     referralId?: string
 ): Promise<LoginResponse> => {
-    const userData =
-        {
-            email
-        } as UserDocument
+    const userData = {
+        email
+    } as UserDocument
 
     const user = await UserModel.register(userData, password)
 
@@ -72,15 +74,14 @@ const register = async (
     )
 
     user.payment = payment._id
+    user.referralId = getReferralId(user.id)
 
     await user.save()
 
     await generateAndSendVerificationToken(user)
 
-    try {
-        await Growwsurf.addParticipant(user, referralId)
-    } catch (error) {
-        Logger.error(new Error('Could not add user to Growsurf'), error, user)
+    if (referralId) {
+        await ReferralService.addEntry(user, referralId)
     }
 
     Segment.track(TrackingEvent.USER_REGISTERED, user)
@@ -112,14 +113,10 @@ const oAuth = async (
             picture: profile.picture
         })
 
-        try {
-            await Growwsurf.addParticipant(created, referralId)
-        } catch (error) {
-            Logger.error(
-                new Error('Could not add user to Growsurf'),
-                error,
-                user
-            )
+        created.referralId = getReferralId(created.id)
+
+        if (referralId) {
+            await ReferralService.addEntry(created, referralId)
         }
 
         const payment = await PaymentService.createSubscription(
@@ -215,16 +212,6 @@ const updateInformation = async (
         }`
     })
 
-    try {
-        await Growwsurf.updateParticipant(userModel.email, data)
-    } catch (error) {
-        Logger.error(
-            new Error('Could not update Growsurf participant'),
-            error,
-            userModel
-        )
-    }
-
     Segment.track(TrackingEvent.USER_UPDATE_INFO, user)
     Segment.identify({ ...userModel.toJSON(), ...data })
 
@@ -249,16 +236,6 @@ const verifyEmail = async (token: string) => {
         verified: true,
         verificationToken: undefined
     })
-}
-
-const getReferralLink = async (user: User) => {
-    const participant = await Growwsurf.getParticipant(user)
-
-    if (!participant) {
-        throw new NotFoundError()
-    }
-
-    return participant.shareUrl
 }
 
 const cancelAccount = async (user: User) => {
@@ -289,7 +266,6 @@ const UserService = {
     updateInformation,
     generateAndSendVerificationToken,
     verifyEmail,
-    getReferralLink,
     cancelAccount,
     updateSettings
 }

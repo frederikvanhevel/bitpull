@@ -7,12 +7,12 @@ import referralImage from './images/referral.svg'
 import { useQuery } from '@apollo/react-hooks'
 import { getPaymentDetails } from 'queries/payment/typedefs/getPaymentDetails'
 import { GET_PAYMENT_DETAILS } from 'queries/payment'
-import { getReferralLink } from 'queries/user/typedefs/getReferralLink'
-import { GET_REFERRAL_LINK } from 'queries/user'
 import ProgressBar from 'components/ui/ProgressBar'
 import Toolbar from 'components/navigation/Toolbar'
-import Loader from 'components/ui/Loader'
 import Segment, { TrackingEvent } from 'services/segment'
+import { AppState } from 'redux/store'
+import { useSelector } from 'react-redux'
+import { User } from 'queries/user/typedefs'
 
 const TOTAL_POSSIBLE_CREDITS = Number(
     process.env.MAX_REFERRAL_CREDITS! || 20000
@@ -60,13 +60,11 @@ const ReferralPage: React.FC = () => {
     const classes = useStyles()
     const { enqueueSnackbar } = useSnackbar()
     const { data } = useQuery<getPaymentDetails>(GET_PAYMENT_DETAILS)
-    const { data: referralData, loading, error } = useQuery<getReferralLink>(
-        GET_REFERRAL_LINK
-    )
+    const user = useSelector<AppState, User>(state => state.user.user!)
+    const referralLink = `${document.location.origin}/register?ref=${user.referralId}`
 
     const copyToClipboard = async () => {
-        if (!referralData?.getReferralLink) return
-        await navigator.clipboard.writeText(referralData.getReferralLink)
+        await navigator.clipboard.writeText(referralLink)
         enqueueSnackbar('Link has been copied to your clipboard', {
             variant: 'success'
         })
@@ -114,27 +112,15 @@ const ReferralPage: React.FC = () => {
                                 URL:
                             </Typography>
 
-                            {!referralData && error && (
-                                <Typography color="error">
-                                    Something went wrong
-                                </Typography>
-                            )}
-
-                            {referralData && !loading && (
-                                <div className={classes.link}>
-                                    <Typography>
-                                        {referralData?.getReferralLink}
-                                    </Typography>
-                                    <Button
-                                        color="primary"
-                                        onClick={() => copyToClipboard()}
-                                    >
-                                        Copy
-                                    </Button>
-                                </div>
-                            )}
-
-                            {loading && <Loader hideText />}
+                            <div className={classes.link}>
+                                <Typography>{referralLink}</Typography>
+                                <Button
+                                    color="primary"
+                                    onClick={() => copyToClipboard()}
+                                >
+                                    Copy
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 </Paper>

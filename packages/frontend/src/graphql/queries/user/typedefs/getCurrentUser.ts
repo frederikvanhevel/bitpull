@@ -21,6 +21,7 @@ export interface getCurrentUser_getCurrentUser {
   picture: string | null;
   verified: boolean;
   settings: getCurrentUser_getCurrentUser_settings;
+  referralId: string;
 }
 
 export interface getCurrentUser {

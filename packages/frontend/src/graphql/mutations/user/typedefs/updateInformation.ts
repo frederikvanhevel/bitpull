@@ -23,6 +23,7 @@ export interface updateInformation_updateInformation {
   picture: string | null;
   verified: boolean;
   settings: updateInformation_updateInformation_settings;
+  referralId: string;
 }
 
 export interface updateInformation {

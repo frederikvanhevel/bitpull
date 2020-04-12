@@ -21,4 +21,5 @@ export interface UserObject {
   picture: string | null;
   verified: boolean;
   settings: UserObject_settings;
+  referralId: string;
 }

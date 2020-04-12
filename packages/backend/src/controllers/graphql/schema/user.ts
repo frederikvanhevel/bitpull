@@ -2,7 +2,6 @@ import { makeExecutableSchema, IResolvers } from 'graphql-tools'
 import { gql } from 'apollo-server'
 import {
     getCurrentUser,
-    getReferralLink,
     register,
     oAuth,
     login,
@@ -29,7 +28,6 @@ const query = gql`
 
     type Query {
         getCurrentUser: User! @isAuthenticated
-        getReferralLink: String! @isAuthenticated
     }
 
     type Mutation {
@@ -47,8 +45,7 @@ const query = gql`
 `
 const resolvers: IResolvers = {
     Query: {
-        getCurrentUser,
-        getReferralLink
+        getCurrentUser
     },
     Mutation: {
         register,

@@ -10,8 +10,8 @@ import Stripe from 'components/stripe'
 import MailService from 'services/mail'
 import { UserFactory } from 'models/user/__mocks__/user.mock'
 import { Token, Card } from 'typedefs/graphql'
-import Growwsurf from 'components/growsurf'
 import UserModel, { UserDocument } from 'models/user'
+import ReferralService from 'services/referral'
 import PaymentService from '../index'
 
 jest.mock('models/payment')
@@ -23,8 +23,8 @@ const mockedUserModel = mocked(UserModel)
 jest.mock('components/stripe')
 const mockedStripe = mocked(Stripe)
 
-jest.mock('components/growsurf')
-const mockedGrowsurf = mocked(Growwsurf)
+jest.mock('services/referral')
+const mockedReferralService = mocked(ReferralService)
 
 jest.mock('services/mail')
 const mockedMailService = mocked(MailService)
@@ -54,7 +54,7 @@ describe('Payment service', () => {
         )
         expect(mockedPaymentModel).toHaveBeenCalledWith({
             owner: user.id,
-            plan: "METERED"
+            plan: 'METERED'
         })
         // @ts-ignore
         expect(mockedPaymentModel.prototype.save).toHaveBeenCalled()
@@ -228,7 +228,7 @@ describe('Payment service', () => {
                 payment.customerId,
                 token.id
             )
-            expect(mockedGrowsurf.triggerReferral).toHaveBeenCalledWith(
+            expect(mockedReferralService.award).toHaveBeenCalledWith(
                 payment.owner
             )
             expect(returnedPayment.sourceId).toEqual(token.id)
@@ -261,7 +261,7 @@ describe('Payment service', () => {
                 payment.customerId,
                 token.id
             )
-            expect(mockedGrowsurf.triggerReferral).not.toHaveBeenCalled()
+            expect(mockedReferralService.award).not.toHaveBeenCalled()
             expect(returnedPayment.sourceId).toEqual(token.id)
             expect(returnedPayment.sourceBrand).toEqual(token.card.brand)
             expect(returnedPayment.sourceLast4).toEqual(token.card.last4)

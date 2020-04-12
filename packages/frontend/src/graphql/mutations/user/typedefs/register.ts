@@ -23,6 +23,7 @@ export interface register_register_user {
   picture: string | null;
   verified: boolean;
   settings: register_register_user_settings;
+  referralId: string;
 }
 
 export interface register_register {

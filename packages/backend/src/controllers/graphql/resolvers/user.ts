@@ -28,21 +28,6 @@ export const getCurrentUser: GraphQLFieldResolver<
     }
 }
 
-export const getReferralLink: GraphQLFieldResolver<
-    any,
-    AuthenticationContext
-> = async (root, args, context): Promise<string> => {
-    try {
-        return await UserService.getReferralLink(context.user)
-    } catch (error) {
-        Logger.throw(
-            new Error('Could not get referral link'),
-            error,
-            context.user
-        )
-    }
-}
-
 export const register: GraphQLFieldResolver<
     any,
     AuthenticationContext,

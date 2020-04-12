@@ -11,6 +11,7 @@ export const USER_FRAGMENT = gql`
         settings {
             failedJobEmail
         }
+        referralId
     }
 `
 
@@ -21,10 +22,4 @@ export const GET_USER = gql`
         }
     }
     ${USER_FRAGMENT}
-`
-
-export const GET_REFERRAL_LINK = gql`
-    query getReferralLink {
-        getReferralLink
-    }
 `

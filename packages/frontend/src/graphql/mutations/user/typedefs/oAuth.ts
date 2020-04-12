@@ -23,6 +23,7 @@ export interface oAuth_oAuth_user {
   picture: string | null;
   verified: boolean;
   settings: oAuth_oAuth_user_settings;
+  referralId: string;
 }
 
 export interface oAuth_oAuth {

@@ -26,6 +26,7 @@ export interface User {
     verificationToken?: string
     deleted?: boolean
     settings: UserSettings
+    referralId: string
 }
 
 export enum OAuthProvider {
@@ -73,7 +74,8 @@ const UserSchema: PassportLocalSchema = new Schema(
                 type: Boolean,
                 default: true
             }
-        }
+        },
+        referralId: String
     },
     {
         toJSON: {

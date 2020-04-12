@@ -22,3 +22,7 @@ export const generateRandomToken = async (length = 20) => {
 
     return buffer.toString('hex')
 }
+
+export const getReferralId = (userId: string) => {
+    return userId.slice(0, 5)
+}

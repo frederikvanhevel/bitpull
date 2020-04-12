@@ -12,6 +12,7 @@ export const User = gql`
         picture: String
         verified: Boolean!
         settings: UserSettings!
+        referralId: String!
     }
 `
 
