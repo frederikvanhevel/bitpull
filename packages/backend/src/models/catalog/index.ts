@@ -16,8 +16,7 @@ export type CatalogDocument = CatalogItem & Document
 const CatalogSchema = new Schema({
     name: {
         type: String,
-        required: true,
-        index: true
+        required: true
     },
     title: {
         type: String,
@@ -30,7 +29,8 @@ const CatalogSchema = new Schema({
     },
     visible: {
         type: Boolean,
-        default: true
+        default: true,
+        index: true
     }
 })
 

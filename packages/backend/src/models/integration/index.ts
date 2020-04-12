@@ -14,8 +14,7 @@ export type IntegrationDocument = Integration & Document
 const IntegrationSchema = new Schema({
     type: {
         type: String,
-        required: true,
-        index: true
+        required: true
     },
     active: {
         type: Boolean,
@@ -28,7 +27,8 @@ const IntegrationSchema = new Schema({
     owner: {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: true,
+        index: true
     }
 })
 

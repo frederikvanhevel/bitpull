@@ -29,8 +29,7 @@ const WorkflowSchema = new Schema(
             type: String,
             default: 'New workflow',
             required: true,
-            trim: true,
-            index: true
+            trim: true
         },
         node: {
             type: Object,

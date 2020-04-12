@@ -2,7 +2,7 @@ import { Schema, model, Types, Document } from 'mongoose'
 import { UserDocument } from 'models/user'
 
 const TRIAL_CREDITS = 200
-export const REFERRED_CREDIT_AMOUNT = 200
+export const REFERRED_CREDIT_AMOUNT = 1000
 export const MAX_REFERRED_CREDITS = 20000
 
 export enum PaymentPlan {

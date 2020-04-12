@@ -14,25 +14,28 @@ export interface Referral {
 
 export type ReferralDocument = Referral & Document
 
-const ReferralSchema = new Schema({
-    referrer: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
-        index: true
+const ReferralSchema = new Schema(
+    {
+        referrer: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+            index: true
+        },
+        referree: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+            index: true
+        },
+        status: {
+            type: String,
+            enum: ['PENDING', 'AWARDED'],
+            default: 'PENDING'
+        }
     },
-    referree: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
-        index: true
-    },
-    status: {
-        type: String,
-        enum: ['PENDING', 'AWARDED'],
-        default: 'PENDING'
-    }
-})
+    { timestamps: true }
+)
 
 const ReferralModel = model<ReferralDocument>('Referral', ReferralSchema)
 

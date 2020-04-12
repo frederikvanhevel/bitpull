@@ -35,7 +35,7 @@ const LogSchema = new Schema({
         }
     ],
     workflow: { type: Schema.Types.ObjectId, ref: 'Workflow' },
-    job: { type: Schema.Types.ObjectId, ref: 'Job' },
+    job: { type: Schema.Types.ObjectId, ref: 'Job', index: true },
     date: {
         type: Date,
         default: Date.now

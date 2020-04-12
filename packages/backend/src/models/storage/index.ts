@@ -69,7 +69,8 @@ const StorageSchema = new Schema({
     resourceType: {
         type: String,
         enum: ['JOB', 'TEST_RUN'],
-        required: true
+        required: true,
+        index: true
     },
     resourceId: {
         type: Schema.Types.ObjectId
