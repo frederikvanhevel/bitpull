@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { AppState } from 'redux/store'
 import { Link } from 'react-router-dom'
 import { MainListItems, SecondaryListItems } from './MenuItems'
-import logo from './images/logo.png'
+import Logo from '../../ui/Logo'
 
 export const SIDEBAR_WIDTH = 240
 
@@ -55,7 +55,7 @@ const Sidebar: React.FC = () => {
             <div className={classes.toolbarIcon}>
                 <Link to="/">
                     {/* <Typography variant="h5">BitPull</Typography> */}
-                    <img src={logo} className={classes.logo} />
+                    <Logo />
                 </Link>
                 {/* <IconButton onClick={() => dispatch(closeSidebar())}>
                     <ChevronLeft />

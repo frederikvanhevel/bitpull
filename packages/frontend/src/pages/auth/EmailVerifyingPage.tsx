@@ -1,13 +1,6 @@
 import React, { useEffect } from 'react'
-import {
-    makeStyles,
-    Container,
-    Avatar,
-    Typography,
-    Box
-} from '@material-ui/core'
+import { makeStyles, Container, Typography, Box } from '@material-ui/core'
 import queryString from 'query-string'
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import { Redirect, useLocation } from 'react-router'
 import Copyright from 'components/ui/Copyright'
 import { useSelector, useDispatch } from 'react-redux'
@@ -28,16 +21,8 @@ const useStyles = makeStyles(theme => ({
         flexDirection: 'column',
         alignItems: 'center'
     },
-    avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main
-    },
-    form: {
-        width: '100%', // Fix IE 11 issue.
-        marginTop: theme.spacing(3)
-    },
-    submit: {
-        margin: theme.spacing(3, 0, 2)
+    error: {
+        color: theme.palette.error.main
     }
 }))
 
@@ -59,15 +44,15 @@ const EmailVerifyingPage: React.FC = () => {
     if (loading) return <Loader />
 
     return (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="sm">
             <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
-                </Avatar>
-
                 {!token ||
                     (error && (
-                        <Typography component="h1" variant="h5">
+                        <Typography
+                            component="h1"
+                            variant="h5"
+                            className={classes.error}
+                        >
                             Something went wrong. Token may be expired.
                         </Typography>
                     ))}

@@ -1,29 +1,29 @@
 import React, { useEffect } from 'react'
 import {
     makeStyles,
-    Container,
-    Avatar,
     Typography,
     Grid,
     TextField,
     FormHelperText,
-    Box,
-    Link
+    Link,
+    Paper
 } from '@material-ui/core'
 import queryString from 'query-string'
 import { useSnackbar } from 'notistack'
 import { Link as RouterLink, useLocation, useHistory } from 'react-router-dom'
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import { useMutation } from '@apollo/react-hooks'
 import { RESET_PASSWORD } from 'mutations/user'
 import LoadingButton from 'components/ui/buttons/LoadingButton'
-import Copyright from 'components/ui/Copyright'
 import { useForm } from 'react-hook-form'
 import {
     resetPassword,
     resetPasswordVariables
 } from 'mutations/user/typedefs/resetPassword'
 import { getError } from 'utils/errors'
+import AuthWrapper from './components/AuthWrapper'
+import PageTitle from 'components/navigation/PageTitle'
+import ContentBox from './components/ContentBox'
+import { Lock } from '@material-ui/icons'
 
 type PasswordResetForm = {
     password: string
@@ -31,20 +31,20 @@ type PasswordResetForm = {
 }
 
 const useStyles = makeStyles(theme => ({
-    '@global': {
-        body: {
-            backgroundColor: theme.palette.common.white
+    top: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        '& svg': {
+            fill: theme.palette.grey[400],
+            wdith: 20,
+            height: 20
         }
     },
-    paper: {
-        marginTop: theme.spacing(8),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center'
-    },
-    avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main
+    content: {
+        padding: theme.spacing(4),
+        borderTop: `5px solid ${theme.palette.grey[700]}`,
+        width: '100%'
     },
     form: {
         width: '100%', // Fix IE 11 issue.
@@ -91,81 +91,90 @@ const ResetPasswordPage: React.FC = () => {
     }, [data])
 
     return (
-        <Container component="main" maxWidth="xs">
-            <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    Reset password
-                </Typography>
+        <AuthWrapper>
+            <PageTitle>Reset password - BitPull</PageTitle>
 
-                <form
-                    className={classes.form}
-                    noValidate
-                    onSubmit={handleSubmit(onSubmit)}
-                >
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="New password"
-                        type="password"
-                        id="password"
-                        autoComplete="new-password"
-                        error={!!errors.password}
-                        inputRef={register({
-                            required: 'Required'
-                        })}
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="passwordRepeat"
-                        label="Repeat your new password"
-                        type="password"
-                        id="passwordRepeat"
-                        autoComplete="new-password"
-                        error={!!errors.passwordRepeat}
-                        inputRef={register({
-                            required: 'Required'
-                        })}
-                    />
-                    {error && (
-                        <FormHelperText error>{getError(error)}</FormHelperText>
-                    )}
-                    <LoadingButton
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                        type="submit"
-                        loading={loading}
-                        disabled={loading || Object.keys(errors).length !== 0}
+            <ContentBox>
+                <Paper className={classes.content} elevation={2}>
+                    <div className={classes.top}>
+                        <Typography component="h1" variant="h5">
+                            Reset password
+                        </Typography>
+                        <Lock />
+                    </div>
+
+                    <form
+                        className={classes.form}
+                        noValidate
+                        onSubmit={handleSubmit(onSubmit)}
                     >
-                        Change password
-                    </LoadingButton>
-                    <Grid container>
-                        <Grid item>
-                            <Link
-                                component={RouterLink}
-                                to="/register"
-                                variant="body2"
-                            >
-                                {"Don't have an account? Sign Up"}
-                            </Link>
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="New password"
+                            type="password"
+                            id="password"
+                            autoComplete="new-password"
+                            error={!!errors.password}
+                            inputRef={register({
+                                required: 'Required'
+                            })}
+                        />
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="passwordRepeat"
+                            label="Repeat your new password"
+                            type="password"
+                            id="passwordRepeat"
+                            autoComplete="new-password"
+                            error={!!errors.passwordRepeat}
+                            inputRef={register({
+                                required: 'Required'
+                            })}
+                        />
+
+                        {error && (
+                            <FormHelperText error>
+                                {getError(error)}
+                            </FormHelperText>
+                        )}
+
+                        <LoadingButton
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            className={classes.submit}
+                            type="submit"
+                            loading={loading}
+                            disabled={
+                                loading || Object.keys(errors).length !== 0
+                            }
+                        >
+                            Change password
+                        </LoadingButton>
+
+                        <Grid container>
+                            <Grid item>
+                                <Link
+                                    component={RouterLink}
+                                    to="/register"
+                                    variant="body2"
+                                >
+                                    Don't have an account?{' '}
+                                    <strong>Sign Up</strong>
+                                </Link>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                </form>
-            </div>
-            <Box mt={8}>
-                <Copyright />
-            </Box>
-        </Container>
+                    </form>
+                </Paper>
+            </ContentBox>
+        </AuthWrapper>
     )
 }
 

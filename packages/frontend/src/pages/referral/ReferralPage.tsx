@@ -95,7 +95,7 @@ const ReferralPage: React.FC = () => {
                                 className={classes.credits}
                             >
                                 Your referral bonus:{' '}
-                                <strong>{earnedCredits}</strong> seconds
+                                <strong>{earnedCredits}</strong> credits
                             </Typography>
 
                             <ProgressBar

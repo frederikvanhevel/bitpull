@@ -1,17 +1,13 @@
 import React from 'react'
 import {
     makeStyles,
-    Container,
-    Avatar,
     Typography,
-    Box,
     Button,
     Link,
-    Grid
+    Grid,
+    Paper
 } from '@material-ui/core'
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import { Redirect } from 'react-router'
-import Copyright from 'components/ui/Copyright'
 import { useSelector, useDispatch } from 'react-redux'
 import { AppState } from 'redux/store'
 import { useMutation } from '@apollo/react-hooks'
@@ -19,22 +15,33 @@ import { SEND_VERIFICATION_EMAIL } from 'mutations/user'
 import { UserState } from 'reducers/user'
 import debounce from 'lodash.debounce'
 import { logout } from 'actions/user'
+import AuthWrapper from './components/AuthWrapper'
+import ContentBox from './components/ContentBox'
+import { Email } from '@material-ui/icons'
 
 const useStyles = makeStyles(theme => ({
-    '@global': {
-        body: {
-            backgroundColor: theme.palette.common.white
-        }
-    },
     paper: {
         marginTop: theme.spacing(8),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center'
     },
-    avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main
+    top: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        '& svg': {
+            fill: theme.palette.grey[400],
+            wdith: 20,
+            height: 20
+        }
+    },
+    content: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        padding: theme.spacing(4),
+        borderTop: `5px solid ${theme.palette.grey[700]}`
     },
     form: {
         width: '100%', // Fix IE 11 issue.
@@ -62,28 +69,29 @@ const VerifyEmailPage: React.FC = () => {
     else if (user.verified) return <Redirect to="/" />
 
     return (
-        <Container component="main" maxWidth="xs">
-            <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
-                </Avatar>
+        <AuthWrapper>
+            <ContentBox>
+                <Paper className={classes.content} elevation={2}>
+                    <div className={classes.top}>
+                        <Typography component="h1" variant="h5">
+                            Verify your email
+                        </Typography>
+                        <Email />
+                    </div>
 
-                <Typography component="h1" variant="h5">
-                    Verify your email
-                </Typography>
+                    <br />
 
-                <br />
+                    <Typography component="h3" variant="subtitle1">
+                        We've sent you an email with instructions to verify your
+                        email address. Please open it and click the link.
+                    </Typography>
 
-                <Typography component="h3" variant="subtitle1">
-                    We've sent you an email with instructions to verify your
-                    email address. Please open it and click the link.
-                </Typography>
+                    <br />
 
-                <br />
-
-                <Button onClick={() => debouncedSend()} color="primary">
-                    Resend email
-                </Button>
+                    <Button onClick={() => debouncedSend()} color="primary">
+                        Resend email
+                    </Button>
+                </Paper>
 
                 <Grid container classes={{ root: classes.footer }}>
                     <Grid item xs />
@@ -96,11 +104,8 @@ const VerifyEmailPage: React.FC = () => {
                         </Link>
                     </Grid>
                 </Grid>
-            </div>
-            <Box mt={8}>
-                <Copyright />
-            </Box>
-        </Container>
+            </ContentBox>
+        </AuthWrapper>
     )
 }
 

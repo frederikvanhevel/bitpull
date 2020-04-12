@@ -1,7 +1,6 @@
 import React from 'react'
 import {
     makeStyles,
-    Container,
     Typography,
     Grid,
     TextField,
@@ -22,36 +21,11 @@ import GoogleSignIn from 'components/ui/buttons/GoogleSignIn'
 import { getError } from 'utils/errors'
 import PageTitle from 'components/navigation/PageTitle'
 import { RouterState } from 'components/navigation/PrivateRoute'
-import logo from './images/logo.png'
 import { Lock } from '@material-ui/icons'
-import Wave from 'components/wrappers/wave'
+import AuthWrapper from './components/AuthWrapper'
+import ContentBox from './components/ContentBox'
 
 const useStyles = makeStyles(theme => ({
-    '@global': {
-        body: {
-            backgroundColor: theme.palette.common.white
-        }
-    },
-    gridContainer: {
-        zIndex: 10,
-        position: 'absolute',
-        left: 0,
-        right: 0
-    },
-    paper: {
-        height: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        maxWidth: 440,
-        marginLeft: 'auto',
-        marginRight: 'auto'
-    },
-    logo: {
-        width: 200,
-        marginBottom: theme.spacing(2)
-    },
     top: {
         display: 'flex',
         alignItems: 'center',
@@ -101,123 +75,112 @@ const LoginPage: React.FC = () => {
     if (user) return <Redirect to={routerState?.from || '/'} />
 
     return (
-        <>
-            <Container
-                component="main"
-                maxWidth="sm"
-                fixed
-                className={classes.gridContainer}
-            >
-                <PageTitle>Login - BitPull</PageTitle>
+        <AuthWrapper>
+            <PageTitle>Login - BitPull</PageTitle>
 
-                <div className={classes.paper}>
-                    <img src={logo} className={classes.logo} />
+            <ContentBox>
+                <Paper className={classes.content} elevation={2}>
+                    <div className={classes.top}>
+                        <Typography component="h1" variant="h5">
+                            Sign in
+                        </Typography>
+                        <Lock />
+                    </div>
 
-                    <Paper className={classes.content} elevation={2}>
-                        <div className={classes.top}>
-                            <Typography component="h1" variant="h5">
-                                Sign in
-                            </Typography>
-                            <Lock />
-                        </div>
-
-                        <form
-                            className={classes.form}
-                            noValidate
-                            onSubmit={handleSubmit(onSubmit)}
-                        >
-                            <TextField
-                                variant="outlined"
-                                margin="normal"
-                                required
-                                fullWidth
-                                id="email"
-                                label="Email Address"
-                                name="email"
-                                autoComplete="email"
-                                autoFocus
-                                error={!!errors.email}
-                                inputRef={register({
-                                    required: 'Required',
-                                    pattern: {
-                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                                        message: 'invalid email address'
-                                    }
-                                })}
-                                className={classes.text}
-                            />
-                            <TextField
-                                variant="outlined"
-                                margin="normal"
-                                required
-                                fullWidth
-                                name="password"
-                                label="Password"
-                                type="password"
-                                id="password"
-                                autoComplete="current-password"
-                                error={!!errors.password}
-                                inputRef={register({
-                                    required: 'Required'
-                                })}
-                                className={classes.text}
-                            />
-
-                            {error && (
-                                <FormHelperText error>
-                                    {getError(error)}
-                                </FormHelperText>
-                            )}
-
-                            <LoadingButton
-                                fullWidth
-                                variant="contained"
-                                color="primary"
-                                className={classes.submit}
-                                type="submit"
-                                size="large"
-                                loading={loading}
-                                disabled={
-                                    loading || Object.keys(errors).length !== 0
+                    <form
+                        className={classes.form}
+                        noValidate
+                        onSubmit={handleSubmit(onSubmit)}
+                    >
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="email"
+                            label="Email Address"
+                            name="email"
+                            autoComplete="email"
+                            autoFocus
+                            error={!!errors.email}
+                            inputRef={register({
+                                required: 'Required',
+                                pattern: {
+                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                                    message: 'invalid email address'
                                 }
-                            >
-                                Sign In
-                            </LoadingButton>
-                        </form>
-                    </Paper>
-
-                    <Grid container classes={{ root: classes.footer }}>
-                        <GoogleSignIn
-                            label="Sign in with Google"
-                            size="large"
-                            className={classes.google}
+                            })}
+                            className={classes.text}
+                        />
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Password"
+                            type="password"
+                            id="password"
+                            autoComplete="current-password"
+                            error={!!errors.password}
+                            inputRef={register({
+                                required: 'Required'
+                            })}
+                            className={classes.text}
                         />
 
-                        <Grid item xs>
-                            <Link
-                                component={RouterLink}
-                                to="/forgot-password"
-                                variant="body2"
-                            >
-                                Forgot password?
-                            </Link>
-                        </Grid>
+                        {error && (
+                            <FormHelperText error>
+                                {getError(error)}
+                            </FormHelperText>
+                        )}
 
-                        <Grid item>
-                            <Link
-                                component={RouterLink}
-                                to="/register"
-                                variant="body2"
-                            >
-                                Don't have an account? <strong>Sign Up</strong>
-                            </Link>
-                        </Grid>
+                        <LoadingButton
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            className={classes.submit}
+                            type="submit"
+                            size="large"
+                            loading={loading}
+                            disabled={
+                                loading || Object.keys(errors).length !== 0
+                            }
+                        >
+                            Sign In
+                        </LoadingButton>
+                    </form>
+                </Paper>
+
+                <Grid container classes={{ root: classes.footer }}>
+                    <GoogleSignIn
+                        label="Sign in with Google"
+                        size="large"
+                        className={classes.google}
+                    />
+
+                    <Grid item xs>
+                        <Link
+                            component={RouterLink}
+                            to="/forgot-password"
+                            variant="body2"
+                        >
+                            Forgot password?
+                        </Link>
                     </Grid>
-                </div>
-            </Container>
 
-            <Wave />
-        </>
+                    <Grid item>
+                        <Link
+                            component={RouterLink}
+                            to="/register"
+                            variant="body2"
+                        >
+                            Don't have an account? <strong>Sign Up</strong>
+                        </Link>
+                    </Grid>
+                </Grid>
+            </ContentBox>
+        </AuthWrapper>
     )
 }
 
