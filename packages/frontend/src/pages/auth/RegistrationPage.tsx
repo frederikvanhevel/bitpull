@@ -47,6 +47,7 @@ const useStyles = makeStyles(theme => ({
     },
     paper: {
         paddingTop: '30%',
+        height: 'auto',
         [theme.breakpoints.down('sm')]: {
             paddingTop: theme.spacing(2)
         }
@@ -155,7 +156,7 @@ const RegistrationPage: React.FC = () => {
                 </Grid>
 
                 <Grid item xs={12} sm={12} md={6} lg={5}>
-                    <ContentBox showLogo={false}>
+                    <ContentBox showLogo={false} className={classes.paper}>
                         <Paper className={classes.content} elevation={2}>
                             <div className={classes.top}>
                                 <Typography component="h1" variant="h5">
