@@ -23,11 +23,12 @@ const useStyles = makeStyles(theme => ({
     toolbarIcon: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
+        marginLeft: theme.spacing(1),
         padding: '0 8px',
         ...theme.mixins.toolbar,
-        '& > h6': {
-            marginLeft: theme.spacing(1)
+        '& img': {
+            height: 30
         }
     },
     activeLink: {

@@ -22,7 +22,8 @@ const useStyles = makeStyles(theme => ({
     logoWrapper: {
         [theme.breakpoints.down('sm')]: {
             textAlign: 'center'
-        }
+        },
+        marginBottom: theme.spacing(2)
     }
 }))
 

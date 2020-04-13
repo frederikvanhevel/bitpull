@@ -1,20 +1,19 @@
 import React from 'react'
 import cx from 'classnames'
-import { Typography, makeStyles } from '@material-ui/core'
-import logo from './images/logo.svg'
+import { makeStyles } from '@material-ui/core'
+import logo from './images/logo-white-bg.svg'
 
 type Props = {
     className?: string
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
     container: {
         display: 'flex',
-        alignItems: 'center',
-        marginBottom: theme.spacing(2)
+        alignItems: 'center'
     },
     logo: {
-        height: 50
+        height: 40
     },
     copy: {
         color: 'white',
@@ -33,9 +32,6 @@ const Logo: React.FC<Props> = ({ className }) => {
     return (
         <div className={cx(classes.container, className)}>
             <img src={logo} className={classes.logo} />
-            <Typography component="h1" variant="h5" className={classes.copy}>
-                Bit<span className={classes.namePart}>pull</span>
-            </Typography>
         </div>
     )
 }
