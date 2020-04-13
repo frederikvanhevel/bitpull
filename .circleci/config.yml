@@ -87,8 +87,8 @@ jobs:
       - run:
           name: Configure Third Party Applications
           command: |
-            kubectl apply -k k8s_config/base/cert/certificate
-            kubectl apply -k k8s_config/base/cert/ingress
+            kubectl apply -f k8s_config/base/cert/certificate
+            kubectl apply -f k8s_config/base/cert/ingress
             kubectl apply -k k8s_config/overlays/production/chrome
             kubectl rollout status deployment/chrome
 
