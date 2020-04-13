@@ -75,7 +75,7 @@ const InvoiceSection: React.FC = () => {
                             className={classes.amount}
                         />
                         <Chip
-                            label={invoice.status}
+                            label={invoice.status.toUpperCase()}
                             classes={{
                                 root:
                                     invoice.status === 'paid'
