@@ -8,7 +8,7 @@ import PaymentService from 'services/payment'
 import MailService from 'services/mail'
 import { User } from 'models/user'
 import Segment, { TrackingEvent } from 'components/segment'
-import { ScheduleType } from './typedefs'
+import { ScheduleType, JobAttributes } from './typedefs'
 
 export const JOB_LIMIT = 50
 
@@ -33,7 +33,7 @@ const createJob = async (
 
     const jobProcessor = JobType.RUN_WORKFLOW
     const agendaJob = Scheduler.getInstance()
-        .create(jobProcessor, { workflowId })
+        .create<JobAttributes>(jobProcessor, { workflowId, owner: user.id })
         .unique({ 'data.processId': workflowId })
         .enable()
 
@@ -45,14 +45,13 @@ const createJob = async (
 
     const savedJob = await agendaJob.save()
 
-    const job =
-        {
-            name,
-            workflow: workflowId,
-            agendaJob: savedJob.attrs._id,
-            owner: user._id,
-            updatedAt: new Date()
-        } as Job
+    const job = {
+        name,
+        workflow: workflowId,
+        agendaJob: savedJob.attrs._id,
+        owner: user._id,
+        updatedAt: new Date()
+    } as Job
 
     Segment.track(TrackingEvent.JOB_CREATE, user)
 

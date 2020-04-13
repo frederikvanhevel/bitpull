@@ -1,7 +1,10 @@
 import { Schema, model, Types, Document } from 'mongoose'
 import { UserDocument } from 'models/user'
 
-const TRIAL_CREDITS = 200
+const TRIAL_CREDIT_AMOUNT = parseInt(
+    process.env.TRIAL_CREDIT_AMOUNT || '500',
+    10
+)
 export const REFERRED_CREDIT_AMOUNT = 1000
 export const MAX_REFERRED_CREDITS = 20000
 
@@ -49,7 +52,7 @@ const PaymentSchema = new Schema({
     disabled: { type: Boolean, default: false },
     credits: {
         type: Number,
-        default: TRIAL_CREDITS
+        default: TRIAL_CREDIT_AMOUNT
     },
     earnedCredits: {
         type: Number,

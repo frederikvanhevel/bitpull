@@ -7,6 +7,7 @@ const requiredVars = [
     'API_URL',
     'APP_URL',
     'JWT_SECRET',
+    'EMAIL_FROM_ADDRESS',
     'ENCRYPTION_KEY',
     'DATABASE_URI',
     'SLACK_CLIENT_ID',
@@ -27,7 +28,7 @@ const requiredVars = [
     'STRIPE_WEBHOOK_SECRET',
     'SENDGRID_API_KEY',
     'SEGMENT_WRITE_KEY',
-    'EMAIL_FROM_ADDRESS'
+    'TRIAL_CREDIT_AMOUNT'
 ]
 
 const missingVars: string[] = requiredVars.filter(

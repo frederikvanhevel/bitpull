@@ -66,7 +66,7 @@ resource "google_container_node_pool" "primary_nodes" {
   }
 
   node_config {
-    preemptible  = false
+    preemptible  = true
     machine_type = "n1-standard-1"
 
     metadata = {

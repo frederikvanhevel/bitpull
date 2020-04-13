@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.down('sm')]: {
             textAlign: 'center'
         },
-        marginBottom: theme.spacing(2)
+        marginBottom: theme.spacing(3)
     }
 }))
 

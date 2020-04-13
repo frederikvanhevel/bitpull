@@ -61,7 +61,8 @@ const useStyles = makeStyles(theme => ({
         marginBottom: theme.spacing(2),
         paddingTop: '20%',
         [theme.breakpoints.down('sm')]: {
-            paddingTop: theme.spacing(2)
+            paddingTop: theme.spacing(4),
+            justifyContent: 'center'
         }
     },
     top: {

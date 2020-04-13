@@ -17,10 +17,9 @@ spec:
         app: backend
         tier: backend
     spec:
-      restartPolicy: Always
       containers:
         - name: backend
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           command: ["/bin/sh", "-c"]
           args:
             - "npm run start"
@@ -162,4 +161,9 @@ spec:
                 secretKeyRef:
                   name: segment
                   key: key
-
+            - name: TRIAL_CREDIT_AMOUNT
+              valueFrom:
+                configMapKeyRef:
+                  key: TRIAL_CREDIT_AMOUNT
+                  name: env-vars
+                  

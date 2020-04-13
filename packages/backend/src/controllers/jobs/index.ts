@@ -14,6 +14,7 @@ import LogService from 'services/log'
 import UserModel, { User } from 'models/user'
 import JobService from 'services/job'
 import { NodeEventType } from 'services/workflow/typedefs'
+import { JobAttributes } from 'services/job/typedefs'
 import Timer from './timer'
 
 const startJobProcessor = () => {
@@ -22,7 +23,7 @@ const startJobProcessor = () => {
 
         try {
             const timer = new Timer()
-            const { workflowId } = agendaJob.attrs.data
+            const { workflowId } = agendaJob.attrs.data as JobAttributes
             const job: Job | null = await JobModel.findOne({
                 agendaJob: agendaJob.attrs._id
             })

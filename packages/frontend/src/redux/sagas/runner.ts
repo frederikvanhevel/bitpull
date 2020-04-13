@@ -89,17 +89,14 @@ function* watchErrors() {
         const { error } = yield take(errorChannel)
 
         try {
-            yield addNotification(
-                'error',
-                error.graphQLErrors[0].message
-            )
-        } catch (error) {
+            yield addNotification('error', error.graphQLErrors[0].message)
+        } catch (err) {
             yield addNotification(
                 'error',
                 'Something went wrong, please try again later.'
             )
         }
-        
+
         yield put(setWorkflowResult(undefined))
     }
 }

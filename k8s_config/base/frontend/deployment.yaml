@@ -17,10 +17,9 @@ spec:
         app: frontend
         tier: frontend
     spec:
-      restartPolicy: Always
       containers:
         - name: frontend
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           command: ["/bin/sh", "-c"]
           args:
             - "npm run start"

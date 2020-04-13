@@ -3,3 +3,8 @@ export enum ScheduleType {
     INTERVAL = 'INTERVAL',
     CRON = 'CRON'
 }
+
+export interface JobAttributes {
+    workflowId: string
+    owner: string
+}
