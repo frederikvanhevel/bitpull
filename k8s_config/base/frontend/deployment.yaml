@@ -17,6 +17,7 @@ spec:
         app: frontend
         tier: frontend
     spec:
+      restartPolicy: Always
       containers:
         - name: frontend
           imagePullPolicy: IfNotPresent

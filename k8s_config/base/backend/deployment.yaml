@@ -17,6 +17,7 @@ spec:
         app: backend
         tier: backend
     spec:
+      restartPolicy: Always
       containers:
         - name: backend
           imagePullPolicy: IfNotPresent
@@ -56,21 +57,6 @@ spec:
                 configMapKeyRef:
                   key: DATABASE_URI
                   name: env-vars
-            - name: GROWSURF_API_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: growsurf
-                  key: token
-            - name: GROWSURF_CAMPAIGN_ID
-              valueFrom:
-                configMapKeyRef:
-                  key: GROWSURF_CAMPAIGN_ID
-                  name: env-vars
-            - name: GROWSURF_WEBHOOK_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: growsurf
-                  key: webhook
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 configMapKeyRef:

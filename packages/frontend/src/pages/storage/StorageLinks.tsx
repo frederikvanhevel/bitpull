@@ -180,7 +180,11 @@ const StorageLinks: React.FC<Props> = ({ entry, count }) => {
                                 )}
                             </TableCell>
                             <TableCell align="right">
-                                {expiresAt !== null ? expiresAt : 'N/A'}
+                                {expiresAt !== null
+                                    ? expiresAt >= 0
+                                        ? expiresAt
+                                        : 0
+                                    : 'N/A'}
                             </TableCell>
                         </TableRow>
                     )

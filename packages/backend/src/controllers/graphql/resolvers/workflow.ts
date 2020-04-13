@@ -140,7 +140,7 @@ export const runWorkflow: GraphQLFieldResolver<
             }
         }
 
-        return await WorkflowService.run(
+        const result = await WorkflowService.run(
             context.user,
             args.node,
             args.name,
@@ -148,6 +148,10 @@ export const runWorkflow: GraphQLFieldResolver<
             handler,
             args.watchedNodeId!
         )
+
+        if (!result)  throw new Error()
+
+        return result
     } catch (error) {
         Logger.throw(new Error('Could not run workflow'), error, context.user)
     }

@@ -345,7 +345,7 @@ const PaymentPlanTab: React.FC = () => {
                                             <span className={classes.currency}>
                                                 $
                                             </span>
-                                            39
+                                            68
                                         </Typography>
                                         <Typography
                                             variant="subtitle1"

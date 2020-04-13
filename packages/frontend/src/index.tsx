@@ -9,7 +9,7 @@ import client from 'graphql/apollo-client'
 import { configureStore } from 'redux/store'
 import theme from 'constants/theme'
 import Notifications from 'components/navigation/Notifications'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers'
+import { LocalizationProvider } from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns'
 import Initializer from 'Initializer'
 
@@ -20,7 +20,7 @@ const Wrapper: React.FC = () => {
         <ApolloProvider client={client}>
             <Provider store={store}>
                 <MuiThemeProvider theme={theme}>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <LocalizationProvider dateAdapter={DateFnsUtils}>
                         <SnackbarProvider maxSnack={3}>
                             <>
                                 <CssBaseline />
@@ -28,7 +28,7 @@ const Wrapper: React.FC = () => {
                                 <Initializer />
                             </>
                         </SnackbarProvider>
-                    </MuiPickersUtilsProvider>
+                    </LocalizationProvider>
                 </MuiThemeProvider>
             </Provider>
         </ApolloProvider>

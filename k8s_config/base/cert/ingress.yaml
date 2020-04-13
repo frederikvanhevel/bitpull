@@ -12,10 +12,10 @@ spec:
       paths:
       - backend:
           serviceName: backend
-          servicePort: backendhttp
+          servicePort: http
   - host: app.bitpull.io
     http:
       paths:
       - backend:
           serviceName: frontend
-          servicePort: frontend-http
+          servicePort: http

@@ -23,7 +23,7 @@ const main = async () => {
 
         console.trace('running readiness probe')
 
-        let response
+        let response: any
 
         try {
             response = await got(pressureApiUrl).json()
@@ -39,7 +39,7 @@ const main = async () => {
         }
 
         if (response) {
-            const pressure: ChromePressure = (response as any).body.pressure
+            const pressure: ChromePressure = response.pressure
 
             console.trace(
                 {
