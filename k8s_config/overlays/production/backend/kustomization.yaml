@@ -17,7 +17,7 @@ configMapGenerator:
       - SLACK_CLIENT_ID='624946163541.644583558804'
       - DROPBOX_CLIENT_ID=n06dpn19abfdi2a
       - GOOGLE_CLIENT_ID=184196915426-4030g4g18prja2f2v55u74cm08frjaq2.apps.googleusercontent.com
-      - ONEDRIVE_CLIENT_ID=3425c71d-afe5-4ac5-bdba-ddb81467d39a
+      - ONEDRIVE_CLIENT_ID=860e5d27-87f5-4fab-a230-3c5d0fd6f6cc
       - GITHUB_CLIENT_ID=bb2e9ee1aba5b6cf5826
       - AWS_ACCESS_KEY_ID=AKIAIDDQ3OHTNYXAC6GA
       - AWS_REGION=us-east-1

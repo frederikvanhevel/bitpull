@@ -54,9 +54,9 @@ spec:
                   key: PUPPETEER_ENDPOINT
             - name: DATABASE_URI
               valueFrom:
-                configMapKeyRef:
-                  key: DATABASE_URI
-                  name: env-vars
+                secretKeyRef:
+                  key: uri
+                  name: database
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 configMapKeyRef:
