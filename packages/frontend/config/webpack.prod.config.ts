@@ -1,7 +1,6 @@
 import path from 'path'
-import {
-    Configuration as WebpackConfiguration
-} from 'webpack'
+import { Configuration as WebpackConfiguration } from 'webpack'
+import CopyWebpackPlugin from 'copy-webpack-plugin'
 import Dotenv from 'dotenv-webpack'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
@@ -86,12 +85,17 @@ const config: WebpackConfiguration = {
         runtimeChunk: true
     },
 
-
     plugins: [
         new Dotenv(),
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, '../src/index.html')
-        })
+        }),
+        new CopyWebpackPlugin([
+            {
+                from: path.resolve(__dirname, '../public'),
+                to: path.resolve(__dirname, '../dist')
+            }
+        ])
     ]
 }
 

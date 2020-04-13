@@ -42,12 +42,15 @@ function* loadUser() {
         const result: FetchResult<getCurrentUser> = yield call(client.query, {
             query: GET_USER
         })
+        const user = result.data?.getCurrentUser
 
-        Segment.identify(result.data?.getCurrentUser)
+        if (!user) throw new Error('Unable to load user')
+
+        Segment.identify(user)
 
         yield put({
             type: UserConstants.LOAD_USER_SUCCESS,
-            payload: result.data?.getCurrentUser
+            payload: user
         })
     } catch (error) {
         localStorage.removeItem(LOCALSTORAGE_TOKEN)

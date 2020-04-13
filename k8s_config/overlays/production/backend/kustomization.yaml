@@ -14,10 +14,10 @@ configMapGenerator:
       - PUPPETEER_ENDPOINT=ws://chrome:3000
       - GROWSURF_CAMPAIGN_ID=89ynio
       - DATABASE_URI=mongodb://nodeflow:iAXxgbCLF63EF@ds237588.mlab.com:37588/nodeflow
-      - SLACK_CLIENT_ID='624946163541.613527388019'
-      - DROPBOX_CLIENT_ID=v0jkjklpsz0orye
-      - GOOGLE_CLIENT_ID=665469788927-87lqsr8a7kensi2brvb8r04d7jo54fss.apps.googleusercontent.com
-      - ONEDRIVE_CLIENT_ID=468043c2-df81-4ecf-b833-27eb23f73f43
+      - SLACK_CLIENT_ID='624946163541.644583558804'
+      - DROPBOX_CLIENT_ID=n06dpn19abfdi2a
+      - GOOGLE_CLIENT_ID=184196915426-4030g4g18prja2f2v55u74cm08frjaq2.apps.googleusercontent.com
+      - ONEDRIVE_CLIENT_ID=3425c71d-afe5-4ac5-bdba-ddb81467d39a
       - GITHUB_CLIENT_ID=bb2e9ee1aba5b6cf5826
       - AWS_ACCESS_KEY_ID=AKIAIDDQ3OHTNYXAC6GA
       - AWS_REGION=us-east-1
