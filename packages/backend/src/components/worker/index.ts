@@ -1,8 +1,9 @@
 import { join } from 'path'
 import { fork, ChildProcess } from 'child_process'
+import { RunnerTimeoutReachedError } from 'utils/errors'
 import { Handler, WorkerArgs, WorkerEvent } from './typedefs'
 
-const TIMEOUT = Number(process.env.RUNNER_TIMEOUT)
+const TIMEOUT = Number(process.env.RUNNER_TIMEOUT || 900000)
 
 export enum Work {
     WORKFLOW = 'workflow.ts',
@@ -21,8 +22,8 @@ const spawn = (
         try {
             timeout = setTimeout(() => {
                 if (forked) forked.kill()
-                reject(new Error('Child process timeout reached'))
-            }, TIMEOUT || 900000)
+                reject(new RunnerTimeoutReachedError())
+            }, TIMEOUT)
 
             forked = fork(join(__dirname, './work', work), [
                 '-r',
@@ -31,11 +32,15 @@ const spawn = (
 
             forked.on('message', message => {
                 if ((message as any).event === WorkerEvent.FINISHED) {
+                    clearTimeout(timeout)
                     resolve((message as any).data)
                 } else onEvent && onEvent(message)
             })
 
-            forked.on('error', reject)
+            forked.on('error', () => {
+                clearTimeout(timeout)
+                reject()
+            })
 
             // forked.on('exit', () => resolve())
 
@@ -50,8 +55,6 @@ const spawn = (
                 })
         } catch (error) {
             reject(error)
-        } finally {
-            clearTimeout(timeout)
         }
     })
 }

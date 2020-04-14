@@ -3,7 +3,8 @@ import { mocked } from 'ts-jest/utils'
 import PaymentModel, {
     PaymentDocument,
     MAX_REFERRED_CREDITS,
-    PaymentPlan
+    PaymentPlan,
+    REFERRED_CREDIT_AMOUNT
 } from 'models/payment'
 import { PaymentFactory } from 'models/payment/__mocks__/payment.mock'
 import Stripe from 'components/stripe'
@@ -342,8 +343,8 @@ describe('Payment service', () => {
 
             await PaymentService.addReferralCredits(payment.owner)
 
-            expect(returnedPayment.earnedCredits).toEqual(200)
-            expect(returnedPayment.credits).toEqual(200)
+            expect(returnedPayment.earnedCredits).toEqual(REFERRED_CREDIT_AMOUNT)
+            expect(returnedPayment.credits).toEqual(REFERRED_CREDIT_AMOUNT)
             expect(returnedPayment.save).toHaveBeenCalled()
         })
 

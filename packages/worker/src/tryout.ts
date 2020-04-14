@@ -160,48 +160,50 @@ const start = async () => {
     //     ]
     // }
 
-    const node = {
-        id: '3a208d25-e429-46c3-b228-18a27ff04a9e',
-        type: 'HTML',
-        link: 'https://www.nytimes.com/',
-        parseJavascript: true,
-        children: [
-            {
-                id: '183675a1-a29e-478a-afaa-2cfadbbab278',
-                type: 'COLLECT',
-                fields: [
-                    {
-                        id: 'b0971d9b-ceda-406f-8cc0-087146e83acc',
-                        label: 'headline',
-                        selector: {
-                            value: '.balancedHeadline',
-                            attribute: 'text'
-                        }
-                    }
-                ],
-                children: [
-                    {
-                        id: '0d653518-f677-4ed7-a327-96789d775b9d',
-                        type: 'JSON',
-                        children: [
-                            {
-                                id: 'b16777f8-e26e-4676-94c2-7f3d6518b15f',
-                                type: 'GITHUB',
-                                repo: 'frederikvanhevel/test-data',
-                                children: [
-                                    {
-                                        id:
-                                            '35fa648d-ce0f-49ca-88d3-81e6ce7261e0',
-                                        type: 'EMAIL'
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
-    }
+    // const node = {
+    //     id: '3a208d25-e429-46c3-b228-18a27ff04a9e',
+    //     type: 'HTML',
+    //     link: 'https://www.nytimes.com/',
+    //     parseJavascript: true,
+    //     children: [
+    //         {
+    //             id: '183675a1-a29e-478a-afaa-2cfadbbab278',
+    //             type: 'COLLECT',
+    //             fields: [
+    //                 {
+    //                     id: 'b0971d9b-ceda-406f-8cc0-087146e83acc',
+    //                     label: 'headline',
+    //                     selector: {
+    //                         value: '.balancedHeadline',
+    //                         attribute: 'text'
+    //                     }
+    //                 }
+    //             ],
+    //             children: [
+    //                 {
+    //                     id: '0d653518-f677-4ed7-a327-96789d775b9d',
+    //                     type: 'JSON',
+    //                     children: [
+    //                         {
+    //                             id: 'b16777f8-e26e-4676-94c2-7f3d6518b15f',
+    //                             type: 'GITHUB',
+    //                             repo: 'frederikvanhevel/test-data',
+    //                             children: [
+    //                                 {
+    //                                     id:
+    //                                         '35fa648d-ce0f-49ca-88d3-81e6ce7261e0',
+    //                                     type: 'EMAIL'
+    //                                 }
+    //                             ]
+    //                         }
+    //                     ]
+    //                 }
+    //             ]
+    //         }
+    //     ]
+    // }
+
+    const node = {"id":"e3a9336a-415a-49e7-9bba-ba088254dd30","type":"HTML","link":"https://circleci.com/workflow-run/147dbe60-41a3-4828-bb4e-8be23b77e781","parseJavascript":true,"children":[{"id":"88935643-a4a5-45ff-b2b2-a63a834c8418","type":"CLICK", "selector": ".2adsf"}]}
 
     // console.log(JSON.stringify(node))
 

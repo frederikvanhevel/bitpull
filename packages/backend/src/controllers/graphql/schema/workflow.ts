@@ -31,7 +31,7 @@ const query = gql`
             node: JSONObject
             name: String!
             watchedNodeId: String
-        ): WorkflowResult! @isAuthenticated
+        ): WorkflowResult! @isAuthenticated @RateLimit
         fetchSiteContent(url: String!): String! @isAuthenticated
     }
 

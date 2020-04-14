@@ -16,20 +16,29 @@ const click = async (input, options, context) => {
     common_1.assert(node.selector, errors_1.ParseError.SELECTOR_MISSING);
     let renderedHtml;
     await browser.with(async (page) => {
-        if (parentResult && parentResult.html) {
-            const displayHtml = absolutify_1.absolutifyHtml(parentResult.html, parentResult.url, settings.proxyEndpoint);
-            await page.setContent(displayHtml);
+        try {
+            page.on("error", function (err) {
+                let theTempValue = err.toString();
+                console.log("Error: " + theTempValue);
+            });
+            if (parentResult && parentResult.html) {
+                const displayHtml = absolutify_1.absolutifyHtml(parentResult.html, parentResult.url, settings.proxyEndpoint);
+                await page.setContent(displayHtml);
+            }
+            else
+                await page.goto(rootAncestor.parsedLink);
+            await page.click(selector);
+            if (waitForNavigation)
+                await page.waitForNavigation();
+            else {
+                const ms = common_1.clamp(MIN_DELAY + delay, MIN_DELAY, MAX_DELAY) * 1000;
+                await page.waitFor(ms);
+            }
+            renderedHtml = await page.content();
         }
-        else
-            await page.goto(rootAncestor.parsedLink);
-        await page.click(selector);
-        if (waitForNavigation)
-            await page.waitForNavigation();
-        else {
-            const ms = common_1.clamp(MIN_DELAY + delay, MIN_DELAY, MAX_DELAY) * 1000;
-            await page.waitFor(ms);
+        catch (error) {
+            throw new Error('Could not click element');
         }
-        renderedHtml = await page.content();
     }, settings);
     common_1.assert(renderedHtml, errors_1.ParseError.ERROR_RENDERING_HTML);
     if (onLog)

@@ -68,6 +68,7 @@ export const startServer = async () => {
 
     const app = express()
 
+    app.set('trust proxy', true)
     app.use(helmet())
     app.use(
         cors({

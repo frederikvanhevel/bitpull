@@ -16,7 +16,7 @@ import Logger from 'utils/logging/logger'
 import { WorkerEvent } from 'components/worker/typedefs'
 import StorageService from 'services/storage'
 import { ResourceType } from 'models/storage'
-import { WorkflowInUseError } from 'utils/errors'
+import { WorkflowInUseError, RunnerTimeoutReachedError } from 'utils/errors'
 import { AuthenticationContext } from '../directives/auth'
 import { pubsub } from '../schema'
 import { SubscriptionEvent } from '../typedefs/workflow'
@@ -112,12 +112,18 @@ export const runWorkflow: GraphQLFieldResolver<
     AuthenticationContext,
     QueryRunWorkflowArgs
 > = async (root, args, context) => {
-    try {
-        let childWorkflow: ChildProcess
+    let childWorkflow: ChildProcess
 
-        if (context.req) {
-            context.req.on('close', () => childWorkflow && childWorkflow.kill())
+    const kill = () => {
+        try {
+            childWorkflow && childWorkflow.kill()
+        } catch (error) {
+            Logger.error(error)
         }
+    }
+
+    try {
+        if (context.req) context.req.on('close', kill)
 
         const handler = (event: NodeEventType | WorkerEvent, data: any) => {
             if (event === WorkerEvent.CREATED) {
@@ -153,7 +159,17 @@ export const runWorkflow: GraphQLFieldResolver<
 
         return result
     } catch (error) {
-        Logger.throw(new Error('Could not run workflow'), error, context.user)
+        if (error instanceof RunnerTimeoutReachedError) {
+            throw error
+        } else {
+            Logger.throw(
+                new Error('Could not run workflow'),
+                error,
+                context.user
+            )
+        }
+    } finally {
+        kill()
     }
 }
 

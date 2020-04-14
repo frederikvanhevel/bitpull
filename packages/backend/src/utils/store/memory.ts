@@ -30,7 +30,7 @@ class MemoryStore {
         if (this.hits[key]) {
             this.hits[key]--
         }
-        if (this.hits[key] === 0) {
+        if (this.hits[key] <= 0) {
             delete this.hits[key]
         }
     }

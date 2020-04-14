@@ -126,9 +126,9 @@ const oAuth = async (
 
         created.payment = payment._id
 
-        Segment.track(TrackingEvent.USER_OAUTH_REGISTERED, user)
-
         user = await created.save()
+
+        Segment.track(TrackingEvent.USER_OAUTH_REGISTERED, user)
     } else {
         Segment.track(TrackingEvent.USER_OAUTH_LOGIN, user)
     }

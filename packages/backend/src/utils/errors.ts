@@ -7,7 +7,8 @@ enum ErrorCodes {
     BAD_REQUEST = 'BAD_REQUEST',
     EMAIL_IN_USE = 'EMAIL_IN_USE',
     WORKFLOW_IN_USE = 'WORKFLOW_IN_USE',
-    LIMIT_REACHED = 'LIMIT_REACHED'
+    LIMIT_REACHED = 'LIMIT_REACHED',
+    RUNNER_TIMEOUT_REACHED = 'RUNNER_TIMEOUT_REACHED'
 }
 
 export class ClientError extends ApolloError {
@@ -52,5 +53,14 @@ export class WorkflowInUseError extends ClientError {
 export class LimitReachedError extends ClientError {
     constructor() {
         super('Limit reached', ErrorCodes.LIMIT_REACHED)
+    }
+}
+
+export class RunnerTimeoutReachedError extends ClientError {
+    constructor() {
+        super(
+            'Test run timeout reached, schedule a job for longer running workflows',
+            ErrorCodes.RUNNER_TIMEOUT_REACHED
+        )
     }
 }

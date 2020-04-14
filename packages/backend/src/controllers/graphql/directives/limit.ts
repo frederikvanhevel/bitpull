@@ -20,20 +20,20 @@ export class RateLimitDirective extends SchemaDirectiveVisitor {
 
         field.resolve = async function (...args: any) {
             const [, , context]: [any, any, AuthenticationContext] = args
-            const ip = context.req!.ip
+            const id = context.user?.id || context.req!.ip
 
-            if (loggedIps.count(ip) > 1) {
+            if (loggedIps.count(id) > (args.max || 1)) {
                 throw new TooManyRequestsError(
                     'Too many requests, please try again later.'
                 )
             }
 
-            loggedIps.add(ip)
+            loggedIps.add(id)
 
             try {
                 return await resolve.apply(this, args)
             } finally {
-                loggedIps.remove(ip)
+                loggedIps.remove(id)
             }
         }
     }

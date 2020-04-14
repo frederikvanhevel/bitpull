@@ -18,6 +18,7 @@ import { LoginError } from '../nodes/processing/login/errors'
 import { WaitError } from '../nodes/processing/wait/errors'
 import { EmailError } from '../nodes/notification/email/errors'
 import { GithubError } from '../nodes/export/github/errors'
+import { ClickError } from '../nodes/processing/click/errors'
 
 export const ErrorMessages: Record<string, string> = {
     // Node error
@@ -104,8 +105,13 @@ export const ErrorMessages: Record<string, string> = {
         'Encryption key is missing or corrupted',
     [LoginError.ENCRYPTION_VERSION_UNSUPPORTED]:
         'Encryption version is unsupported',
+    [LoginError.COULD_NOT_LOGIN]: 'Could not login',
 
-    [WaitError.DELAY_MISSING]: 'No time to wait specified'
+    // Wait error
+    [WaitError.DELAY_MISSING]: 'No time to wait specified',
+
+    // Click error
+    [ClickError.COULD_NOT_CLICK]: 'Could not click element'
 }
 
 export class FlowError extends Error {
@@ -113,7 +119,7 @@ export class FlowError extends Error {
     constructor(code: string) {
         if (!ErrorMessages[code]) {
             console.warn(`Missing error message for ${code}`)
-            super(NodeError.UNKNOWN_ERROR)
+            super(ErrorMessages[NodeError.UNKNOWN_ERROR])
             this.code = NodeError.UNKNOWN_ERROR
             return
         }

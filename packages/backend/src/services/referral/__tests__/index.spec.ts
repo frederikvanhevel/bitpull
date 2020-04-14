@@ -45,7 +45,7 @@ describe('Referral service', () => {
 
         // @ts-ignore
         mockedReferralModel.findOne.mockReturnValueOnce(returnedReferral)
-        mockedUserModel.findById.mockResolvedValueOnce(referrer as UserDocument)
+        mockedUserModel.findById.mockResolvedValue(referrer as UserDocument)
 
         await ReferralService.award(referrer)
 

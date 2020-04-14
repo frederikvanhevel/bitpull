@@ -57,28 +57,32 @@ const login: NodeParser<LoginNode, undefined, HtmlParseResult> = async (
 
     let renderedHtml: string
 
-    await browser.with(async page => {
-        await page.goto(rootAncestor.parsedLink!)
+    try {
+        await browser.with(async page => {
+            await page.goto(rootAncestor.parsedLink!)
 
-        await page.waitFor(username.selector, { visible: true })
+            await page.waitFor(username.selector, { visible: true })
 
-        await page.waitFor(120)
+            await page.waitFor(120)
 
-        await page.type(username.selector, usernameInput)
+            await page.type(username.selector, usernameInput)
 
-        await page.waitFor(232)
+            await page.waitFor(232)
 
-        await page.type(password.selector, passwordInput)
+            await page.type(password.selector, passwordInput)
 
-        await page.waitFor(112)
+            await page.waitFor(112)
 
-        await page.click(submit)
+            await page.click(submit)
 
-        if (waitForNavigation) await page.waitForNavigation()
-        else await page.waitFor(clamp(delay, 0, MAX_DELAY))
+            if (waitForNavigation) await page.waitForNavigation()
+            else await page.waitFor(clamp(delay, 0, MAX_DELAY))
 
-        renderedHtml = await page.content()
-    }, settings)
+            renderedHtml = await page.content()
+        }, settings)
+    } catch (error) {
+        throw new Error(LoginError.COULD_NOT_LOGIN)
+    }
 
     assert(renderedHtml!, ParseError.ERROR_RENDERING_HTML)
 
