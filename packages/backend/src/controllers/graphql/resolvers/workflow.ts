@@ -149,7 +149,7 @@ export const runWorkflow: GraphQLFieldResolver<
             args.watchedNodeId!
         )
 
-        if (!result)  throw new Error()
+        if (!result) throw new Error()
 
         return result
     } catch (error) {

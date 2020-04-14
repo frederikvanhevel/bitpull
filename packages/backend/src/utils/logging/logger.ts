@@ -4,7 +4,7 @@ import { ErrorLog, Logs, InfoLog, LogType } from './typedefs'
 import { isErrorLog } from './helper'
 
 class Logger {
-    public static jsonOutput = false
+    public static jsonOutput = process.env.NODE_ENV === 'production'
 
     public static info(message: string, user?: User) {
         const data: InfoLog = {

@@ -32,8 +32,6 @@ export class RateLimitDirective extends SchemaDirectiveVisitor {
 
             try {
                 return await resolve.apply(this, args)
-            } catch (error) {
-                // noop
             } finally {
                 loggedIps.remove(ip)
             }

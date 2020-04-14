@@ -1,7 +1,7 @@
 import React from 'react'
 import cx from 'classnames'
 import { makeStyles } from '@material-ui/core'
-import logo from './images/logo-white-bg.svg'
+import logo from './images/logo-white-no-bg.png'
 
 type Props = {
     className?: string
