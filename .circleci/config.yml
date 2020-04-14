@@ -104,9 +104,8 @@ jobs:
       - run:
           name: Build and push docker image
           command: |
-            echo 'export GIT_SHA1="$CIRCLE_SHA1"' >> $BASH_ENV
-            docker build -t "gcr.io/$GOOGLE_PROJECT_ID/backend:latest" -f packages/backend/Dockerfile .
-            docker push "gcr.io/$GOOGLE_PROJECT_ID/backend:$GIT_SHA1"
+            docker build -t "gcr.io/$GOOGLE_PROJECT_ID/backend:$CIRCLE_SHA1" -f packages/backend/Dockerfile .
+            docker push "gcr.io/$GOOGLE_PROJECT_ID/backend:$CIRCLE_SHA1"
 
   build-frontend:
     docker:
@@ -120,9 +119,8 @@ jobs:
       - run:
           name: Build and push docker image
           command: |
-            echo 'export GIT_SHA1="$CIRCLE_SHA1"' >> $BASH_ENV
-            docker build -t "gcr.io/$GOOGLE_PROJECT_ID/frontend:$GIT_SHA1" -f packages/frontend/Dockerfile .
-            docker push "gcr.io/$GOOGLE_PROJECT_ID/frontend:$GIT_SHA1"
+            docker build -t "gcr.io/$GOOGLE_PROJECT_ID/frontend:$CIRCLE_SHA1" -f packages/frontend/Dockerfile .
+            docker push "gcr.io/$GOOGLE_PROJECT_ID/frontend:$CIRCLE_SHA1"
 
   push-and-deploy:
     docker:
@@ -134,15 +132,10 @@ jobs:
       - run: *setup-cloud-sdk
 
       - run:
-          name: Setup environment variables
           command: |
-            echo 'export GIT_SHA1="$CIRCLE_SHA1"' >> $BASH_ENV
-
-      - run:
-          command: |
-            sed -i "s/latest/$GIT_SHA1/" k8s_config/overlays/production/backend/deployment.yaml
+            sed -i "s/latest/$CIRCLE_SHA1/" k8s_config/overlays/production/backend/deployment.yaml
             kubectl apply -k k8s_config/overlays/production/backend
-            sed -i "s/latest/$GIT_SHA1/" k8s_config/overlays/production/frontend/deployment.yaml
+            sed -i "s/latest/$CIRCLE_SHA1/" k8s_config/overlays/production/frontend/deployment.yaml
             kubectl apply -k k8s_config/overlays/production/frontend
             kubectl rollout status deployment/backend
             kubectl rollout status deployment/frontend
