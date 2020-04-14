@@ -217,7 +217,8 @@ const PaymentPlanTab: React.FC = () => {
                                             <span className={classes.currency}>
                                                 $
                                             </span>
-                                            0.00015
+                                            {process.env.METERED_PLAN_PRICE ||
+                                                0.002}
                                         </Typography>
                                         <Typography
                                             variant="subtitle1"
@@ -345,7 +346,8 @@ const PaymentPlanTab: React.FC = () => {
                                             <span className={classes.currency}>
                                                 $
                                             </span>
-                                            68
+                                            {process.env.MONTLY_PLAN_PRICE ||
+                                                68}
                                         </Typography>
                                         <Typography
                                             variant="subtitle1"

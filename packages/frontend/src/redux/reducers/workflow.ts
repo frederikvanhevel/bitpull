@@ -56,24 +56,22 @@ export default (state = initialState, action: Actions): WorkflowState => {
         case SET_WORKFLOW_NAME:
             return {
                 ...state,
-                currentWorkflow:
-                    {
-                        ...state.currentWorkflow,
-                        name: action.payload
-                    } as Workflow,
+                currentWorkflow: {
+                    ...state.currentWorkflow,
+                    name: action.payload
+                } as Workflow,
                 hasUnsavedChanges: true
             }
         case CHANGE_WORKFLOW_SETTINGS:
             return {
                 ...state,
-                currentWorkflow:
-                    {
-                        ...state.currentWorkflow,
-                        settings: {
-                            ...state.currentWorkflow!.settings,
-                            ...action.payload
-                        }
-                    } as Workflow,
+                currentWorkflow: {
+                    ...state.currentWorkflow,
+                    settings: {
+                        ...state.currentWorkflow!.settings,
+                        ...action.payload
+                    }
+                } as Workflow,
                 hasUnsavedChanges: true
             }
         case RUN_NODE:
@@ -138,11 +136,10 @@ export default (state = initialState, action: Actions): WorkflowState => {
         case SET_WORKFLOW_ID:
             return {
                 ...state,
-                currentWorkflow:
-                    {
-                        ...state.currentWorkflow,
-                        id: action.payload
-                    } as Workflow
+                currentWorkflow: {
+                    ...state.currentWorkflow,
+                    id: action.payload
+                } as Workflow
             }
         case UPDATE_NODE:
             return {

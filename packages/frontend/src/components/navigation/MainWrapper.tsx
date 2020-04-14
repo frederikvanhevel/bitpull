@@ -7,7 +7,10 @@ import Sidebar from './sidebar/Sidebar'
 const useStyles = makeStyles(() => ({
     wrapper: {
         display: 'flex',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        minWidth: 1024,
+        position: 'relative',
+        height: '100vh'
     }
 }))
 

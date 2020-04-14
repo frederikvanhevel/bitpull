@@ -51,7 +51,7 @@ spec:
                 configMapKeyRef:
                   name: env-vars
                   key: PUPPETEER_ENDPOINT
-            - name: DATABASE_URI
+            - name: MONGO_URI
               valueFrom:
                 secretKeyRef:
                   key: uri

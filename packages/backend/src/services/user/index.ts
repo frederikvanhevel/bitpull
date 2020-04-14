@@ -47,7 +47,7 @@ const generateAndSendVerificationToken = async (currentUser: User) => {
     }
 
     const verificationToken = await generateRandomToken()
-    await user.update({ verificationToken, verified: false })
+    await user.updateOne({ verificationToken, verified: false })
 
     MailService.sendVerificationEmail(user, verificationToken)
 }
@@ -179,7 +179,7 @@ const resetPassword = async (token: string, password: string) => {
     }
 
     await user.setPassword(password)
-    await user.update({
+    await user.updateOne({
         resetPasswordToken: undefined,
         resetPasswordExpires: undefined,
         updatedAt: new Date()
@@ -232,7 +232,7 @@ const verifyEmail = async (token: string) => {
 
     Segment.track(TrackingEvent.USER_VERIFY_EMAIL, user)
 
-    await user.update({
+    await user.updateOne({
         verified: true,
         verificationToken: undefined
     })

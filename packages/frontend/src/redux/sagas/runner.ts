@@ -104,7 +104,7 @@ function* watchErrors() {
 function* cancelRunner() {
     runnerObservable && runnerObservable.unsubscribe()
     yield put(setWorkflowResult(undefined))
-    Segment.track(TrackingEvent.WORKFLOW_CANCEL_RUN)
+    yield call(Segment.track, TrackingEvent.WORKFLOW_CANCEL_RUN)
 }
 
 function nodeEventsChannel() {

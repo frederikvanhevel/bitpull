@@ -8,6 +8,7 @@ import { loadUser } from 'actions/user'
 import { AppState } from 'redux/store'
 import Loader from 'components/ui/Loader'
 import NotFoundPage from './pages/common/NotFoundPage'
+import ErrorBoundary from 'components/navigation/ErrorBoundary'
 
 const App: React.FC = () => {
     const dispatch = useDispatch()
@@ -20,27 +21,29 @@ const App: React.FC = () => {
     if (initializing) return <Loader hideText delay={200} fullPage />
 
     return (
-        <Router history={history}>
-            <Switch>
-                {publicRoutes.map(route => (
-                    <Route key={route.path} {...route} />
-                ))}
+        <ErrorBoundary>
+            <Router history={history}>
+                <Switch>
+                    {publicRoutes.map(route => (
+                        <Route key={route.path} {...route} />
+                    ))}
 
-                {privateRoutes.map(route => (
-                    <PrivateRoute
-                        key={route.path}
-                        {...route}
-                        component={() => (
-                            <MainWrapper>
-                                <route.component />
-                            </MainWrapper>
-                        )}
-                    />
-                ))}
+                    {privateRoutes.map(route => (
+                        <PrivateRoute
+                            key={route.path}
+                            {...route}
+                            component={() => (
+                                <MainWrapper>
+                                    <route.component />
+                                </MainWrapper>
+                            )}
+                        />
+                    ))}
 
-                <Route component={NotFoundPage} />
-            </Switch>
-        </Router>
+                    <Route component={NotFoundPage} />
+                </Switch>
+            </Router>
+        </ErrorBoundary>
     )
 }
 

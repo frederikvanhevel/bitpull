@@ -21,7 +21,7 @@ const main = async () => {
     while (true) {
         const pressureApiUrl = resolveUrl(PUPPETEER_URL, '/pressure')
 
-        console.trace('running readiness probe')
+        // console.trace('running readiness probe')
 
         let response: any
 
@@ -30,9 +30,9 @@ const main = async () => {
         } catch (error) {
             console.error(
                 {
-                    error: serializeError(error)
-                },
-                'cannot get the latest pressure metrics; signaling that instance is not ready'
+                    ...serializeError(error),
+                    message: 'cannot get the latest pressure metrics; signaling that instance is not ready',
+                }
             )
 
             lightship.signalNotReady()
@@ -41,12 +41,12 @@ const main = async () => {
         if (response) {
             const pressure: ChromePressure = response.pressure
 
-            console.trace(
-                {
-                    pressure
-                },
-                'received new pressure report'
-            )
+            // console.trace(
+            //     {
+            //         pressure
+            //     },
+            //     'received new pressure report'
+            // )
 
             if (pressure.isAvailable !== true) {
                 console.warn(

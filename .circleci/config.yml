@@ -101,11 +101,12 @@ jobs:
       - setup_remote_docker
       - run: *setup-cloud-sdk
 
-      # - run: echo 'export CLEANED_BRANCH=${CIRCLE_BRANCH//\/}' >> $BASH_ENV
       - run:
+          name: Build and push docker image
           command: |
+            echo 'export GIT_SHA1="$CIRCLE_SHA1"' >> $BASH_ENV
             docker build -t "gcr.io/$GOOGLE_PROJECT_ID/backend:latest" -f packages/backend/Dockerfile .
-            docker push "gcr.io/$GOOGLE_PROJECT_ID/backend:latest"
+            docker push "gcr.io/$GOOGLE_PROJECT_ID/backend:$GIT_SHA1"
 
   build-frontend:
     docker:
@@ -116,11 +117,12 @@ jobs:
       - setup_remote_docker
       - run: *setup-cloud-sdk
 
-      # - run: echo 'export CLEANED_BRANCH=${CIRCLE_BRANCH//\/}' >> $BASH_ENV
       - run:
+          name: Build and push docker image
           command: |
-            docker build -t "gcr.io/$GOOGLE_PROJECT_ID/frontend:latest" -f packages/frontend/Dockerfile .
-            docker push "gcr.io/$GOOGLE_PROJECT_ID/frontend:latest"
+            echo 'export GIT_SHA1="$CIRCLE_SHA1"' >> $BASH_ENV
+            docker build -t "gcr.io/$GOOGLE_PROJECT_ID/frontend:$GIT_SHA1" -f packages/frontend/Dockerfile .
+            docker push "gcr.io/$GOOGLE_PROJECT_ID/frontend:$GIT_SHA1"
 
   push-and-deploy:
     docker:
@@ -130,10 +132,20 @@ jobs:
       # deploy the image
       - checkout
       - run: *setup-cloud-sdk
-      - run: kubectl apply -k k8s_config/overlays/production/backend
-      - run: kubectl apply -k k8s_config/overlays/production/frontend
-      - run: kubectl rollout status deployment/backend
-      - run: kubectl rollout status deployment/frontend
+
+      - run:
+          name: Setup environment variables
+          command: |
+            echo 'export GIT_SHA1="$CIRCLE_SHA1"' >> $BASH_ENV
+
+      - run:
+          command: |
+            sed -i "s/latest/$GIT_SHA1/" k8s_config/overlays/production/backend/deployment.yaml
+            kubectl apply -k k8s_config/overlays/production/backend
+            sed -i "s/latest/$GIT_SHA1/" k8s_config/overlays/production/frontend/deployment.yaml
+            kubectl apply -k k8s_config/overlays/production/frontend
+            kubectl rollout status deployment/backend
+            kubectl rollout status deployment/frontend
 
 workflows:
   version: 2

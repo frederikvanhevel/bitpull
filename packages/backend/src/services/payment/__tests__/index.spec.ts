@@ -343,7 +343,9 @@ describe('Payment service', () => {
 
             await PaymentService.addReferralCredits(payment.owner)
 
-            expect(returnedPayment.earnedCredits).toEqual(REFERRED_CREDIT_AMOUNT)
+            expect(returnedPayment.earnedCredits).toEqual(
+                REFERRED_CREDIT_AMOUNT
+            )
             expect(returnedPayment.credits).toEqual(REFERRED_CREDIT_AMOUNT)
             expect(returnedPayment.save).toHaveBeenCalled()
         })

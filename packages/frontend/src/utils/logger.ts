@@ -1,5 +1,7 @@
 import stackdriver from 'services/stackdriver'
 
+stackdriver.initialize()
+
 class Logger {
     private static LOG_LEVEL = parseInt(process.env.LOG_LEVEL || '3', 10)
 
