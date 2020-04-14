@@ -1,5 +1,7 @@
 FROM mhart/alpine-node:12
 
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+
 # Create app directory
 WORKDIR /usr/src/app
 
