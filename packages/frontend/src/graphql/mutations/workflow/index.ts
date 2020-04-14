@@ -55,21 +55,23 @@ export const createWorkflow = (workflow: Workflow) => {
         update: (cache, { data: mutationData }) => {
             if (!mutationData) return
 
-            const data = cache.readQuery<getWorkflowsQuery>({
-                query: GET_WORKFLOWS
-            })
+            try {
+                const data = cache.readQuery<getWorkflowsQuery>({
+                    query: GET_WORKFLOWS
+                })
 
-            if (!data) return
+                if (!data) return
 
-            cache.writeQuery<getWorkflowsQuery>({
-                query: GET_WORKFLOWS,
-                data: {
-                    getWorkflows: [
-                        mutationData.createWorkflow,
-                        ...data.getWorkflows
-                    ]
-                }
-            })
+                cache.writeQuery<getWorkflowsQuery>({
+                    query: GET_WORKFLOWS,
+                    data: {
+                        getWorkflows: [
+                            mutationData.createWorkflow,
+                            ...data.getWorkflows
+                        ]
+                    }
+                })
+            } catch (error) {}
         }
     })
 }
@@ -88,22 +90,24 @@ export const updateWorkflow = (workflow: Workflow) => {
         update: (cache, { data: mutationData }) => {
             if (!mutationData) return
 
-            const data = cache.readQuery<getWorkflowsQuery>({
-                query: GET_WORKFLOWS
-            })
+            try {
+                const data = cache.readQuery<getWorkflowsQuery>({
+                    query: GET_WORKFLOWS
+                })
 
-            if (!data) return
+                if (!data) return
 
-            cache.writeQuery<getWorkflowsQuery>({
-                query: GET_WORKFLOWS,
-                data: {
-                    getWorkflows: data.getWorkflows.map(wf =>
-                        wf.id === mutationData.updateWorkflow.id
-                            ? { ...wf, ...mutationData.updateWorkflow }
-                            : wf
-                    )
-                }
-            })
+                cache.writeQuery<getWorkflowsQuery>({
+                    query: GET_WORKFLOWS,
+                    data: {
+                        getWorkflows: data.getWorkflows.map(wf =>
+                            wf.id === mutationData.updateWorkflow.id
+                                ? { ...wf, ...mutationData.updateWorkflow }
+                                : wf
+                        )
+                    }
+                })
+            } catch (error) {}
         }
     })
 }
@@ -115,20 +119,22 @@ export const removeWorkflow = (id: string) => {
             id
         },
         update: cache => {
-            const data = cache.readQuery<getWorkflowsQuery>({
-                query: GET_WORKFLOWS
-            })
+            try {
+                const data = cache.readQuery<getWorkflowsQuery>({
+                    query: GET_WORKFLOWS
+                })
 
-            if (!data) return
+                if (!data) return
 
-            cache.writeQuery<getWorkflowsQuery>({
-                query: GET_WORKFLOWS,
-                data: {
-                    getWorkflows: data.getWorkflows.filter(
-                        workflow => workflow.id !== id
-                    )
-                }
-            })
+                cache.writeQuery<getWorkflowsQuery>({
+                    query: GET_WORKFLOWS,
+                    data: {
+                        getWorkflows: data.getWorkflows.filter(
+                            workflow => workflow.id !== id
+                        )
+                    }
+                })
+            } catch (error) {}
         }
     })
 }

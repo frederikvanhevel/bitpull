@@ -7,25 +7,17 @@
 	"settings": {
 		"eslint.workingDirectories": [
 			{
-				"directory": "packages/backend",
-				"changeProcessCWD": true
-			},
-			{
-				"directory": "packages/frontend",
-				"changeProcessCWD": true
-			},
-			{
-				"directory": "packages/worker",
-				"changeProcessCWD": true
-			},
-			{
-				"directory": "packages/scheduler",
-				"changeProcessCWD": true
-			},
-			{
-				"directory": "packages/pressure",
+				"pattern": "./packages/*/",
 				"changeProcessCWD": true
 			}
-		]
+		],
+		// "eslint.workingDirectories": [
+		// 	{
+		// 		"directory": "packages/*",
+		// 		"changeProcessCWD": true
+		// 	}
+		// ],
+		"eslint.format.enable": true,
+		"eslint.packageManager": "yarn"
 	}
 }

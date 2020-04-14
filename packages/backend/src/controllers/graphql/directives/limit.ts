@@ -22,8 +22,6 @@ export class RateLimitDirective extends SchemaDirectiveVisitor {
             const [, , context]: [any, any, AuthenticationContext] = args
             const ip = context.req!.ip
 
-            loggedIps.log()
-
             if (loggedIps.count(ip) > 1) {
                 throw new TooManyRequestsError(
                     'Too many requests, please try again later.'
@@ -38,7 +36,6 @@ export class RateLimitDirective extends SchemaDirectiveVisitor {
                 // noop
             } finally {
                 loggedIps.remove(ip)
-                loggedIps.log()
             }
         }
     }

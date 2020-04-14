@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// @ts-ignore
 const p3x_json2xls_worker_thread_1 = __importDefault(require("p3x-json2xls-worker-thread"));
 const file_1 = require("../../../utils/file");
 const excel = async (input, options) => {

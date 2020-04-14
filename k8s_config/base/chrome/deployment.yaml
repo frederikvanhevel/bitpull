@@ -37,14 +37,14 @@ spec:
                   key: MAX_CONCURRENT_SESSIONS
                   name: env-vars
             - name: PREBOOT_CHROME
-              value: "true"
+              value: "false"
             # - name: CONNECTION_TIMEOUT
             #   value: "900000"
         # - image: gcr.io/bitpull/pressure:latest
         #   name: pressure
         #   env:
         #     - name: PUPPETEER_URL
-        #       value: "http://localhost:3000"
+        #       value: "http://chrome:3000"
         #     - name: CHECK_INTERVAL
         #       value: "1"
         #     - name: MAXIMUM_QUEUE_SIZE

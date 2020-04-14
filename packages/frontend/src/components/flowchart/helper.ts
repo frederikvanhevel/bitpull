@@ -106,7 +106,6 @@ const getHostname = (link: string) => {
         const url = new URL(link)
         return url.hostname.replace('www.', '')
     } catch (error) {
-        console.error(error)
         return link
     }
 }

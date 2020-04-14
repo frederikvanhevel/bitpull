@@ -43,10 +43,6 @@ class MemoryStore {
         delete this.hits[key]
     }
 
-    log() {
-        console.log(this.hits)
-    }
-
     resetAll() {
         this.hits = {}
         this.resetTime = calculateNextResetTime(this.time)

@@ -2,7 +2,7 @@ import { FileWriteResult } from '../../../utils/file'
 import { NodeParser, NodeInput } from '../../../typedefs/node'
 import { NodeError, ParseError } from '../../common/errors'
 import { HtmlParseResult } from '../html/typedefs'
-import { absolutifyHtml } from '../../../utils/helper'
+import { absolutifyHtml } from '../../../utils/absolutify'
 import { assert, clamp } from '../../../utils/common'
 import { WaitNode } from './typedefs'
 

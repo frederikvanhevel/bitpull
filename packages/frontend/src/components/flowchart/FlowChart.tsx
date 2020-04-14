@@ -60,7 +60,7 @@ const getNodeClass = (
         return classArray.join(' ')
     }
 
-    if (isRootNode(node) && !!(node as RootNode).link) {
+    if (isRootNode(node) && !(node as RootNode).linkedField) {
         classArray.push(classes.primaryNode)
     } else {
         classArray.push(classes.defaultNode)

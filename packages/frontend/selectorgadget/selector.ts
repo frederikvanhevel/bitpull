@@ -302,7 +302,7 @@ class SelectorGadget {
         )
         document.body.appendChild(instructions.get(0))
         block.click(function() {
-            console.log(target)
+            // console.log(target)
             if (self.selectable(target)) {
                 return target.mousedown()
             }

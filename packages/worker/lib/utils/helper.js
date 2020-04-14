@@ -1,7 +1,4 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -12,7 +9,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const node_1 = require("../typedefs/node");
 const errors_1 = require("./errors");
-const absolutify_1 = __importDefault(require("./absolutify"));
 const FILE_NODES = [
     node_1.NodeType.PDF,
     node_1.NodeType.EXCEL,
@@ -55,9 +51,4 @@ exports.getModule = async (type) => {
 };
 exports.isFileNode = (type) => {
     return FILE_NODES.includes(type);
-};
-exports.absolutifyHtml = (html, url, proxyEndpoint = '') => {
-    const origin = new URL(url).origin;
-    const cssImportRegex = /url\("?([/][^/].*?)"?\)/gm;
-    return absolutify_1.default(html, (url) => proxyEndpoint + encodeURIComponent(origin + url)).replace(cssImportRegex, (m, $1) => `url(${proxyEndpoint + encodeURIComponent(origin + $1)})`);
 };

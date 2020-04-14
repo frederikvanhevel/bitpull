@@ -166,4 +166,3 @@ spec:
                 configMapKeyRef:
                   key: TRIAL_CREDIT_AMOUNT
                   name: env-vars
-                  

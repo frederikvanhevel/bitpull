@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const errors_1 = require("../../common/errors");
 const common_1 = require("../../../utils/common");
-const helper_1 = require("../../../utils/helper");
+const absolutify_1 = require("../../../utils/absolutify");
 const MIN_DELAY = 1;
 const MAX_DELAY = 60;
 const click = async (input, options, context) => {
@@ -17,7 +17,7 @@ const click = async (input, options, context) => {
     let renderedHtml;
     await browser.with(async (page) => {
         if (parentResult && parentResult.html) {
-            const displayHtml = helper_1.absolutifyHtml(parentResult.html, parentResult.url, settings.proxyEndpoint);
+            const displayHtml = absolutify_1.absolutifyHtml(parentResult.html, parentResult.url, settings.proxyEndpoint);
             await page.setContent(displayHtml);
         }
         else

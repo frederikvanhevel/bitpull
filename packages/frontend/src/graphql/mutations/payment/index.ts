@@ -26,21 +26,23 @@ export const changePaymentPlan = (plan: Plan) => {
         update: (cache, { data: mutationData }) => {
             if (!mutationData) return
 
-            const data = cache.readQuery<getPaymentDetails>({
-                query: GET_PAYMENT_DETAILS
-            })
+            try {
+                const data = cache.readQuery<getPaymentDetails>({
+                    query: GET_PAYMENT_DETAILS
+                })
 
-            if (!data) return
+                if (!data) return
 
-            cache.writeQuery<getPaymentDetails>({
-                query: GET_PAYMENT_DETAILS,
-                data: {
-                    getPaymentDetails: {
-                        ...data.getPaymentDetails,
-                        plan
+                cache.writeQuery<getPaymentDetails>({
+                    query: GET_PAYMENT_DETAILS,
+                    data: {
+                        getPaymentDetails: {
+                            ...data.getPaymentDetails,
+                            plan
+                        }
                     }
-                }
-            })
+                })
+            } catch (error) {}
         }
     })
 }

@@ -1,5 +1,5 @@
 export const addScript = (html: string, script: string): string => {
-    return html.replace('</body>', `${script}</body>`)
+    return html.replace(/<\/body>/g, `${script}</body>`)
 }
 
 export const addSelectorScript = (html: string): string => {

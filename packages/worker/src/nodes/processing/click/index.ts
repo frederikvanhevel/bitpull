@@ -3,7 +3,7 @@ import { NodeError, ParseError } from '../../common/errors'
 import { NodeParser, NodeInput } from '../../../typedefs/node'
 import { assert, clamp } from '../../../utils/common'
 import { HtmlParseResult } from '../html/typedefs'
-import { absolutifyHtml } from '../../../utils/helper'
+import { absolutifyHtml } from '../../../utils/absolutify'
 import { ClickNode } from './typedefs'
 
 const MIN_DELAY = 1

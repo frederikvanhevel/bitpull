@@ -9,7 +9,7 @@ import { NodeParser, NodeInput } from '../../../typedefs/node'
 import { assert } from '../../../utils/common'
 import { NodeError, FileError, ParseError } from '../../common/errors'
 import { HtmlParseResult } from '../html/typedefs'
-import { absolutifyHtml } from '../../../utils/helper'
+import { absolutifyHtml } from '../../../utils/absolutify'
 import { ScreenshotNode } from './typedefs'
 
 const screenshot: NodeParser<ScreenshotNode, FileWriteResult> = async (

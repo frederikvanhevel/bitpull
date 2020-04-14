@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const file_1 = require("../../../utils/file");
 const common_1 = require("../../../utils/common");
 const errors_1 = require("../../common/errors");
-const helper_1 = require("../../../utils/helper");
+const absolutify_1 = require("../../../utils/absolutify");
 const screenshot = async (input, options, context) => {
     const { settings, onLog } = options;
     const { browser } = context;
@@ -13,7 +13,7 @@ const screenshot = async (input, options, context) => {
     let buffer;
     await browser.with(async (page) => {
         if (parentResult && parentResult.html) {
-            const displayHtml = helper_1.absolutifyHtml(parentResult.html, parentResult.url, settings.proxyEndpoint);
+            const displayHtml = absolutify_1.absolutifyHtml(parentResult.html, parentResult.url, settings.proxyEndpoint);
             await page.setContent(displayHtml);
         }
         else

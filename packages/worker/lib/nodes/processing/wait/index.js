@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const errors_1 = require("../../common/errors");
-const helper_1 = require("../../../utils/helper");
+const absolutify_1 = require("../../../utils/absolutify");
 const common_1 = require("../../../utils/common");
 const DEFAULT_DELAY = 5;
 const MIN_DELAY = 0;
@@ -16,7 +16,7 @@ const wait = async (input, options, context) => {
     const ms = common_1.clamp(MIN_DELAY + delay, MIN_DELAY, MAX_DELAY) * 1000;
     await browser.with(async (page) => {
         if (parentResult && parentResult.html) {
-            const displayHtml = helper_1.absolutifyHtml(parentResult.html, parentResult.url, settings.proxyEndpoint);
+            const displayHtml = absolutify_1.absolutifyHtml(parentResult.html, parentResult.url, settings.proxyEndpoint);
             await page.setContent(displayHtml);
         }
         else

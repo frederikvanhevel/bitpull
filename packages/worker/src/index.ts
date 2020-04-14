@@ -44,7 +44,7 @@ import { StorageNode } from './nodes/export/storage/typedefs'
 import { WebhookNode } from './nodes/export/webhook/typedefs'
 import { SlackNode } from './nodes/notification/slack/typedefs'
 import { EmailNode } from './nodes/notification/email/typedefs'
-import { absolutifyHtml } from './utils/helper'
+import { absolutifyHtml } from './utils/absolutify'
 import NodeMap from './nodes/common/node-map'
 
 export {

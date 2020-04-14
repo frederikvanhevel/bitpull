@@ -1,28 +1,20 @@
 import request from 'request'
 import { Router } from 'express'
 
+const LOCALHOST_REGEX = /https?:\/\/localhost/
 const apiRouter = Router()
 
 apiRouter.get('/proxy', async (req, res) => {
     const { url } = req.query
 
-    try {
-        req.pipe(
-            request(url).on('error', () => {
-                res.status(400).send()
-            })
-        ).pipe(res)
-    } catch (error) {
-        res.status(200).send()
+    // prevent localhosty
+    if (typeof url !== 'string' || LOCALHOST_REGEX.test(url)) {
+        res.status(400).send()
     }
-})
-
-apiRouter.get('/file', async (req, res) => {
-    const { name } = req.query
 
     try {
         req.pipe(
-            request('https://bitpull.s3.amazonaws.com/nf-51OzqPp4K3xdBH.json' + name).on('error', () => {
+            request(url as string).on('error', () => {
                 res.status(400).send()
             })
         ).pipe(res)

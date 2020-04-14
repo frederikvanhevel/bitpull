@@ -2,7 +2,6 @@ import { NodeType, FlowNode, NodeParser } from '../typedefs/node'
 import { HtmlNode } from '../nodes/processing/html/typedefs'
 import { XmlNode } from '../nodes/processing/xml/typedefs'
 import { FlowError } from './errors'
-import absolutify from './absolutify'
 
 const FILE_NODES = [
     NodeType.PDF,
@@ -57,21 +56,4 @@ export const getModule = async (
 
 export const isFileNode = (type: NodeType) => {
     return FILE_NODES.includes(type)
-}
-
-export const absolutifyHtml = (
-    html: string,
-    url: string,
-    proxyEndpoint: string = ''
-) => {
-    const origin = new URL(url).origin
-    const cssImportRegex = /url\("?([/][^/].*?)"?\)/gm
-    return absolutify(
-        html,
-        (url: string) => proxyEndpoint + encodeURIComponent(origin + url)
-    ).replace(
-        cssImportRegex,
-        (m: any, $1: string) =>
-            `url(${proxyEndpoint + encodeURIComponent(origin + $1)})`
-    )
 }

@@ -9,7 +9,7 @@ import {
 import { assert } from '../../../utils/common'
 import { NodeError, ParseError, FileError } from '../../common/errors'
 import { HtmlParseResult } from '../html/typedefs'
-import { absolutifyHtml } from '../../../utils/helper'
+import { absolutifyHtml } from '../../../utils/absolutify'
 import { PdfNode, PdfFormat } from './typedefs'
 
 const pdf: NodeParser<PdfNode, FileWriteResult> = async (

@@ -22,7 +22,7 @@ import { StorageNode } from './nodes/export/storage/typedefs';
 import { WebhookNode } from './nodes/export/webhook/typedefs';
 import { SlackNode } from './nodes/notification/slack/typedefs';
 import { EmailNode } from './nodes/notification/email/typedefs';
-import { absolutifyHtml } from './utils/helper';
+import { absolutifyHtml } from './utils/absolutify';
 import NodeMap from './nodes/common/node-map';
 export { NodeInput, TraverseOptions, FlowNode, NodeType, RootNode, NodeId, CollectNode, CollectField, HTMLSelector, HtmlNode, XmlNode, PaginationNode, ClickNode, LoginNode, ExcelNode, JsonNode, ScreenshotNode, PdfNode, PdfFormat, WaitNode, FunctionNode, DropboxNode, GoogleDriveNode, OnedriveNode, GithubNode, StorageNode, WebhookNode, SlackNode, EmailNode, LogType, StorageService, AmazonS3Credentials, StorageObject, IntegrationType, IntegrationSettings, Integration, StorageProvider, Settings, Status, ParseLog, ErrorLog, FileStorageObject, ParseResult, absolutifyHtml, NodeMap };
 export default Traverser;
