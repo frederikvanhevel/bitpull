@@ -30,6 +30,7 @@ import { FetchResult, ApolloError } from 'apollo-boost'
 import { RUN_NODE, RUN_NODE_CANCEL } from 'redux/constants/runner'
 import { storageItemAdded } from 'actions/storage'
 import Segment, { TrackingEvent } from 'services/segment'
+import Logger from 'utils/logger'
 
 const resultsChannel = channel()
 const errorChannel = channel()
@@ -87,6 +88,8 @@ function* watchResult() {
 function* watchErrors() {
     while (true) {
         const { error } = yield take(errorChannel)
+
+        yield call(Logger.error, error)
 
         try {
             yield addNotification('error', error.graphQLErrors[0].message)

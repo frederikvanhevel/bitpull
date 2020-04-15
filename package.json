@@ -13,7 +13,8 @@
     "test:backend": "cd packages/backend && yarn test",
     "test:worker": "cd packages/worker && yarn test",
     "bump": "lerna version",
-    "diff": "lerna diff"
+    "diff": "lerna diff",
+    "deploy": "sh scripts/deploy.sh"
   },
   "devDependencies": {
     "lerna": "^3.20.2"

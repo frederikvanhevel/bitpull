@@ -11,6 +11,7 @@ import {
 } from 'typedefs/graphql'
 import { LoginResponse } from 'services/user/typedefs'
 import Logger from 'utils/logging/logger'
+import { isUserError } from 'models/user/errors'
 import { AuthenticationContext } from '../directives/auth'
 
 export const getCurrentUser: GraphQLFieldResolver<
@@ -43,8 +44,8 @@ export const register: GraphQLFieldResolver<
             data.referralId || undefined
         )
     } catch (error) {
-        Logger.error(new Error('Could not register user'), error)
-        throw error
+        if (isUserError(error)) throw error
+        else Logger.throw(new Error('Could not register user'), error)
     }
 }
 
@@ -73,8 +74,8 @@ export const login: GraphQLFieldResolver<
         const { data } = args
         return await UserService.login(data.email, data.password)
     } catch (error) {
-        Logger.error(new Error('Could not login user'), error)
-        throw error
+        if (isUserError(error)) throw error
+        else Logger.throw(new Error('Could not login user'), error)
     }
 }
 

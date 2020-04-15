@@ -104,7 +104,7 @@ jobs:
       - run:
           name: Build and push docker image
           command: |
-            docker build -t "gcr.io/$GOOGLE_PROJECT_ID/backend:$CIRCLE_SHA1" -f packages/backend/Dockerfile .
+            docker build -t "gcr.io/$GOOGLE_PROJECT_ID/backend:$CIRCLE_SHA1" -t "gcr.io/$GOOGLE_PROJECT_ID/backend:latest" -f packages/backend/Dockerfile .
             docker push "gcr.io/$GOOGLE_PROJECT_ID/backend:$CIRCLE_SHA1"
 
   build-frontend:
@@ -119,7 +119,7 @@ jobs:
       - run:
           name: Build and push docker image
           command: |
-            docker build -t "gcr.io/$GOOGLE_PROJECT_ID/frontend:$CIRCLE_SHA1" -f packages/frontend/Dockerfile .
+            docker build -t "gcr.io/$GOOGLE_PROJECT_ID/frontend:$CIRCLE_SHA1" -t "gcr.io/$GOOGLE_PROJECT_ID/frontend:latest" -f packages/frontend/Dockerfile .
             docker push "gcr.io/$GOOGLE_PROJECT_ID/frontend:$CIRCLE_SHA1"
 
   push-and-deploy:

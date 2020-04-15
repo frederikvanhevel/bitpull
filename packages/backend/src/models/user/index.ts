@@ -7,6 +7,7 @@ import {
     Types
 } from 'mongoose'
 import { PaymentDocument } from 'models/payment'
+import { userErrors } from './errors'
 
 export interface UserSettings {
     failedJobEmail: boolean
@@ -91,12 +92,7 @@ const UserSchema: PassportLocalSchema = new Schema(
 UserSchema.plugin(passportLocal, {
     usernameField: 'email',
     usernameQueryFields: ['email'],
-    errorMessages: {
-        IncorrectPasswordError: 'Password or email is incorrect',
-        IncorrectUsernameError: 'Password or email is incorrect',
-        MissingUsernameError: 'No email was given',
-        UserExistsError: 'A user with the given email is already registered'
-    }
+    errorMessages: userErrors
 })
 
 const UserModel = model<UserDocument>('User', UserSchema)
