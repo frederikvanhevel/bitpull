@@ -212,13 +212,17 @@ const updateInformation = async (
         }`
     })
 
-    Segment.track(TrackingEvent.USER_UPDATE_INFO, user)
-    Segment.identify({ ...userModel.toJSON(), ...data })
-
-    return {
+    const newUser = {
         ...userModel.toJSON(),
         ...data
     }
+
+    newUser.id = newUser._id
+
+    Segment.track(TrackingEvent.USER_UPDATE_INFO, newUser)
+    Segment.identify(newUser)
+
+    return newUser
 }
 
 const verifyEmail = async (token: string) => {
