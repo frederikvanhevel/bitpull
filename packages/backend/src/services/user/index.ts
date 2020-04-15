@@ -198,25 +198,25 @@ const updateInformation = async (
         throw new NotFoundError()
     }
 
-    if (data.email && data.email !== userModel.email) {
-        const existingUser = await UserModel.findOne({ email: data.email })
-        if (existingUser) throw new EmailInUseError()
-        await generateAndSendVerificationToken(userModel)
-    }
-
-    await userModel.updateOne(data)
-    await PaymentService.updateUserInfo(userModel, {
-        email: data.email || userModel.email,
-        name: `${data.firstName || userModel.firstName} ${
-            data.lastName || userModel.lastName
-        }`
-    })
-
     const newUser = {
         id: userModel.id,
         ...userModel.toJSON(),
         ...data
     }
+
+    if (data.email && data.email !== userModel.email) {
+        const existingUser = await UserModel.findOne({ email: data.email })
+        if (existingUser) throw new EmailInUseError()
+        await generateAndSendVerificationToken(newUser)
+    }
+
+    await userModel.updateOne(data)
+    await PaymentService.updateUserInfo(newUser, {
+        email: data.email || userModel.email,
+        name: `${data.firstName || userModel.firstName} ${
+            data.lastName || userModel.lastName
+        }`
+    })
 
     Segment.track(TrackingEvent.USER_UPDATE_INFO, newUser)
     Segment.identify(newUser)
