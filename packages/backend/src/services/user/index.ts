@@ -213,11 +213,10 @@ const updateInformation = async (
     })
 
     const newUser = {
+        id: userModel.id,
         ...userModel.toJSON(),
         ...data
     }
-
-    newUser.id = newUser._id
 
     Segment.track(TrackingEvent.USER_UPDATE_INFO, newUser)
     Segment.identify(newUser)
