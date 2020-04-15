@@ -24,5 +24,5 @@ export const generateRandomToken = async (length = 20) => {
 }
 
 export const getReferralId = (userId: string) => {
-    return userId.slice(0, 5)
+    return userId.substr(userId.length - 5)
 }

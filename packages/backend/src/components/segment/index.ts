@@ -11,6 +11,12 @@ const initialize = () => {
     analytics = new Analytics(process.env.SEGMENT_WRITE_KEY!)
 }
 
+const getUserId = (user: User) => {
+    if (user.id) return user.id
+    else if (typeof user._id === 'string') return user._id
+    return user._id.toHexString()
+}
+
 const track = (
     event: TrackingEvent,
     user: User,
@@ -22,7 +28,7 @@ const track = (
         analytics.track({
             event,
             timestamp: new Date(),
-            userId: user.id,
+            userId: getUserId(user),
             ...message
         })
     } catch (error) {
@@ -35,7 +41,7 @@ const identify = (user: User) => {
 
     try {
         analytics.identify({
-            userId: user.id,
+            userId: getUserId(user),
             traits: {
                 firstName: user.firstName,
                 lastName: user.lastName,
