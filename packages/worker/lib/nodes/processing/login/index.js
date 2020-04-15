@@ -35,21 +35,26 @@ const login = async (input, options, context) => {
         ? getDecryptedValue(password.value, options)
         : password.value;
     let renderedHtml;
-    await browser.with(async (page) => {
-        await page.goto(rootAncestor.parsedLink);
-        await page.waitFor(username.selector, { visible: true });
-        await page.waitFor(120);
-        await page.type(username.selector, usernameInput);
-        await page.waitFor(232);
-        await page.type(password.selector, passwordInput);
-        await page.waitFor(112);
-        await page.click(submit);
-        if (waitForNavigation)
-            await page.waitForNavigation();
-        else
-            await page.waitFor(common_1.clamp(delay, 0, MAX_DELAY));
-        renderedHtml = await page.content();
-    }, settings);
+    try {
+        await browser.with(async (page) => {
+            await page.goto(rootAncestor.parsedLink);
+            await page.waitFor(username.selector, { visible: true });
+            await page.waitFor(120);
+            await page.type(username.selector, usernameInput);
+            await page.waitFor(232);
+            await page.type(password.selector, passwordInput);
+            await page.waitFor(112);
+            await page.click(submit);
+            if (waitForNavigation)
+                await page.waitForNavigation();
+            else
+                await page.waitFor(common_1.clamp(delay, 0, MAX_DELAY));
+            renderedHtml = await page.content();
+        }, settings);
+    }
+    catch (error) {
+        throw new Error(errors_2.LoginError.COULD_NOT_LOGIN);
+    }
     common_1.assert(renderedHtml, errors_1.ParseError.ERROR_RENDERING_HTML);
     if (onLog)
         onLog(node, 'Logged in');

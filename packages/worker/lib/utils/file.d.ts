@@ -1,6 +1,6 @@
 export declare enum FileType {
     JSON = "json",
-    EXCEL = "xls",
+    EXCEL = "xlsx",
     PDF = "pdf",
     CSV = "csv",
     PNG = "png"

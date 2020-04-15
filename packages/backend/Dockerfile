@@ -16,6 +16,10 @@ COPY ./packages/worker ./packages/worker
 
 RUN yarn install
 
+WORKDIR /usr/src/app/packages/worker
+
+RUN yarn compile
+
 WORKDIR /usr/src/app/packages/backend
 
 EXPOSE 8080

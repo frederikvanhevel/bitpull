@@ -15,6 +15,7 @@ const errors_12 = require("../nodes/processing/login/errors");
 const errors_13 = require("../nodes/processing/wait/errors");
 const errors_14 = require("../nodes/notification/email/errors");
 const errors_15 = require("../nodes/export/github/errors");
+const errors_16 = require("../nodes/processing/click/errors");
 exports.ErrorMessages = {
     // Node error
     [errors_1.NodeError.NEEDS_ROOT_ANCESTOR]: 'Needs to have a html or xml node as parent',
@@ -80,13 +81,17 @@ exports.ErrorMessages = {
     [errors_12.LoginError.CREDENTIALS_MISSING]: 'Credentials missing',
     [errors_12.LoginError.ENCRYPTION_KEY_MISSING]: 'Encryption key is missing or corrupted',
     [errors_12.LoginError.ENCRYPTION_VERSION_UNSUPPORTED]: 'Encryption version is unsupported',
-    [errors_13.WaitError.DELAY_MISSING]: 'No time to wait specified'
+    [errors_12.LoginError.COULD_NOT_LOGIN]: 'Could not login',
+    // Wait error
+    [errors_13.WaitError.DELAY_MISSING]: 'No time to wait specified',
+    // Click error
+    [errors_16.ClickError.COULD_NOT_CLICK]: 'Could not click element'
 };
 class FlowError extends Error {
     constructor(code) {
         if (!exports.ErrorMessages[code]) {
             console.warn(`Missing error message for ${code}`);
-            super(errors_1.NodeError.UNKNOWN_ERROR);
+            super(exports.ErrorMessages[errors_1.NodeError.UNKNOWN_ERROR]);
             this.code = errors_1.NodeError.UNKNOWN_ERROR;
             return;
         }

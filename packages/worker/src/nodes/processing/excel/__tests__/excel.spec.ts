@@ -19,7 +19,7 @@ describe('Excel node', () => {
             {}
         )
 
-        expect(result.passedData.fileName.includes('.xls')).toBeTruthy()
-        expect(result.passedData.path.includes('.xls')).toBeTruthy()
+        expect(result.passedData.fileName.includes('.xlsx')).toBeTruthy()
+        expect(result.passedData.path.includes('.xlsx')).toBeTruthy()
     })
 })

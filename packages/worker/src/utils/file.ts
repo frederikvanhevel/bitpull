@@ -12,7 +12,7 @@ const FILE_PREFIX = 'nf-'
 
 export enum FileType {
     JSON = 'json',
-    EXCEL = 'xls',
+    EXCEL = 'xlsx',
     PDF = 'pdf',
     CSV = 'csv',
     PNG = 'png'

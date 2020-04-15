@@ -15,7 +15,7 @@ const FILE_PREFIX = 'nf-';
 var FileType;
 (function (FileType) {
     FileType["JSON"] = "json";
-    FileType["EXCEL"] = "xls";
+    FileType["EXCEL"] = "xlsx";
     FileType["PDF"] = "pdf";
     FileType["CSV"] = "csv";
     FileType["PNG"] = "png";
