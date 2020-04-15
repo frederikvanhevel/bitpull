@@ -29,6 +29,7 @@ import Loader from 'components/ui/Loader'
 import { isPast } from 'date-fns'
 import { StorageService } from '@bitpull/worker/lib/typedefs'
 import colors from 'constants/colors'
+import CsvIcon from 'components/ui/icons/csv-icon'
 
 interface Props {
     entry: string
@@ -39,7 +40,8 @@ const ICONS: Record<string, ElementType> = {
     'application/json': JsonIcon,
     'application/pdf': PdfIcon,
     'image/png': ImageIcon,
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ExcelIcon
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ExcelIcon,
+    'text/csv': CsvIcon
 }
 
 const SERVICE_NAME: Record<StorageService, string> = {

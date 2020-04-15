@@ -7,7 +7,9 @@ import {
     getFileNameFromPath,
     FileWriteResult
 } from '../../../utils/file'
+import { FlowError } from '../../../utils/errors'
 import { ExcelNode } from './typedefs'
+import { ExeclError } from './errors'
 
 const excel: NodeParser<ExcelNode, FileWriteResult> = async (
     input,
@@ -15,8 +17,14 @@ const excel: NodeParser<ExcelNode, FileWriteResult> = async (
 ) => {
     const { onLog } = options
     const { node, passedData } = input
-    const excelData = await json2xls(passedData)
-    const path = await writeFile(excelData, FileType.EXCEL, FileEncoding.BINARY)
+
+    let path
+    try {
+        const excelData = await json2xls(passedData)
+        path = await writeFile(excelData, FileType.EXCEL, FileEncoding.BINARY)
+    } catch (error) {
+        throw new FlowError(ExeclError.COULD_NOT_CREATE)
+    }
 
     if (onLog) onLog(node, 'Succesfully converted to excel file')
 

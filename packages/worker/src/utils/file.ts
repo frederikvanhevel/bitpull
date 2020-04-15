@@ -1,6 +1,7 @@
 import fs from 'fs'
 import tmp from 'tmp'
 import { Parser } from 'xml2js'
+import { AsyncParser } from 'json2csv'
 import { ParseError } from '../nodes/common/errors'
 import { FlowError } from './errors'
 
@@ -9,12 +10,13 @@ tmp.setGracefulCleanup()
 
 // TODO add to settings
 const FILE_PREFIX = 'nf-'
+const CSV_OPTIONS = { highWaterMark: 8192 }
 
 export enum FileType {
     JSON = 'json',
     EXCEL = 'xlsx',
-    PDF = 'pdf',
     CSV = 'csv',
+    PDF = 'pdf',
     PNG = 'png'
 }
 
@@ -79,4 +81,20 @@ export const parseXml = async (body: string) => {
     } catch (error) {
         throw new FlowError(ParseError.XML_PARSE_ERROR)
     }
+}
+
+export const convertToCsv = async (data: object[]) => {
+    return new Promise((resolve, reject) => {
+        const asyncParser = new AsyncParser({}, CSV_OPTIONS)
+        const buffer = Buffer.from(JSON.stringify(data))
+
+        let csv = ''
+        asyncParser.processor
+            .on('data', chunk => (csv += chunk.toString()))
+            .on('end', () => resolve(csv))
+            .on('error', err => reject(err))
+
+        asyncParser.input.push(buffer)
+        asyncParser.input.push(null)
+    })
 }

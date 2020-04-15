@@ -14,6 +14,7 @@ export declare enum NodeType {
     LOGIN = "LOGIN",
     FUNCTION = "FUNCTION",
     EXCEL = "EXCEL",
+    CSV = "CSV",
     JSON = "JSON",
     SCREENSHOT = "SCREENSHOT",
     PDF = "PDF",

@@ -30,6 +30,7 @@ import { PaginationNode } from './nodes/processing/pagination/typedefs'
 import { ClickNode } from './nodes/processing/click/typedefs'
 import { LoginNode } from './nodes/processing/login/typedefs'
 import { ExcelNode } from './nodes/processing/excel/typedefs'
+import { CsvNode } from './nodes/processing/csv/typedefs'
 import { JsonNode } from './nodes/processing/json/typedefs'
 import { ScreenshotNode } from './nodes/processing/screenshot/typedefs'
 import { PdfNode, PdfFormat } from './nodes/processing/pdf/typedefs'
@@ -61,6 +62,7 @@ export {
     ClickNode,
     LoginNode,
     ExcelNode,
+    CsvNode,
     JsonNode,
     ScreenshotNode,
     PdfNode,

@@ -30,7 +30,7 @@ const NodeMap = {
     },
     [node_1.NodeType.COLLECT]: {
         processing: [node_1.NodeType.HTML, node_1.NodeType.XML],
-        export: [node_1.NodeType.EXCEL, node_1.NodeType.JSON, node_1.NodeType.WEBHOOK],
+        export: [node_1.NodeType.EXCEL, node_1.NodeType.JSON, node_1.NodeType.CSV, node_1.NodeType.WEBHOOK],
         notification: []
     },
     [node_1.NodeType.PAGINATION]: {
@@ -79,6 +79,18 @@ const NodeMap = {
         notification: []
     },
     [node_1.NodeType.EXCEL]: {
+        processing: [],
+        export: [
+            node_1.NodeType.STORAGE,
+            node_1.NodeType.WEBHOOK,
+            node_1.NodeType.DROPBOX,
+            node_1.NodeType.GOOGLE_DRIVE,
+            node_1.NodeType.ONEDRIVE,
+            node_1.NodeType.GITHUB
+        ],
+        notification: []
+    },
+    [node_1.NodeType.CSV]: {
         processing: [],
         export: [
             node_1.NodeType.STORAGE,

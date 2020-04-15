@@ -35,6 +35,8 @@ import EmailIcon from '@material-ui/icons/Email'
 import { HourglassEmpty, GitHub } from '@material-ui/icons'
 import Wait from '../modules/Wait'
 import Email from '../modules/Email'
+import Csv from '../modules/Csv'
+import CsvIcon from 'components/ui/icons/csv-icon'
 
 export interface NodeProperty {
     icon: ElementType
@@ -127,6 +129,12 @@ export const NODE_PROPERTIES: Record<NodeType, NodeProperty> = {
         label: 'Convert to Excel doc',
         shortLabel: 'Excel',
         editor: Excel
+    },
+    [NodeType.CSV]: {
+        icon: CsvIcon,
+        label: 'Convert to Csv file',
+        shortLabel: 'Csv',
+        editor: Csv
     },
     [NodeType.JSON]: {
         icon: JsonIcon,

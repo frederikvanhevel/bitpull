@@ -25,7 +25,7 @@ export const ALLOWED_CHILD_NODES: Record<PaginationStep, NodeType[]> = {
         NodeType.SCREENSHOT,
         NodeType.PDF
     ],
-    [PaginationStep.END]: [NodeType.WEBHOOK, NodeType.EXCEL, NodeType.JSON]
+    [PaginationStep.END]: [NodeType.WEBHOOK, NodeType.EXCEL, NodeType.CSV, NodeType.JSON]
 }
 
 export const hasValidChildren = (node: Node, type: PaginationStep) => {

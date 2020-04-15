@@ -6,6 +6,7 @@ import { FlowError } from './errors'
 const FILE_NODES = [
     NodeType.PDF,
     NodeType.EXCEL,
+    NodeType.CSV,
     NodeType.JSON,
     NodeType.SCREENSHOT
 ]
@@ -18,6 +19,7 @@ export const IMPORT_PATHS: Record<NodeType, string> = {
     [NodeType.CLICK]: '../nodes/processing/click',
     [NodeType.LOGIN]: '../nodes/processing/login',
     [NodeType.EXCEL]: '../nodes/processing/excel',
+    [NodeType.CSV]: '../nodes/processing/csv',
     [NodeType.JSON]: '../nodes/processing/json',
     [NodeType.SCREENSHOT]: '../nodes/processing/screenshot',
     [NodeType.PDF]: '../nodes/processing/pdf',

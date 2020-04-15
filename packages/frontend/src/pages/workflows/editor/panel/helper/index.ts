@@ -81,6 +81,7 @@ export const isExportOnlyNode = (node: Node) => {
     return (
         node.type === NodeType.JSON ||
         node.type === NodeType.EXCEL ||
+        node.type === NodeType.CSV ||
         node.type === NodeType.PDF ||
         node.type === NodeType.SCREENSHOT
     )
@@ -99,6 +100,7 @@ export const isFileNode = (node: Node) => {
     return (
         node.type === NodeType.PDF ||
         node.type === NodeType.EXCEL ||
+        node.type === NodeType.CSV ||
         node.type === NodeType.JSON ||
         node.type === NodeType.SCREENSHOT
     )

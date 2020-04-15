@@ -6,18 +6,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = __importDefault(require("fs"));
 const tmp_1 = __importDefault(require("tmp"));
 const xml2js_1 = require("xml2js");
+const json2csv_1 = require("json2csv");
 const errors_1 = require("../nodes/common/errors");
 const errors_2 = require("./errors");
 // cleanup files even on uncaught exceptions
 tmp_1.default.setGracefulCleanup();
 // TODO add to settings
 const FILE_PREFIX = 'nf-';
+const CSV_OPTIONS = { highWaterMark: 8192 };
 var FileType;
 (function (FileType) {
     FileType["JSON"] = "json";
     FileType["EXCEL"] = "xlsx";
-    FileType["PDF"] = "pdf";
     FileType["CSV"] = "csv";
+    FileType["PDF"] = "pdf";
     FileType["PNG"] = "png";
 })(FileType = exports.FileType || (exports.FileType = {}));
 var FileEncoding;
@@ -67,4 +69,17 @@ exports.parseXml = async (body) => {
     catch (error) {
         throw new errors_2.FlowError(errors_1.ParseError.XML_PARSE_ERROR);
     }
+};
+exports.convertToCsv = async (data) => {
+    return new Promise((resolve, reject) => {
+        const asyncParser = new json2csv_1.AsyncParser({}, CSV_OPTIONS);
+        const buffer = Buffer.from(JSON.stringify(data));
+        let csv = '';
+        asyncParser.processor
+            .on('data', chunk => (csv += chunk.toString()))
+            .on('end', () => resolve(csv))
+            .on('error', err => reject(err));
+        asyncParser.input.push(buffer);
+        asyncParser.input.push(null);
+    });
 };

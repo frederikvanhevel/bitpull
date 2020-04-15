@@ -35,7 +35,7 @@ const NodeMap: Record<NodeType, Map> = {
     },
     [NodeType.COLLECT]: {
         processing: [NodeType.HTML, NodeType.XML],
-        export: [NodeType.EXCEL, NodeType.JSON, NodeType.WEBHOOK],
+        export: [NodeType.EXCEL, NodeType.JSON, NodeType.CSV, NodeType.WEBHOOK],
         notification: []
     },
     [NodeType.PAGINATION]: {
@@ -84,6 +84,18 @@ const NodeMap: Record<NodeType, Map> = {
         notification: []
     },
     [NodeType.EXCEL]: {
+        processing: [],
+        export: [
+            NodeType.STORAGE,
+            NodeType.WEBHOOK,
+            NodeType.DROPBOX,
+            NodeType.GOOGLE_DRIVE,
+            NodeType.ONEDRIVE,
+            NodeType.GITHUB
+        ],
+        notification: []
+    },
+    [NodeType.CSV]: {
         processing: [],
         export: [
             NodeType.STORAGE,

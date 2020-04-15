@@ -10,6 +10,7 @@ var NodeType;
     NodeType["LOGIN"] = "LOGIN";
     NodeType["FUNCTION"] = "FUNCTION";
     NodeType["EXCEL"] = "EXCEL";
+    NodeType["CSV"] = "CSV";
     NodeType["JSON"] = "JSON";
     NodeType["SCREENSHOT"] = "SCREENSHOT";
     NodeType["PDF"] = "PDF";

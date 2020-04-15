@@ -1,8 +1,8 @@
 export declare enum FileType {
     JSON = "json",
     EXCEL = "xlsx",
-    PDF = "pdf",
     CSV = "csv",
+    PDF = "pdf",
     PNG = "png"
 }
 export declare enum FileEncoding {
@@ -21,3 +21,4 @@ export declare const readFile: (path: string, encoding: FileEncoding) => Promise
 export declare const validateFilePath: (path: string) => boolean;
 export declare const getFileNameFromPath: (path: string) => string;
 export declare const parseXml: (body: string) => Promise<any>;
+export declare const convertToCsv: (data: object[]) => Promise<unknown>;

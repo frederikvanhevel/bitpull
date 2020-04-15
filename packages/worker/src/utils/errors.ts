@@ -4,6 +4,8 @@ import {
     ParseError,
     IntegrationError
 } from '../nodes/common/errors'
+import { CsvError } from '../nodes/processing/csv/errors'
+import { ExeclError } from '../nodes/processing/excel/errors'
 import { DropboxError } from '../nodes/export/dropbox/errors'
 import { OneDriveError } from '../nodes/export/onedrive/errors'
 import { GoogleDriveError } from '../nodes/export/google-drive/errors'
@@ -111,7 +113,13 @@ export const ErrorMessages: Record<string, string> = {
     [WaitError.DELAY_MISSING]: 'No time to wait specified',
 
     // Click error
-    [ClickError.COULD_NOT_CLICK]: 'Could not click element'
+    [ClickError.COULD_NOT_CLICK]: 'Could not click element',
+
+    // CSV error
+    [CsvError.COULD_NOT_CREATE]: 'Could not write csv file',
+
+    // Eccel error
+    [ExeclError.COULD_NOT_CREATE]: 'Could not write excel file'
 }
 
 export class FlowError extends Error {

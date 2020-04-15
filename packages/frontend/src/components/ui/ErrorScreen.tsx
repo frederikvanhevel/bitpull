@@ -2,6 +2,11 @@ import React from 'react'
 import { Theme, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 
+type Props = {
+    title?: string
+    description?: string
+}
+
 const useStyles = makeStyles((theme: Theme) => ({
     centeredColumns: {
         margin: theme.spacing(4),
@@ -19,20 +24,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }))
 
-const ErrorScreen: React.FC = ({ children }) => {
+const ErrorScreen: React.FC<Props> = ({
+    children,
+    title = 'Something went wrong!',
+    description = 'We have been notified. In the meantime try reloading thepage.'
+}) => {
     const classes = useStyles()
 
     return (
         <div className="container">
             <div className={classes.centeredColumns}>
                 <Typography className={classes.title} variant="subtitle1">
-                    Something went wrong!
+                    {title}
                 </Typography>
 
-                <Typography className={classes.text}>
-                    We have been notified. In the meantime try reloading the
-                    page.
-                </Typography>
+                <Typography className={classes.text}>{description}</Typography>
 
                 <div>{children}</div>
             </div>

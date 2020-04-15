@@ -12,6 +12,7 @@ const errors_1 = require("./errors");
 const FILE_NODES = [
     node_1.NodeType.PDF,
     node_1.NodeType.EXCEL,
+    node_1.NodeType.CSV,
     node_1.NodeType.JSON,
     node_1.NodeType.SCREENSHOT
 ];
@@ -23,6 +24,7 @@ exports.IMPORT_PATHS = {
     [node_1.NodeType.CLICK]: '../nodes/processing/click',
     [node_1.NodeType.LOGIN]: '../nodes/processing/login',
     [node_1.NodeType.EXCEL]: '../nodes/processing/excel',
+    [node_1.NodeType.CSV]: '../nodes/processing/csv',
     [node_1.NodeType.JSON]: '../nodes/processing/json',
     [node_1.NodeType.SCREENSHOT]: '../nodes/processing/screenshot',
     [node_1.NodeType.PDF]: '../nodes/processing/pdf',
