@@ -16,9 +16,9 @@ COPY ./packages/worker ./packages/worker
 
 RUN yarn install
 
-WORKDIR /usr/src/app/packages/worker
+# WORKDIR /usr/src/app/packages/worker
 
-RUN yarn compile
+# RUN yarn compile
 
 WORKDIR /usr/src/app/packages/backend
 

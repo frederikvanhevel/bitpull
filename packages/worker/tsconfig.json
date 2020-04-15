@@ -25,7 +25,7 @@
     "resolveJsonModule": true
   },
   "exclude": [
-    "**/dist/*",
+    "**/lib/*",
     "src/tryout.ts",
     "src/index.d.ts",
     "src/**/*.spec.ts",
