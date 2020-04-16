@@ -30,6 +30,7 @@ exports.ErrorMessages = {
     [errors_1.NodeError.NEEDS_REAL_BROWSER]: 'Feature not available in fast mode',
     [errors_1.NodeError.UNKNOWN_ERROR]: 'An unknown error occured',
     [errors_1.NodeError.TOO_MANY_ERRORS]: 'Too many errors occured',
+    [errors_1.NodeError.EXPORT_NODE_MISSING]: 'You need to specify an export method',
     // File error
     [errors_1.FileError.FILE_MISSING]: 'File is missing',
     [errors_1.FileError.INVALID_FILE_PATH]: 'Invalid file path',

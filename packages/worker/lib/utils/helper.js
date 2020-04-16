@@ -16,6 +16,14 @@ const FILE_NODES = [
     node_1.NodeType.JSON,
     node_1.NodeType.SCREENSHOT
 ];
+const EXPORT_NODES = [
+    node_1.NodeType.STORAGE,
+    node_1.NodeType.WEBHOOK,
+    node_1.NodeType.DROPBOX,
+    node_1.NodeType.GOOGLE_DRIVE,
+    node_1.NodeType.ONEDRIVE,
+    node_1.NodeType.GITHUB
+];
 exports.IMPORT_PATHS = {
     [node_1.NodeType.COLLECT]: '../nodes/processing/collect',
     [node_1.NodeType.HTML]: '../nodes/processing/html',
@@ -53,4 +61,11 @@ exports.getModule = async (type) => {
 };
 exports.isFileNode = (type) => {
     return FILE_NODES.includes(type);
+};
+exports.isExportNode = (type) => {
+    return EXPORT_NODES.includes(type);
+};
+exports.hasChildExportNodes = (node) => {
+    var _a;
+    return (_a = node.children) === null || _a === void 0 ? void 0 : _a.find(child => EXPORT_NODES.includes(child.type));
 };

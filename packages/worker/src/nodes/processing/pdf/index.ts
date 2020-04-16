@@ -10,6 +10,7 @@ import { assert } from '../../../utils/common'
 import { NodeError, ParseError, FileError } from '../../common/errors'
 import { HtmlParseResult } from '../html/typedefs'
 import { absolutifyHtml } from '../../../utils/absolutify'
+import { hasChildExportNodes } from '../../../utils/helper'
 import { PdfNode, PdfFormat } from './typedefs'
 
 const pdf: NodeParser<PdfNode, FileWriteResult> = async (
@@ -21,8 +22,8 @@ const pdf: NodeParser<PdfNode, FileWriteResult> = async (
     const { browser } = context
     const { node, rootAncestor, parentResult } = input
 
+    assert(hasChildExportNodes(node), NodeError.EXPORT_NODE_MISSING)
     assert(rootAncestor, NodeError.NEEDS_ROOT_ANCESTOR)
-    // assert(rootAncestor.parseJavascript, NEEDS_REAL_BROWSER);
     assert(
         rootAncestor.parsedLink || parentResult!.html,
         ParseError.LINK_MISSING

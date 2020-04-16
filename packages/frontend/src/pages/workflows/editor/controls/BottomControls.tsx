@@ -57,6 +57,8 @@ const BottomControls: React.FC = () => {
                     open={true}
                     onClose={closeLogDialog}
                     classes={{ paper: classes.dialog }}
+                    maxWidth="md"
+                    fullWidth
                 >
                     <LogView logs={result.logs} onClose={closeLogDialog} />
                 </Dialog>

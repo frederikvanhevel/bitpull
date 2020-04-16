@@ -27,7 +27,6 @@
   "exclude": [
     "**/lib/*",
     "src/tryout.ts",
-    "src/index.d.ts",
     "src/**/*.spec.ts",
     "src/**/*.mock.ts",
     "node_modules"

@@ -11,6 +11,15 @@ const FILE_NODES = [
     NodeType.SCREENSHOT
 ]
 
+const EXPORT_NODES = [
+    NodeType.STORAGE,
+    NodeType.WEBHOOK,
+    NodeType.DROPBOX,
+    NodeType.GOOGLE_DRIVE,
+    NodeType.ONEDRIVE,
+    NodeType.GITHUB
+]
+
 export const IMPORT_PATHS: Record<NodeType, string> = {
     [NodeType.COLLECT]: '../nodes/processing/collect',
     [NodeType.HTML]: '../nodes/processing/html',
@@ -58,4 +67,12 @@ export const getModule = async (
 
 export const isFileNode = (type: NodeType) => {
     return FILE_NODES.includes(type)
+}
+
+export const isExportNode = (type: NodeType) => {
+    return EXPORT_NODES.includes(type)
+}
+
+export const hasChildExportNodes = (node: FlowNode) => {
+    return node.children?.find(child => EXPORT_NODES.includes(child.type))
 }

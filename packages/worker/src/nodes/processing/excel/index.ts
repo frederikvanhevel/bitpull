@@ -8,8 +8,11 @@ import {
     FileWriteResult
 } from '../../../utils/file'
 import { FlowError } from '../../../utils/errors'
-import { ExcelNode } from './typedefs'
+import { assert } from '../../../utils/common'
+import { hasChildExportNodes } from '../../../utils/helper'
+import { NodeError } from '../../../nodes/common/errors'
 import { ExeclError } from './errors'
+import { ExcelNode } from './typedefs'
 
 const excel: NodeParser<ExcelNode, FileWriteResult> = async (
     input,
@@ -17,6 +20,8 @@ const excel: NodeParser<ExcelNode, FileWriteResult> = async (
 ) => {
     const { onLog } = options
     const { node, passedData } = input
+
+    assert(hasChildExportNodes(node), NodeError.EXPORT_NODE_MISSING)
 
     let path
     try {

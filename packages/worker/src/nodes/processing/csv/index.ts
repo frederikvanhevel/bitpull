@@ -8,12 +8,17 @@ import {
     convertToCsv
 } from '../../../utils/file'
 import { FlowError } from '../../../utils/errors'
+import { assert } from '../../../utils/common'
+import { hasChildExportNodes } from '../../../utils/helper'
+import { NodeError } from '../../../nodes/common/errors'
 import { CsvNode } from './typedefs'
 import { CsvError } from './errors'
 
 const csv: NodeParser<CsvNode, FileWriteResult> = async (input, options) => {
     const { onLog } = options
     const { node, passedData } = input
+
+    assert(hasChildExportNodes(node), NodeError.EXPORT_NODE_MISSING)
 
     let path
     try {

@@ -35,6 +35,7 @@ export const ErrorMessages: Record<string, string> = {
     [NodeError.NEEDS_REAL_BROWSER]: 'Feature not available in fast mode',
     [NodeError.UNKNOWN_ERROR]: 'An unknown error occured',
     [NodeError.TOO_MANY_ERRORS]: 'Too many errors occured',
+    [NodeError.EXPORT_NODE_MISSING]: 'You need to specify an export method',
 
     // File error
     [FileError.FILE_MISSING]: 'File is missing',

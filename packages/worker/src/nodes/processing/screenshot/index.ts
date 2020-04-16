@@ -10,6 +10,7 @@ import { assert } from '../../../utils/common'
 import { NodeError, FileError, ParseError } from '../../common/errors'
 import { HtmlParseResult } from '../html/typedefs'
 import { absolutifyHtml } from '../../../utils/absolutify'
+import { hasChildExportNodes } from '../../../utils/helper'
 import { ScreenshotNode } from './typedefs'
 
 const screenshot: NodeParser<ScreenshotNode, FileWriteResult> = async (
@@ -21,6 +22,7 @@ const screenshot: NodeParser<ScreenshotNode, FileWriteResult> = async (
     const { browser } = context
     const { node, rootAncestor, parentResult } = input
 
+    assert(hasChildExportNodes(node), NodeError.EXPORT_NODE_MISSING)
     assert(rootAncestor, NodeError.NEEDS_ROOT_ANCESTOR)
     assert(
         rootAncestor.parsedLink || parentResult!.html,

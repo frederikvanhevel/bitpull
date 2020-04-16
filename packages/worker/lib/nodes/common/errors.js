@@ -20,6 +20,7 @@ var NodeError;
     NodeError["NEEDS_REAL_BROWSER"] = "NEEDS_REAL_BROWSER";
     NodeError["UNKNOWN_ERROR"] = "UNKNOWN_ERROR";
     NodeError["TOO_MANY_ERRORS"] = "TOO_MANY_ERRORS";
+    NodeError["EXPORT_NODE_MISSING"] = "EXPORT_NODE_MISSING";
 })(NodeError = exports.NodeError || (exports.NodeError = {}));
 var ParseError;
 (function (ParseError) {
