@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core'
 import Header from './Header'
 import MainContent from './MainContent'
 import Sidebar from './sidebar/Sidebar'
+import ErrorBoundary from './ErrorBoundary'
 
 const useStyles = makeStyles(() => ({
     wrapper: {
@@ -22,7 +23,9 @@ const MainWrapper: React.FC = ({ children }) => {
             <Header />
             <Sidebar />
 
-            <MainContent>{children}</MainContent>
+            <ErrorBoundary withPadding>
+                <MainContent>{children}</MainContent>
+            </ErrorBoundary>
         </div>
     )
 }

@@ -190,6 +190,7 @@ const Pagination: React.FC<Props> = ({ node, onUpdate, onAdd }) => {
                         required
                         classes={{ select: classes.select }}
                         value={node.goToPerPage || ''}
+                        onClose={() => onHighLightNode(undefined)}
                         onChange={e => {
                             onHighLightNode(undefined)
                             selectNextNode('goToPerPage', e.target.value)
@@ -209,6 +210,7 @@ const Pagination: React.FC<Props> = ({ node, onUpdate, onAdd }) => {
                         required
                         classes={{ select: classes.select }}
                         value={node.gotoOnEnd || ''}
+                        onClose={() => onHighLightNode(undefined)}
                         onChange={e => {
                             onHighLightNode(undefined)
                             selectNextNode('gotoOnEnd', e.target.value)

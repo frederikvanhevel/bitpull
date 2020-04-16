@@ -72,6 +72,7 @@ const NodeMap: Record<NodeType, Map> = {
     },
     [NodeType.LOGIN]: {
         processing: [
+            NodeType.HTML,
             NodeType.COLLECT,
             NodeType.PAGINATION,
             NodeType.CLICK,
@@ -145,6 +146,7 @@ const NodeMap: Record<NodeType, Map> = {
     },
     [NodeType.WAIT]: {
         processing: [
+            NodeType.HTML,
             NodeType.COLLECT,
             NodeType.PAGINATION,
             NodeType.CLICK,

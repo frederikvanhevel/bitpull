@@ -77,6 +77,15 @@ export const isIntegrationNode = (node: Node) => {
     return node.type === NodeType.SLACK || node.type === NodeType.EMAIL
 }
 
+export const isPaginationSet = (node: Node) => {
+    if (node.type !== NodeType.PAGINATION) return true
+
+    return (
+        !!(node as PaginationNode).goToPerPage &&
+        !!(node as PaginationNode).gotoOnEnd
+    )
+}
+
 export const isExportOnlyNode = (node: Node) => {
     return (
         node.type === NodeType.JSON ||
@@ -137,7 +146,7 @@ export const getNewNode = (type: NodeType, parent?: Node): Node => {
         const props =
             parent?.type === NodeType.COLLECT
                 ? { linkedField: '' }
-                : { link: ' ' }
+                : { link: '' }
 
         return {
             ...newNode,

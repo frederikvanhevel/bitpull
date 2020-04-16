@@ -1,4 +1,3 @@
-import { FileWriteResult } from '../../../utils/file'
 import { NodeParser, NodeInput } from '../../../typedefs/node'
 import { NodeError, ParseError } from '../../common/errors'
 import { HtmlParseResult } from '../html/typedefs'
@@ -10,7 +9,7 @@ const DEFAULT_DELAY = 5
 const MIN_DELAY = 0
 const MAX_DELAY = 600
 
-const wait: NodeParser<WaitNode, FileWriteResult> = async (
+const wait: NodeParser<WaitNode, undefined, HtmlParseResult> = async (
     input: NodeInput<WaitNode, undefined, HtmlParseResult>,
     options,
     context
@@ -28,6 +27,7 @@ const wait: NodeParser<WaitNode, FileWriteResult> = async (
 
     const ms = clamp(MIN_DELAY + delay, MIN_DELAY, MAX_DELAY) * 1000
 
+    let html
     await browser.with(async page => {
         if (parentResult && parentResult.html) {
             const displayHtml = absolutifyHtml(
@@ -36,14 +36,22 @@ const wait: NodeParser<WaitNode, FileWriteResult> = async (
                 settings.proxyEndpoint
             )
             await page.setContent(displayHtml)
-        } else await page.goto(rootAncestor!.parsedLink!)
+        } else await page.goto(rootAncestor.parsedLink!)
 
         await page.waitFor(ms)
+
+        html = await page.content()
     }, settings)
 
     if (onLog) onLog(node, `Waited for ${ms / 1000} seconds`)
 
-    return Promise.resolve(input)
+    return Promise.resolve({
+        ...input,
+        parentResult: {
+            html: html!,
+            url: rootAncestor.parsedLink!
+        }
+    })
 }
 
 export default wait

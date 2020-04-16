@@ -9,6 +9,7 @@ interface Props {
 
 const useStyles = makeStyles(theme => ({
     wrapper: {
+        width: '100%',
         padding: theme.spacing(3)
     },
     withTopbar: {

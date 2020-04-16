@@ -8,7 +8,8 @@ import {
     isIntegrationNode,
     isExportOnlyNode,
     isProcessingOnlyNode,
-    getNewNode
+    getNewNode,
+    isPaginationSet
 } from './helper'
 import SelectProcessor from './controls/SelectProcessor'
 import SelectExport from './controls/SelectExport'
@@ -111,26 +112,31 @@ const Details: React.FC<Props> = ({
                     onAdd={onAddNode}
                 />
 
-                {!isEndNode(node) && !isIntegrationNode(node) && (
-                    <div>
-                        <Tabs
-                            tabs={tabs}
-                            activeTab={selectedTab}
-                            color="primary"
-                            onChange={(e, tab) => setCurrentTab(tab)}
-                        />
-
-                        {selectedTab === 0 && (
-                            <SelectProcessor
-                                node={node}
-                                onAddNode={addNewNode}
+                {isPaginationSet(node) &&
+                    !isEndNode(node) &&
+                    !isIntegrationNode(node) && (
+                        <div>
+                            <Tabs
+                                tabs={tabs}
+                                activeTab={selectedTab}
+                                color="primary"
+                                onChange={(e, tab) => setCurrentTab(tab)}
                             />
-                        )}
-                        {selectedTab === 1 && (
-                            <SelectExport node={node} onAddNode={addNewNode} />
-                        )}
-                    </div>
-                )}
+
+                            {selectedTab === 0 && (
+                                <SelectProcessor
+                                    node={node}
+                                    onAddNode={addNewNode}
+                                />
+                            )}
+                            {selectedTab === 1 && (
+                                <SelectExport
+                                    node={node}
+                                    onAddNode={addNewNode}
+                                />
+                            )}
+                        </div>
+                    )}
 
                 {isEndNode(node) && !isIntegrationNode(node) && (
                     <div>

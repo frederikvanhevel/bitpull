@@ -67,6 +67,7 @@ const NodeMap = {
     },
     [node_1.NodeType.LOGIN]: {
         processing: [
+            node_1.NodeType.HTML,
             node_1.NodeType.COLLECT,
             node_1.NodeType.PAGINATION,
             node_1.NodeType.CLICK,
@@ -140,6 +141,7 @@ const NodeMap = {
     },
     [node_1.NodeType.WAIT]: {
         processing: [
+            node_1.NodeType.HTML,
             node_1.NodeType.COLLECT,
             node_1.NodeType.PAGINATION,
             node_1.NodeType.CLICK,

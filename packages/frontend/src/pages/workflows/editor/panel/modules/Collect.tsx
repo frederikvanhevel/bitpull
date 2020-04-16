@@ -145,7 +145,7 @@ const Collect: React.FC<Props> = ({ node, onUpdate }) => {
                     color="primary"
                     onClick={onAddField}
                 >
-                    Add selector
+                    Add field
                 </Button>
             </div>
 

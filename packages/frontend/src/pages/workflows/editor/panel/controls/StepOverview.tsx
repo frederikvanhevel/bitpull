@@ -21,6 +21,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import { setHighlightedNodeId } from 'actions/workflow'
 import { AppState } from 'redux/store'
+import { NodeType, WaitNode } from '@bitpull/worker/lib/typedefs'
 
 interface Props {
     node: Node
@@ -41,6 +42,8 @@ const getNodeLabel = (node: Node) => {
         }
 
         return `${label} to ${links}`
+    } else if (node.type === NodeType.WAIT) {
+        return `Wait ${(node as WaitNode).delay} seconds`
     } else if (isRootNode(node)) {
         return `${label} parse ${node.link || node.linkedField}`
     }

@@ -1,15 +1,20 @@
-import React, { Props } from 'react'
+import React from 'react'
 import Logger from 'utils/logger'
 import ErrorScreen from 'components/ui/ErrorScreen'
+import PaddingWrapper from './PaddingWrapper'
+
+type Props = {
+    withPadding?: boolean
+}
 
 type State = {
     hasError: boolean
 }
 
-class ErrorBoundary extends React.Component {
+class ErrorBoundary extends React.Component<Props, State> {
     state: State
 
-    constructor(props: Props<any>) {
+    constructor(props: Props) {
         super(props)
         this.state = { hasError: false }
     }
@@ -24,8 +29,16 @@ class ErrorBoundary extends React.Component {
     }
 
     render() {
+        const { withPadding } = this.props
+
         if (this.state.hasError) {
-            return <ErrorScreen />
+            return withPadding ? (
+                <PaddingWrapper withTopbar>
+                    <ErrorScreen />
+                </PaddingWrapper>
+            ) : (
+                <ErrorScreen />
+            )
         }
 
         return this.props.children

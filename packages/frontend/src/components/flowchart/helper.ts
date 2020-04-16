@@ -119,7 +119,7 @@ export const getNodeText = (node: Node): string => {
         const link = htmlNode.linkedField
             ? `{{${htmlNode.linkedField}}}`
             : getHostname(htmlNode.link!)
-        return link || 'Enter a url'
+        return !!link && link !== '' ? link : 'Enter a url'
     }
 
     return NODE_LABELS[node!.type as NodeType]
@@ -133,7 +133,10 @@ export const isLinkDotted = (link: any) => {
 }
 
 export const isRootNode = (node: Node) => {
-    return node.type === NodeType.HTML || node.type === NodeType.XML
+    return (
+        (node.type === NodeType.HTML || node.type === NodeType.XML) &&
+        (node as HtmlNode).link !== undefined
+    )
 }
 
 export const getStyles = (theme: Theme): ChartClasses => ({

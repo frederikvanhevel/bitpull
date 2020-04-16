@@ -67,6 +67,9 @@ class CustomBrowser {
             }
             const userAgent = new user_agents_1.default({ deviceCategory: 'desktop' });
             await page.setUserAgent(userAgent.toString());
+            await page.setExtraHTTPHeaders({
+                'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8'
+            });
             await func(page);
         }
         finally {

@@ -25,9 +25,10 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        marginLeft: theme.spacing(1),
         padding: '0 8px',
+        paddingLeft: theme.spacing(2),
         ...theme.mixins.toolbar,
+        background: 'rgb(0,0,0, 0.2)',
         '& img': {
             height: 30
         }

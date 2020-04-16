@@ -14,7 +14,7 @@ const screenshot = async (input, options, context) => {
     common_1.assert(rootAncestor.parsedLink || parentResult.html, errors_1.ParseError.LINK_MISSING);
     let buffer;
     await browser.with(async (page) => {
-        if (parentResult && parentResult.html) {
+        if (parentResult === null || parentResult === void 0 ? void 0 : parentResult.html) {
             const displayHtml = absolutify_1.absolutifyHtml(parentResult.html, parentResult.url, settings.proxyEndpoint);
             await page.setContent(displayHtml);
         }

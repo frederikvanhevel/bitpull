@@ -1,5 +1,5 @@
-import { FileWriteResult } from '../../../utils/file';
 import { NodeParser } from '../../../typedefs/node';
+import { HtmlParseResult } from '../html/typedefs';
 import { WaitNode } from './typedefs';
-declare const wait: NodeParser<WaitNode, FileWriteResult>;
+declare const wait: NodeParser<WaitNode, undefined, HtmlParseResult>;
 export default wait;

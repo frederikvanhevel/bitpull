@@ -31,7 +31,7 @@ const screenshot: NodeParser<ScreenshotNode, FileWriteResult> = async (
 
     let buffer
     await browser.with(async page => {
-        if (parentResult && parentResult.html) {
+        if (parentResult?.html) {
             const displayHtml = absolutifyHtml(
                 parentResult.html,
                 parentResult.url,
