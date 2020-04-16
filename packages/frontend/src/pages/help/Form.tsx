@@ -48,6 +48,9 @@ const DESCRIPTIONS: Record<QuestionType, string> = {
 const useStyles = makeStyles(() => ({
     select: {
         width: '100%'
+    },
+    label: {
+        background: 'white'
     }
 }))
 
@@ -72,7 +75,7 @@ const FeedbackForm: React.FC<Props> = ({ loading, onSubmit }) => {
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <FormControl variant="outlined" className={classes.select}>
-                        <InputLabel>What is your question about?</InputLabel>
+                        <InputLabel className={classes.label}>What is your question about?</InputLabel>
 
                         <Select
                             value={type || ''}
@@ -115,7 +118,7 @@ const FeedbackForm: React.FC<Props> = ({ loading, onSubmit }) => {
                                 maxLength: 2000
                             })}
                             inputProps={{
-                                maxlength: 2000
+                                maxLength: 2000
                             }}
                         />
                     )}
