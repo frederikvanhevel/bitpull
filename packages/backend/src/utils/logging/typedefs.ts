@@ -6,7 +6,6 @@ export enum LogType {
 
 export interface Log {
     type: LogType
-    hostname: string
     timestamp: Date
 }
 

@@ -167,8 +167,6 @@ function* verifyEmail(action: VerifyEmail) {
             type: UserConstants.VERIFY_EMAIL_FAILED,
             payload: error
         })
-
-        yield addNotification('error', 'Something went wrong, please try again')
     }
 }
 

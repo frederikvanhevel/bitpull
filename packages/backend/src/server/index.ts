@@ -24,32 +24,12 @@ export const startServer = async () => {
         tracing: process.env.NODE_ENV !== 'production',
         context: async ({ req, connection }) => {
             if (connection) return connection.context
-            // if (connection) {
-            //     console.log(connection.context)
-            //     const payload: any = jwt.verify(
-            //         connection.context.token,
-            //         process.env.JWT_SECRET!
-            //     )
-            //     const user = await UserService.getUser(payload.id)
-            //     return {
-            //         user
-            //     }
-            // }
-            // // console.log(req.user)
 
             return {
                 user: req.user,
                 req
             }
         },
-        // subscriptions: {
-        //     onConnect: () => {
-        //         console.log('Connected.')
-        //     },
-        //     onDisconnect: () => {
-        //         console.log('Disconnected.')
-        //     }
-        // },
         formatError: (error: GraphQLError) => {
             Logger.error(error)
             return error

@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react'
-import { makeStyles, Container, Typography, Box } from '@material-ui/core'
+import { makeStyles, Container, Typography } from '@material-ui/core'
 import queryString from 'query-string'
-import { Redirect, useLocation } from 'react-router'
-import Copyright from 'components/ui/Copyright'
+import { Redirect, useLocation, useHistory } from 'react-router'
 import { useSelector, useDispatch } from 'react-redux'
 import { AppState } from 'redux/store'
 import Loader from 'components/ui/Loader'
@@ -29,6 +28,7 @@ const useStyles = makeStyles(theme => ({
 const EmailVerifyingPage: React.FC = () => {
     const classes = useStyles()
     const location = useLocation()
+    const history = useHistory()
     const dispatch = useDispatch()
     const { token } = queryString.parse(location.search)
     const { user, loading, error } = useSelector<AppState, UserState>(
@@ -39,6 +39,14 @@ const EmailVerifyingPage: React.FC = () => {
         if (!user?.verified && token) dispatch(verifyEmail(token as string))
     }, [])
 
+    useEffect(() => {
+        if (error) {
+            setTimeout(() => {
+                history.push('/login')
+            }, 4000)
+        }
+    }, [error])
+
     if (user?.verified) return <Redirect to="/" />
 
     if (loading) return <Loader />
@@ -48,18 +56,22 @@ const EmailVerifyingPage: React.FC = () => {
             <div className={classes.paper}>
                 {!token ||
                     (error && (
-                        <Typography
-                            component="h1"
-                            variant="h5"
-                            className={classes.error}
-                        >
-                            Something went wrong. Token may be expired.
-                        </Typography>
+                        <>
+                            <Typography
+                                component="h1"
+                                variant="h5"
+                                className={classes.error}
+                            >
+                                Your verification token is invalid or expired.
+                            </Typography>
+
+                            <br />
+                            <br />
+
+                            <Loader text="Redirecting you to login" />
+                        </>
                     ))}
             </div>
-            <Box mt={8}>
-                <Copyright />
-            </Box>
         </Container>
     )
 }

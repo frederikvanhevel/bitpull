@@ -13,6 +13,7 @@ import { LoginResponse } from 'services/user/typedefs'
 import Logger from 'utils/logging/logger'
 import { isUserError } from 'models/user/errors'
 import { AuthenticationContext } from '../directives/auth'
+import { BadRequestError } from 'utils/errors'
 
 export const getCurrentUser: GraphQLFieldResolver<
     any,
@@ -135,7 +136,8 @@ export const verifyEmail: GraphQLFieldResolver<
         await UserService.verifyEmail(args.token)
         return true
     } catch (error) {
-        Logger.throw(new Error('Could not verify email'), error)
+        if (error instanceof BadRequestError) throw error
+        else Logger.throw(new Error('Could not verify email'), error)
     }
 }
 

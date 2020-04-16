@@ -9,7 +9,6 @@ class Logger {
     public static info(message: string, user?: User) {
         const data: InfoLog = {
             type: LogType.INFO,
-            hostname: os.hostname(),
             timestamp: new Date(),
             userId: user?._id.toHexString(),
             message
@@ -21,7 +20,6 @@ class Logger {
     public static warn(message: string) {
         const data: InfoLog = {
             type: LogType.WARN,
-            hostname: os.hostname(),
             timestamp: new Date(),
             message
         }
@@ -32,7 +30,6 @@ class Logger {
     public static error(error: Error, relatedError?: Error, user?: User) {
         const data: ErrorLog = {
             type: LogType.ERROR,
-            hostname: os.hostname(),
             timestamp: new Date(),
             error,
             relatedError,
@@ -62,7 +59,13 @@ class Logger {
                 console.error(log.stack)
             }
         } else {
-            logFunction(JSON.stringify(log))
+            logFunction(
+                JSON.stringify({
+                    serviceContext: { service: 'backend' },
+                    hostname: os.hostname(),
+                    ...log
+                })
+            )
         }
     }
 
