@@ -123,6 +123,19 @@ const sendReferralAwardEmail = async (
     })
 }
 
+const sendFeedbackEmail = (user: User, type: string, question: string) => {
+    Email.send({
+        to: 'help@bitpull.io',
+        template: Template.FEEDBACK,
+        params: {
+            id: user.id,
+            name: `${user.firstName} ${user.lastName}`,
+            type,
+            question
+        }
+    })
+}
+
 const MailService = {
     sendVerificationEmail,
     sendForgotPasswordEmail,
@@ -130,7 +143,8 @@ const MailService = {
     sendPaymentFailedEmail,
     sendTrialWillEndEmail,
     sendOutOfFreeCreditsEmail,
-    sendReferralAwardEmail
+    sendReferralAwardEmail,
+    sendFeedbackEmail
 }
 
 export default MailService

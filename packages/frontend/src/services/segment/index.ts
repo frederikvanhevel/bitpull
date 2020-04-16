@@ -5,6 +5,8 @@ import Logger from 'utils/logger'
 analytics.load(process.env.SEGMENT_WRITE_KEY!)
 
 const track = (event: TrackingEvent, traits?: object) => {
+    if (process.env.NODE_ENV !== 'production') return
+
     try {
         analytics.track(event, traits)
     } catch (error) {
@@ -13,6 +15,8 @@ const track = (event: TrackingEvent, traits?: object) => {
 }
 
 const page = (path: string) => {
+    if (process.env.NODE_ENV !== 'production') return
+
     try {
         analytics.page(path)
     } catch (error) {
@@ -21,6 +25,8 @@ const page = (path: string) => {
 }
 
 const identify = (user: User) => {
+    if (process.env.NODE_ENV !== 'production') return
+
     try {
         analytics.identify(user.id, {
             userId: user.id,

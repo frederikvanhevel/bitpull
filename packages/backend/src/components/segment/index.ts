@@ -6,7 +6,7 @@ import { SegmentMessage, TrackingEvent } from './typedefs'
 let analytics: Analytics
 
 const initialize = () => {
-    if (process.env.NODE_ENV === 'test') return
+    if (process.env.NODE_ENV !== 'production') return
 
     analytics = new Analytics(process.env.SEGMENT_WRITE_KEY!)
 }

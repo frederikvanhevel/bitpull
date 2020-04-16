@@ -61,7 +61,7 @@ export const oAuth: GraphQLFieldResolver<any, AuthenticationContext> = async (
             data.referralId
         )
     } catch (error) {
-        Logger.throw(new Error('Could not register user with google'), error)
+        Logger.throw(new Error('Could not perform oauth with google'), error)
     }
 }
 

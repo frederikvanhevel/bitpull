@@ -27,6 +27,13 @@ export interface ReferralAwardedParams {
     referralLink: string
 }
 
+export interface FeedbackParams {
+    id: string
+    user: string
+    type: string
+    question: string
+}
+
 // Template paramaters
 type TemplateParams =
     | VerifyEmailParams
@@ -35,6 +42,7 @@ type TemplateParams =
     | PaymentFailedParams
     | TrialWillEndParams
     | ReferralAwardedParams
+    | FeedbackParams
 
 export interface EmailOptions {
     to: string
