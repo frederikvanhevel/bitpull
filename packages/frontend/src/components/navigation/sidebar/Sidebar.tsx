@@ -3,7 +3,7 @@ import { makeStyles, Drawer, Divider } from '@material-ui/core'
 import { useSelector } from 'react-redux'
 import { AppState } from 'redux/store'
 import { Link } from 'react-router-dom'
-import { MainListItems, SecondaryListItems } from './MenuItems'
+import { MainListItems, SecondaryListItems, BottomListItems } from './MenuItems'
 import Logo from '../../ui/Logo'
 
 export const SIDEBAR_WIDTH = 240
@@ -18,6 +18,7 @@ const useStyles = makeStyles(theme => ({
         position: 'relative',
         whiteSpace: 'nowrap',
         width: SIDEBAR_WIDTH,
+        minHeight: 600,
         backgroundColor: '#203656'
     },
     toolbarIcon: {
@@ -55,17 +56,15 @@ const Sidebar: React.FC = () => {
         >
             <div className={classes.toolbarIcon}>
                 <Link to="/">
-                    {/* <Typography variant="h5">BitPull</Typography> */}
                     <Logo />
                 </Link>
-                {/* <IconButton onClick={() => dispatch(closeSidebar())}>
-                    <ChevronLeft />
-                </IconButton> */}
             </div>
             <Divider className={classes.divider} />
             <MainListItems />
             <Divider className={classes.divider} />
             <SecondaryListItems />
+
+            <BottomListItems />
         </Drawer>
     )
 }

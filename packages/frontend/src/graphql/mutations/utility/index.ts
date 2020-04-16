@@ -5,3 +5,9 @@ export const ENCRYPT = gql`
         encrypt(text: $text)
     }
 `
+
+export const SEND_FEEDBACK = gql`
+    mutation feedback($type: String!, $question: String!) {
+        feedback(type: $type, question: $question)
+    }
+`

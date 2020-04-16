@@ -19,6 +19,7 @@ import ResetPasswordPage from './auth/ResetPasswordPage'
 import OAuthCallback from './auth/callbacks/OAuthCallback'
 import ReferralPage from './referral/ReferralPage'
 import Segment from 'services/segment'
+import HelpPage from './help/HelpPage'
 
 export const history = createBrowserHistory()
 
@@ -137,6 +138,12 @@ const privateRoutes: Route[] = [
         path: '/referral',
         component: ReferralPage,
         label: 'Refer a friend'
+    },
+    {
+        exact: true,
+        path: '/help',
+        component: HelpPage,
+        label: 'Help'
     }
 ]
 

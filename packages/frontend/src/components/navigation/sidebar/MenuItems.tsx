@@ -6,7 +6,8 @@ import {
     Layers,
     BarChart,
     Settings,
-    Redeem
+    Redeem,
+    HelpOutline
 } from '@material-ui/icons'
 import ScheduleIcon from '@material-ui/icons/Schedule'
 import { List, Chip, makeStyles, Theme } from '@material-ui/core'
@@ -23,6 +24,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     chip: {
         backgroundColor: theme.palette.tertiary.main,
         color: theme.palette.tertiary.contrastText
+    },
+    bottom: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: theme.spacing(2)
     }
 }))
 
@@ -102,3 +109,18 @@ export const SecondaryListItems: React.FC = () => (
         />
     </List>
 )
+
+export const BottomListItems: React.FC = () => {
+    const classes = useStyles()
+
+    return (
+        <List component="nav" className={classes.bottom}>
+            <ListItemLink
+                exact
+                to="/help"
+                primary="Feedback"
+                icon={<HelpOutline />}
+            />
+        </List>
+    )
+}
