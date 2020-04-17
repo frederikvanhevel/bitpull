@@ -14,3 +14,4 @@ var PdfFormat;
     PdfFormat["A5"] = "A5";
     PdfFormat["A6"] = "A6";
 })(PdfFormat = exports.PdfFormat || (exports.PdfFormat = {}));
+//# sourceMappingURL=typedefs.js.map

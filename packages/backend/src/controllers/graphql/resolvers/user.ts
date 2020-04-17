@@ -12,8 +12,8 @@ import {
 import { LoginResponse } from 'services/user/typedefs'
 import Logger from 'utils/logging/logger'
 import { isUserError } from 'models/user/errors'
-import { AuthenticationContext } from '../directives/auth'
 import { BadRequestError } from 'utils/errors'
+import { AuthenticationContext } from '../directives/auth'
 
 export const getCurrentUser: GraphQLFieldResolver<
     any,

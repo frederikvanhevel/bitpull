@@ -12,5 +12,5 @@ export interface fetchSiteContent {
 }
 
 export interface fetchSiteContentVariables {
-  url: string;
+  node: any;
 }

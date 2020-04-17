@@ -179,7 +179,7 @@ export const fetchSiteContent: GraphQLFieldResolver<
     QueryFetchSiteContentArgs
 > = async (root, args, context) => {
     try {
-        return await ProxyTool.prepareForSelector(args.url)
+        return await ProxyTool.prepareForSelector(args.node)
     } catch (error) {
         Logger.throw(
             new Error('Could not get website content'),

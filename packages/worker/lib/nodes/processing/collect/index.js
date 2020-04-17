@@ -19,3 +19,4 @@ const collect = (input, options) => {
     return Promise.resolve(Object.assign(Object.assign({}, input), { passedData: data }));
 };
 exports.default = collect;
+//# sourceMappingURL=index.js.map

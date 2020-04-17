@@ -12,3 +12,4 @@ const functionNode = input => {
     return Promise.resolve(input);
 };
 exports.default = functionNode;
+//# sourceMappingURL=index.js.map

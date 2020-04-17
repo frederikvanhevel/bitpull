@@ -75,7 +75,9 @@ const FeedbackForm: React.FC<Props> = ({ loading, onSubmit }) => {
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <FormControl variant="outlined" className={classes.select}>
-                        <InputLabel className={classes.label}>What is your question about?</InputLabel>
+                        <InputLabel className={classes.label}>
+                            What is your question about?
+                        </InputLabel>
 
                         <Select
                             value={type || ''}

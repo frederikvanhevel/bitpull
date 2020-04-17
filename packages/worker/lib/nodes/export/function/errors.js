@@ -4,3 +4,4 @@ var FunctionError;
 (function (FunctionError) {
     FunctionError["NO_FUNCTION_SPECIFIED"] = "NO_FUNCTION_SPECIFIED";
 })(FunctionError = exports.FunctionError || (exports.FunctionError = {}));
+//# sourceMappingURL=errors.js.map

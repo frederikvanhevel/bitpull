@@ -7,7 +7,7 @@ import { CollectNode, CollectField } from '@bitpull/worker/lib/typedefs'
 import MoreMenu from 'components/ui/MoreMenu'
 import ExpandableOptionRow from 'components/ui/expandable/ExpandableOptionRow'
 import Selector from './common/Selector'
-import { findUrlAncestor, getNewCollectField } from '../helper'
+import { getNewCollectField } from '../helper'
 
 interface Props {
     node: CollectNode & Node
@@ -61,7 +61,6 @@ const Collect: React.FC<Props> = ({ node, onUpdate }) => {
         defaultValues: node,
         mode: 'onChange'
     })
-    const urlAncestor = findUrlAncestor(node)
     const onAddField = () => setFields([...fields, getNewCollectField()])
     const onUpdateField = (field: CollectField, key: string, value: any) => {
         onUpdate(
@@ -123,7 +122,7 @@ const Collect: React.FC<Props> = ({ node, onUpdate }) => {
                                 <Selector
                                     label="CSS selector"
                                     selector={field.selector}
-                                    urlAncestor={urlAncestor}
+                                    node={node}
                                     onUpdate={selector => {
                                         onUpdateField(
                                             field,

@@ -12,7 +12,9 @@ const query = gql`
 
     type Mutation {
         encrypt(text: String!): String! @isAuthenticated
-        feedback(type: String!, question: String!): Boolean! @isAuthenticated @RateLimit
+        feedback(type: String!, question: String!): Boolean!
+            @isAuthenticated
+            @RateLimit
     }
 `
 const resolvers: IResolvers = {

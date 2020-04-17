@@ -40,6 +40,9 @@ exports.getFieldsFromHtml = (input, settings, xmlMode = false) => {
     const arrayMapping = [];
     node.fields.forEach(field => {
         $(field.selector.value).each((i, element) => {
+            // only collect as many items as the limit if its set
+            if (node.limit && i >= node.limit)
+                return;
             let el = $(element);
             const tagName = el[0].name;
             // see if we can find the element with attribute as a child
@@ -89,3 +92,4 @@ exports.getSelectorParser = (node) => {
     }
     return null;
 };
+//# sourceMappingURL=selectors.js.map

@@ -1,8 +1,9 @@
 import React from 'react'
-import { findUrlAncestor, getMenuItemsByType } from '../helper'
+import { getMenuItemsByType } from '../helper'
 import { Node } from 'typedefs/common'
 import AddStep from './AddStep'
 import { NodeType, NodeMap } from '@bitpull/worker/lib/typedefs'
+import { findUrlAncestor } from 'components/node'
 
 interface Props {
     node: Node

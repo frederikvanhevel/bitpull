@@ -8,3 +8,4 @@ var RequestMethod;
     RequestMethod["PATCH"] = "PATCH";
     RequestMethod["DELETE"] = "DELETE";
 })(RequestMethod = exports.RequestMethod || (exports.RequestMethod = {}));
+//# sourceMappingURL=typedefs.js.map

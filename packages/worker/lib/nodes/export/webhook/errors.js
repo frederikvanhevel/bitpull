@@ -4,3 +4,4 @@ var WebhookError;
 (function (WebhookError) {
     WebhookError["REQUEST_PATH_MISSING"] = "REQUEST_PATH_MISSING";
 })(WebhookError = exports.WebhookError || (exports.WebhookError = {}));
+//# sourceMappingURL=errors.js.map

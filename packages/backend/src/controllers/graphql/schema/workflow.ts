@@ -32,7 +32,7 @@ const query = gql`
             name: String!
             watchedNodeId: String
         ): WorkflowResult! @isAuthenticated @RateLimit
-        fetchSiteContent(url: String!): String! @isAuthenticated
+        fetchSiteContent(node: JSONObject!): String! @isAuthenticated
     }
 
     type Mutation {

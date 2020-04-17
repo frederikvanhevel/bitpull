@@ -1,5 +1,5 @@
 import { FlowNode } from '@bitpull/worker/lib/typedefs'
 
-export interface Node extends FlowNode {
+export type Node<T = FlowNode> = T & {
     parent?: FlowNode
 }

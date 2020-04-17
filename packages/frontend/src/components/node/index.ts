@@ -1,5 +1,10 @@
 import { clone } from 'ramda'
-import { NodeType, NodeId } from '@bitpull/worker/lib/typedefs'
+import {
+    NodeType,
+    NodeId,
+    RootNode,
+    CollectNode
+} from '@bitpull/worker/lib/typedefs'
 import { PaginationNode } from '@bitpull/worker/lib/typedefs'
 import { Node } from 'typedefs/common'
 
@@ -90,11 +95,12 @@ export const initializeNodes = (startNode: Node) => {
     return startNode
 }
 
-export const toJSON = (node: Node) => {
+export const toJSON = (node: Node, removeChildren?: boolean) => {
     const newNode = clone(node)
 
     const removeFields = (innerNode: Node) => {
         delete innerNode.parent
+        if (removeChildren) delete innerNode.children
 
         if (innerNode.children) {
             for (let i = 0; i < innerNode.children.length; i++) {
@@ -106,4 +112,46 @@ export const toJSON = (node: Node) => {
     }
 
     return removeFields(newNode)
+}
+
+export const findUrlAncestor = (node: Node): Node<RootNode> | undefined => {
+    if (node.type === NodeType.HTML || node.type === NodeType.XML) {
+        return node as RootNode
+    }
+
+    if (node.parent) {
+        return findUrlAncestor(node.parent)
+    }
+
+    return undefined
+}
+
+export const traverseAncestors = (node: Node) => {
+    const urlNode = findUrlAncestor(node)!
+
+    if (!urlNode.parent) return toJSON(urlNode, true)
+
+    let nodes: Node[] = [{ ...urlNode }]
+    let parent: Node | undefined = urlNode.parent
+
+    while (parent) {
+        if (parent.type === NodeType.HTML || parent.type === NodeType.COLLECT) {
+            nodes.push({ ...parent })
+        }
+
+        parent = parent.parent
+    }
+
+    let root = { ...nodes.pop()! }
+    let lastChild = root
+    while (nodes.length) {
+        const child = { ...nodes.pop()! }
+        if (child.type === NodeType.COLLECT) {
+            ;(child as CollectNode).limit = 1
+        }
+        lastChild.children = [child]
+        lastChild = child
+    }
+
+    return toJSON(root)
 }

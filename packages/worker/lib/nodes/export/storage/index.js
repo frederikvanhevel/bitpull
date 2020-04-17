@@ -65,3 +65,4 @@ const storage = async (input, options) => {
         } });
 };
 exports.default = storage;
+//# sourceMappingURL=index.js.map

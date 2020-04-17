@@ -12,9 +12,9 @@ import {
 import SelectorIcon from '@material-ui/icons/Search'
 import { HTMLSelector } from '@bitpull/worker/lib/typedefs'
 import { validateSelector } from './validation'
-import { RootNode } from '@bitpull/worker/lib/typedefs'
 import PageSelector from 'pages/workflows/editor/pageselector/PageSelector'
 import Portal from 'components/ui/Portal'
+import { Node } from 'typedefs/common'
 
 export enum Attributes {
     TEXT = 'text',
@@ -26,7 +26,7 @@ interface Props {
     selector: HTMLSelector
     withAttribute?: boolean
     defaultAttribute?: Attributes
-    urlAncestor?: RootNode
+    node: Node
     label?: string
     onUpdate: (selector: HTMLSelector) => void
 }
@@ -59,7 +59,7 @@ const Selector: React.FC<Props> = ({
     label = 'Selector',
     withAttribute = true,
     defaultAttribute = Attributes.TEXT,
-    urlAncestor,
+    node,
     onUpdate
 }) => {
     const classes = useStyles()
@@ -87,15 +87,14 @@ const Selector: React.FC<Props> = ({
                 placeholder="div > a"
                 autoComplete="off"
                 InputProps={{
-                    endAdornment:
-                        urlAncestor && urlAncestor.link ? (
-                            <IconButton
-                                className={classes.selectorButton}
-                                onClick={() => setPageSelectOpen(true)}
-                            >
-                                <SelectorIcon />
-                            </IconButton>
-                        ) : null
+                    endAdornment: (
+                        <IconButton
+                            className={classes.selectorButton}
+                            onClick={() => setPageSelectOpen(true)}
+                        >
+                            <SelectorIcon />
+                        </IconButton>
+                    )
                 }}
                 error={!!errors.value}
                 name="value"
@@ -125,23 +124,21 @@ const Selector: React.FC<Props> = ({
                 </FormControl>
             )}
 
-            {urlAncestor && urlAncestor.link && (
-                <Portal id="pageSelector">
-                    <PageSelector
-                        open={pageSelectOpen}
-                        url={urlAncestor.link}
-                        initialSelector={selector.value}
-                        onSelect={chosenSelector => {
-                            onUpdateSelector('value', chosenSelector)
-                            reset({
-                                value: chosenSelector
-                            })
-                            setPageSelectOpen(false)
-                        }}
-                        onClose={() => setPageSelectOpen(false)}
-                    />
-                </Portal>
-            )}
+            <Portal id="pageSelector">
+                <PageSelector
+                    open={pageSelectOpen}
+                    node={node}
+                    initialSelector={selector.value}
+                    onSelect={chosenSelector => {
+                        onUpdateSelector('value', chosenSelector)
+                        reset({
+                            value: chosenSelector
+                        })
+                        setPageSelectOpen(false)
+                    }}
+                    onClose={() => setPageSelectOpen(false)}
+                />
+            </Portal>
         </div>
     )
 }

@@ -123,3 +123,4 @@ class CustomBrowser {
     }
 }
 exports.default = CustomBrowser;
+//# sourceMappingURL=index.js.map

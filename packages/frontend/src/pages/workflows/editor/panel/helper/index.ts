@@ -35,18 +35,6 @@ export const isNodeType = (value: string): boolean => {
     return Object.values(NodeType).includes(value as NodeType)
 }
 
-export const findUrlAncestor = (node: Node): RootNode | undefined => {
-    if (node.type === NodeType.HTML || node.type === NodeType.XML) {
-        return node as RootNode
-    }
-
-    if (node.parent) {
-        return findUrlAncestor(node.parent)
-    }
-
-    return undefined
-}
-
 export const getMenuItemsByType = (types: NodeType[]): NodeMenuItem[] => {
     const items: NodeMenuItem[] = []
 

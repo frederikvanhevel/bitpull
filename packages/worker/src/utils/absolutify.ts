@@ -24,12 +24,13 @@ const isValidUrl = (url: string) => {
 }
 
 export const absolutifyUrl = (url: string, origin: string) => {
+    const trimmed = url.includes('\n') ? url.substr(0, url.indexOf('\n')) : url
     try {
-        const parsedUrl = new URL(url)
+        const parsedUrl = new URL(trimmed)
         return parsedUrl.href
     } catch (e) {
-        if (!url.startsWith('/')) return origin + '/' + url
-        return url.replace(/^[^/]+\/[^/].*$|^\/[^/].*$/, origin + url)
+        if (!trimmed.startsWith('/')) return origin + '/' + trimmed
+        return trimmed.replace(/^[^/]+\/[^/].*$|^\/[^/].*$/, origin + trimmed)
     }
 }
 

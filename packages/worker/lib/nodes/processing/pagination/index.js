@@ -105,3 +105,4 @@ const pagination = async (input, options, context) => {
     return Object.assign(Object.assign({}, input), { passedData: allResults });
 };
 exports.default = pagination;
+//# sourceMappingURL=index.js.map

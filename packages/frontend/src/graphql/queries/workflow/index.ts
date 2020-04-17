@@ -50,8 +50,8 @@ export const RUN_WORKFLOW = gql`
 `
 
 export const GET_SITE_CONTENT = gql`
-    query fetchSiteContent($url: String!) {
-        fetchSiteContent(url: $url)
+    query fetchSiteContent($node: JSONObject!) {
+        fetchSiteContent(node: $node)
     }
 `
 

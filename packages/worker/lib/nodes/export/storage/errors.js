@@ -8,3 +8,4 @@ var StorageError;
     StorageError["AWS_SECRET_ACCESS_KEY_MISSING"] = "AWS_SECRET_ACCESS_KEY_MISSING";
     StorageError["INVALID_PARENT_TYPE"] = "INVALID_PARENT_TYPE";
 })(StorageError = exports.StorageError || (exports.StorageError = {}));
+//# sourceMappingURL=errors.js.map

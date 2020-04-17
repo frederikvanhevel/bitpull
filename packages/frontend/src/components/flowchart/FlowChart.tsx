@@ -1,13 +1,7 @@
 import React, { useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core'
 import Zoomable from './Zoomable'
-import {
-    getStyles,
-    isRootNode,
-    getNodeText,
-    getNodeIcon,
-    isLinkDotted
-} from './helper'
+import { isRootNode, getNodeText, getNodeIcon, isLinkDotted } from './helper'
 import { Node } from 'typedefs/common'
 import D3FlowChart from './D3FlowChart'
 import { isNodeWatchable, isNodeUnreachable } from 'components/node'
@@ -15,7 +9,7 @@ import { useSelector } from 'react-redux'
 import { AppState } from 'redux/store'
 import { WorkflowState } from 'reducers/workflow'
 import usePrevious from 'hooks/usePrevious'
-import { RootNode } from '@bitpull/worker'
+import { getStyles } from './styles'
 
 interface Props {
     onClickNode: (node: Node) => void

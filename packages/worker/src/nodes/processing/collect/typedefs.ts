@@ -11,6 +11,7 @@ export type CollectNode = FlowNode & {
     type: NodeType.COLLECT
     fields: CollectField[]
     append?: boolean
+    limit?: number
 }
 
 export type CollectParseResult = object | object[]

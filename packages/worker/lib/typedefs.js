@@ -15,3 +15,4 @@ const typedefs_1 = require("./nodes/processing/pdf/typedefs");
 exports.PdfFormat = typedefs_1.PdfFormat;
 const node_map_1 = __importDefault(require("./nodes/common/node-map"));
 exports.NodeMap = node_map_1.default;
+//# sourceMappingURL=typedefs.js.map

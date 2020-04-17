@@ -9,5 +9,6 @@ export declare type CollectNode = FlowNode & {
     type: NodeType.COLLECT;
     fields: CollectField[];
     append?: boolean;
+    limit?: number;
 };
 export declare type CollectParseResult = object | object[];

@@ -18,3 +18,4 @@ exports.decrypt = (key, text, algorithm = 'v1') => {
     decrypted += decipher.final('utf8');
     return decrypted;
 };
+//# sourceMappingURL=encryption.js.map

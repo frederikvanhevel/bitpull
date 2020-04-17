@@ -22,3 +22,4 @@ const xml = async (input, options) => {
     return Promise.resolve(Object.assign(Object.assign({}, input), { parentResult: json }));
 };
 exports.default = xml;
+//# sourceMappingURL=index.js.map

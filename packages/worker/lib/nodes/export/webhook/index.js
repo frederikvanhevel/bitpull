@@ -51,3 +51,4 @@ const webhook = async (input, options) => {
     return Promise.resolve(input);
 };
 exports.default = webhook;
+//# sourceMappingURL=index.js.map

@@ -38,3 +38,4 @@ const slack = async (input, options) => {
     return input;
 };
 exports.default = slack;
+//# sourceMappingURL=index.js.map

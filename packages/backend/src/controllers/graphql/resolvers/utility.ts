@@ -1,8 +1,8 @@
 import { GraphQLFieldResolver } from 'graphql'
 import EncryptionSerivce from 'services/encryption'
 import Logger from 'utils/logging/logger'
-import { AuthenticationContext } from '../directives/auth'
 import MailService from 'services/mail'
+import { AuthenticationContext } from '../directives/auth'
 
 export const encrypt: GraphQLFieldResolver<
     any,
@@ -28,10 +28,11 @@ export const decrypt: GraphQLFieldResolver<
     }
 }
 
-export const feedback: GraphQLFieldResolver<
-    any,
-    AuthenticationContext
-> = (root, args, context) => {
+export const feedback: GraphQLFieldResolver<any, AuthenticationContext> = (
+    root,
+    args,
+    context
+) => {
     try {
         MailService.sendFeedbackEmail(context.user, args.type, args.question)
         return true

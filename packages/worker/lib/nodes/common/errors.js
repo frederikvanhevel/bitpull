@@ -37,3 +37,4 @@ var IntegrationError;
     IntegrationError["INTEGRATION_INACTIVE"] = "INTEGRATION_INACTIVE";
     IntegrationError["ACCESS_TOKEN_MISSING"] = "ACCESS_TOKEN_MISSING";
 })(IntegrationError = exports.IntegrationError || (exports.IntegrationError = {}));
+//# sourceMappingURL=errors.js.map

@@ -18,3 +18,4 @@ const json = async (input, options) => {
         } }));
 };
 exports.default = json;
+//# sourceMappingURL=index.js.map

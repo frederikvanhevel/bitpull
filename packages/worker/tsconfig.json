@@ -22,11 +22,12 @@
       "@types/jest"
     ],
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "sourceMap": true
   },
   "exclude": [
     "**/lib/*",
-    "src/tryout.ts",
+    // "src/tryout.ts",
     "src/**/*.spec.ts",
     "src/**/*.mock.ts",
     "node_modules"

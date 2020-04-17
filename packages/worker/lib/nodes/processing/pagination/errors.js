@@ -7,3 +7,4 @@ var PaginationError;
     PaginationError["NEXT_LINK_MISSING"] = "NEXT_LINK_MISSING";
     PaginationError["NO_LINKS_SPECIFIED"] = "NO_LINKS_SPECIFIED";
 })(PaginationError = exports.PaginationError || (exports.PaginationError = {}));
+//# sourceMappingURL=errors.js.map

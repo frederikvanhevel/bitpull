@@ -27,3 +27,4 @@ exports.sendMail = (options, settings) => {
         throw new Error('Error sending email');
     });
 };
+//# sourceMappingURL=index.js.map

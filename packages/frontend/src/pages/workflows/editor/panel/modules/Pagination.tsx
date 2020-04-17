@@ -10,7 +10,7 @@ import {
 import { PaginationNode } from '@bitpull/worker/lib/typedefs'
 import ExpandableOptionRow from 'components/ui/expandable/ExpandableOptionRow'
 import Selector, { Attributes } from './common/Selector'
-import { findUrlAncestor, isNodeType, getNewNode } from '../helper'
+import { isNodeType, getNewNode } from '../helper'
 import { HTMLSelector } from '@bitpull/worker/lib/typedefs'
 import {
     getMenuItems,
@@ -92,7 +92,6 @@ const Pagination: React.FC<Props> = ({ node, onUpdate, onAdd }) => {
     const [activePanel, setActivePanel] = useState<PaginationType | undefined>(
         getInitialPanel(pagination)
     )
-    const urlAncestor = findUrlAncestor(node)
     const updatePagination = (key: string, value: any) => {
         onUpdate('pagination', { ...pagination, [key]: value })
     }
@@ -127,7 +126,7 @@ const Pagination: React.FC<Props> = ({ node, onUpdate, onAdd }) => {
                 <Selector
                     label="Next page selector"
                     selector={(pagination as NextLinkPagination).nextLink}
-                    urlAncestor={urlAncestor}
+                    node={node}
                     defaultAttribute={Attributes.HREF}
                     onUpdate={(selector: HTMLSelector) => {
                         updatePagination('linkList', undefined)

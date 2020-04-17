@@ -32,3 +32,4 @@ const excel = async (input, options) => {
         } }));
 };
 exports.default = excel;
+//# sourceMappingURL=index.js.map

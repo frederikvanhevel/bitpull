@@ -67,6 +67,9 @@ export const getFieldsFromHtml = (
 
     node.fields.forEach(field => {
         $(field.selector.value).each((i: number, element: CheerioElement) => {
+            // only collect as many items as the limit if its set
+            if (node.limit && i >= node.limit) return
+
             let el = $(element)
             const tagName = el[0].name
 

@@ -6,7 +6,6 @@ import { LoginNode } from '@bitpull/worker/lib/typedefs'
 import SecureInput from 'components/ui/input/SecureInput'
 import { Node } from 'typedefs/common'
 import Selector from './common/Selector'
-import { findUrlAncestor } from '../helper'
 
 interface Props {
     node: LoginNode & Node
@@ -28,7 +27,6 @@ const useStyles = makeStyles(theme => ({
 
 const Login: React.FC<Props> = ({ node, onUpdate }) => {
     const classes = useStyles()
-    const urlAncestor = findUrlAncestor(node)
     const {
         credentials = {
             username: {
@@ -78,7 +76,7 @@ const Login: React.FC<Props> = ({ node, onUpdate }) => {
                 <Selector
                     label="Selector"
                     selector={{ value: credentials.username.selector }}
-                    urlAncestor={urlAncestor}
+                    node={node}
                     withAttribute={false}
                     onUpdate={selector => {
                         onUpdate(
@@ -129,7 +127,7 @@ const Login: React.FC<Props> = ({ node, onUpdate }) => {
                 <Selector
                     label="Selector"
                     selector={{ value: credentials.password.selector }}
-                    urlAncestor={urlAncestor}
+                    node={node}
                     withAttribute={false}
                     onUpdate={selector => {
                         onUpdate(
@@ -159,7 +157,7 @@ const Login: React.FC<Props> = ({ node, onUpdate }) => {
                 <Selector
                     label="Selector"
                     selector={{ value: credentials.submit }}
-                    urlAncestor={urlAncestor}
+                    node={node}
                     withAttribute={false}
                     onUpdate={selector => {
                         onUpdate(

@@ -47,3 +47,4 @@ const click = async (input, options, context) => {
         } }));
 };
 exports.default = click;
+//# sourceMappingURL=index.js.map

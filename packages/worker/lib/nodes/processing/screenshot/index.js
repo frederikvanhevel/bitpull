@@ -36,3 +36,4 @@ const screenshot = async (input, options, context) => {
         } }));
 };
 exports.default = screenshot;
+//# sourceMappingURL=index.js.map

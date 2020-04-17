@@ -49,7 +49,7 @@ export type QueryRunWorkflowArgs = {
 
 
 export type QueryFetchSiteContentArgs = {
-  url: Scalars['String'];
+  node: Scalars['JSONObject'];
 };
 
 

@@ -3,10 +3,11 @@ import { makeStyles } from '@material-ui/styles'
 import { Theme, Slide } from '@material-ui/core'
 import SelectorTopControls from './SelectorTopControls'
 import BrowserFrame from './BrowserFrame'
+import { Node } from 'typedefs/common'
 
 interface Props {
     open: boolean
-    url: string
+    node: Node
     initialSelector?: string
     onSelect: (selector: string | undefined) => void
     onClose: () => void
@@ -39,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }))
 
-const PageSelector: React.FC<Props> = ({ open, url, onSelect, onClose }) => {
+const PageSelector: React.FC<Props> = ({ open, node, onSelect, onClose }) => {
     const classes = useStyles()
     const [currentSelector, setCurrentSelector] = useState<string>()
 
@@ -55,7 +56,7 @@ const PageSelector: React.FC<Props> = ({ open, url, onSelect, onClose }) => {
 
                 <div className={classes.fullHeight}>
                     <BrowserFrame
-                        url={url}
+                        node={node}
                         setSelector={setCurrentSelector}
                         currentSelector={currentSelector}
                     />

@@ -3,7 +3,6 @@ import { makeStyles, TextField } from '@material-ui/core'
 import Selector from './common/Selector'
 import { HTMLSelector } from '@bitpull/worker/lib/typedefs'
 import { ClickNode } from '@bitpull/worker/lib/typedefs'
-import { findUrlAncestor } from '../helper'
 import ExpandableOptionRow from 'components/ui/expandable/ExpandableOptionRow'
 
 interface Props {
@@ -35,7 +34,6 @@ const useStyles = makeStyles(theme => ({
 
 const Click: React.FC<Props> = ({ node, onUpdate }) => {
     const classes = useStyles()
-    const urlAncestor = findUrlAncestor(node)
 
     return (
         <>
@@ -43,7 +41,7 @@ const Click: React.FC<Props> = ({ node, onUpdate }) => {
                 <Selector
                     label="Click element selector"
                     selector={{ value: node.selector }}
-                    urlAncestor={urlAncestor}
+                    node={node}
                     withAttribute={false}
                     onUpdate={(selector: HTMLSelector) =>
                         onUpdate('selector', selector.value)

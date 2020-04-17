@@ -4,15 +4,17 @@ import { useQuery } from '@apollo/react-hooks'
 import { fetchSiteContent } from 'queries/workflow/typedefs/fetchSiteContent'
 import Loader from 'components/ui/Loader'
 import ErrorScreen from 'components/ui/ErrorScreen'
+import { Node } from 'typedefs/common'
+import { traverseAncestors } from 'components/node'
 
 interface Props {
-    url: string
+    node: Node
     currentSelector?: string
     setSelector: (selector: string) => void
 }
 
 const BrowserFrame: React.FC<Props> = ({
-    url,
+    node,
     currentSelector,
     setSelector
 }) => {
@@ -21,7 +23,7 @@ const BrowserFrame: React.FC<Props> = ({
         GET_SITE_CONTENT,
         {
             variables: {
-                url
+                node: traverseAncestors(node)
             }
         }
     )

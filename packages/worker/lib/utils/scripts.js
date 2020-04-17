@@ -43,3 +43,4 @@ exports.scrollToBottom = async (page, scrollStep = 250, scrollDelay = 100) => {
     }, scrollStep, scrollDelay);
     return lastPosition;
 };
+//# sourceMappingURL=scripts.js.map

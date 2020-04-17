@@ -4,3 +4,4 @@ var WaitError;
 (function (WaitError) {
     WaitError["DELAY_MISSING"] = "DELAY_MISSING";
 })(WaitError = exports.WaitError || (exports.WaitError = {}));
+//# sourceMappingURL=errors.js.map

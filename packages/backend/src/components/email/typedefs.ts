@@ -29,7 +29,7 @@ export interface ReferralAwardedParams {
 
 export interface FeedbackParams {
     id: string
-    user: string
+    name: string
     type: string
     question: string
 }

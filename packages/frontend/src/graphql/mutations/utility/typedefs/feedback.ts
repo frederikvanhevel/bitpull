@@ -8,7 +8,7 @@
 // ====================================================
 
 export interface feedback {
-  feedback: boolean | null;
+  feedback: boolean;
 }
 
 export interface feedbackVariables {

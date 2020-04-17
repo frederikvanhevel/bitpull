@@ -40,9 +40,9 @@ const login = async (input, options, context) => {
             await page.goto(rootAncestor.parsedLink);
             await page.waitFor(username.selector, { visible: true });
             await page.waitFor(120);
-            await page.type(username.selector, 'frederik.vanhevel@gmail.com');
+            await page.type(username.selector, usernameInput);
             await page.waitFor(232);
-            await page.type(password.selector, 'Valiant76');
+            await page.type(password.selector, passwordInput);
             await page.waitFor(112);
             await page.click(submit);
             if (waitForNavigation)
@@ -64,3 +64,4 @@ const login = async (input, options, context) => {
         } });
 };
 exports.default = login;
+//# sourceMappingURL=index.js.map

@@ -64,3 +64,4 @@ const github = async (input, options) => {
         } });
 };
 exports.default = github;
+//# sourceMappingURL=index.js.map

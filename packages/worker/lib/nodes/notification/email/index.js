@@ -25,3 +25,4 @@ const email = async (input, options) => {
     return input;
 };
 exports.default = email;
+//# sourceMappingURL=index.js.map

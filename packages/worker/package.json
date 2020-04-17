@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "dev": "ts-node-dev ./src/tryout.ts",
-    "debug": "ts-node-dev ./src/index.ts --inspect",
+    "debug": "ts-node-dev ./src/tryout.ts --inspect",
     "compile": "rm -rf ./lib && tsc",
     "lint": "eslint --ext ts \"src/**\"",
     "lint:staged": "lint-staged",

@@ -7,3 +7,4 @@ var LoginError;
     LoginError["ENCRYPTION_VERSION_UNSUPPORTED"] = "ENCRYPTION_VERSION_UNSUPPORTED";
     LoginError["COULD_NOT_LOGIN"] = "COULD_NOT_LOGIN";
 })(LoginError = exports.LoginError || (exports.LoginError = {}));
+//# sourceMappingURL=errors.js.map
