@@ -4,12 +4,18 @@ import Worker from 'components/worker'
 import { addSelectorScript } from './helper'
 
 const prepareForSelector = async (node: FlowNode) => {
+    const proxy = `${process.env.API_URL}/api/proxy?url=`
     const result = await Worker.runSingleNode({
         node,
         options: {
             settings: {
                 puppeteer: {
                     endpoint: process.env.PUPPETEER_ENDPOINT!
+                },
+                proxyEndpoint: proxy,
+                encryption: {
+                    version: 'v1',
+                    key: process.env.ENCRYPTION_KEY!
                 },
                 exitOnError: true
             }
@@ -22,8 +28,6 @@ const prepareForSelector = async (node: FlowNode) => {
     } else {
         parentResult = result.parentResult
     }
-
-    const proxy = `${process.env.API_URL}/api/proxy?url=`
 
     if (!parentResult) {
         Logger.throw(new Error(`Could not get website content`))

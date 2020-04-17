@@ -42,7 +42,9 @@ const spawn = (
                 reject()
             })
 
-            // forked.on('exit', () => resolve())
+            forked.on('exit', (code) => {
+                code === 0 ? resolve() : reject()
+            })
 
             // forked.on('close', () => resolve())
 

@@ -10,7 +10,7 @@
     "lint": "eslint --ext ts \"src/**\"",
     "lint:staged": "lint-staged",
     "fix": "eslint --ext ts \"src/**\" --fix",
-    "test": "jest",
+    "test": "jest --runInBand",
     "test:watch": "jest --watch"
   },
   "author": "",

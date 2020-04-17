@@ -19,7 +19,7 @@ process.on('message', async (args: WorkerArgs) => {
         await traverser.cleanup()
     } catch (error) {
         await traverser.cleanup()
-        throw error
+        process.exit(1)
     }
 })
 

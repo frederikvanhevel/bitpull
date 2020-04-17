@@ -114,28 +114,44 @@ export const toJSON = (node: Node, removeChildren?: boolean) => {
     return removeFields(newNode)
 }
 
-export const findUrlAncestor = (node: Node): Node<RootNode> | undefined => {
-    if (node.type === NodeType.HTML || node.type === NodeType.XML) {
-        return node as RootNode
-    }
+export const findParentOfType = (
+    node: Node,
+    types: NodeType[]
+): Node | undefined => {
+    if (types.includes(node.type)) return node
 
     if (node.parent) {
-        return findUrlAncestor(node.parent)
+        return findParentOfType(node.parent, types)
     }
 
     return undefined
 }
 
-export const traverseAncestors = (node: Node) => {
-    const urlNode = findUrlAncestor(node)!
+export const findUrlAncestor = (node: Node): Node<RootNode> | undefined => {
+    return findParentOfType(node, [NodeType.HTML, NodeType.XML]) as RootNode
+}
 
-    if (!urlNode.parent) return toJSON(urlNode, true)
+export const traverseAncestors = (node: Node) => {
+    const traversableTypes = [
+        NodeType.HTML,
+        NodeType.XML,
+        NodeType.LOGIN,
+        NodeType.WAIT,
+        NodeType.CLICK,
+        NodeType.COLLECT
+    ]
+
+    if (!node.parent) return toJSON(node, true)
+
+    const urlNode = findParentOfType(node.parent!, traversableTypes)!
+
+    if (!urlNode) return toJSON(urlNode, true)
 
     let nodes: Node[] = [{ ...urlNode }]
     let parent: Node | undefined = urlNode.parent
 
     while (parent) {
-        if (parent.type === NodeType.HTML || parent.type === NodeType.COLLECT) {
+        if (traversableTypes.includes(parent.type)) {
             nodes.push({ ...parent })
         }
 
@@ -143,12 +159,16 @@ export const traverseAncestors = (node: Node) => {
     }
 
     let root = { ...nodes.pop()! }
+    delete root.children
     let lastChild = root
     while (nodes.length) {
         const child = { ...nodes.pop()! }
+        delete child.children
+
         if (child.type === NodeType.COLLECT) {
             ;(child as CollectNode).limit = 1
         }
+
         lastChild.children = [child]
         lastChild = child
     }

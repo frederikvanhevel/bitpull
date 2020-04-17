@@ -23,6 +23,9 @@
       "./typings",
       "./node_modules/@types"
     ],
+    "types": [
+      "@types/jest"
+    ],
     "outDir": "lib",
     "paths": {
       "components/*": [
