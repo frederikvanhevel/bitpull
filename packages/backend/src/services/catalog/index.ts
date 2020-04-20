@@ -7,7 +7,7 @@ import WorkflowService from '../workflow'
 const getItems = async () => {
     return await CatalogModel.find({
         visible: true
-    })
+    }).sort({ order: -1 })
 }
 
 const addItem = async (item: CatalogItem) => {

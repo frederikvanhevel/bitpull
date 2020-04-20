@@ -30,7 +30,7 @@ process.on('message', async (args: WorkerArgs) => {
     } catch (error) {
         console.log(error)
         await traverser.cleanup()
-        throw error
+        process.exit(1)
     }
 })
 

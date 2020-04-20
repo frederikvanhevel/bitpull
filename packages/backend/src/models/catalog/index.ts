@@ -31,7 +31,8 @@ const CatalogSchema = new Schema({
         type: Boolean,
         default: true,
         index: true
-    }
+    },
+    order: Number
 })
 
 const CatalogModel = model<CatalogDocument>('Catalog', CatalogSchema, 'catalog')
