@@ -181,6 +181,7 @@ const resetPassword = async (token: string, password: string) => {
     }
 
     await user.setPassword(password)
+    await user.save()
     await user.updateOne({
         resetPasswordToken: undefined,
         resetPasswordExpires: undefined,

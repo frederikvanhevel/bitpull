@@ -52,21 +52,23 @@ const BrowserFrame: React.FC<Props> = ({
         return () => window.removeEventListener('message', receiveMessage)
     }, [])
 
-    if (loading)
+    if (loading) {
         return (
             <Loader
                 delay={225}
-                text="Getting website content ..."
+                text="Analyzing website ..."
                 subText="This could take a minute or two"
             />
         )
-    if (!data || error)
+    }
+    if (!data || error) {
         return (
             <ErrorScreen
                 title="Sorry!"
                 description="We couldn't get the website content at this time! Please try again later."
             />
         )
+    }
 
     return (
         <iframe

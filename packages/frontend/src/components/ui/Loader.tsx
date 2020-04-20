@@ -71,11 +71,13 @@ const Loader: React.FC<Props> = ({
                 <CircularProgress color="primary" size={40} />
 
                 {!hideText && (
-                    <Typography className={classes.text}>{text}</Typography>
+                    <Typography className={classes.text} variant="body2">
+                        {text}
+                    </Typography>
                 )}
 
                 {!hideText && !!subText && (
-                    <Typography className={classes.subText}>
+                    <Typography className={classes.subText} variant="caption">
                         {subText}
                     </Typography>
                 )}
