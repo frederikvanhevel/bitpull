@@ -6,6 +6,7 @@ export const GET_CATALOG = gql`
             id
             name
             title
+            description
         }
     }
 `

@@ -618,12 +618,12 @@ export type CatalogItem = {
   id: Scalars['String'];
   name: Scalars['String'];
   title: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
   node: Scalars['JSONObject'];
 };
 
 export type CatalogItemInput = {
   name: Scalars['String'];
   title: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
   node: Scalars['JSONObject'];
 };
