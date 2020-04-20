@@ -3,6 +3,7 @@ import {
     UPDATE_NODE,
     DELETE_NODE,
     SAVE_WORKFLOW,
+    SAVE_WORKFLOW_COMPLETED,
     SET_WORKFLOW_ID
 } from 'redux/constants/workflow'
 import { UpdateNode, setCurrentWorkflow } from 'actions/workflow'
@@ -12,6 +13,7 @@ import { Workflow } from 'queries/workflow'
 import { history } from 'pages/router'
 import { createWorkflow, updateWorkflow } from 'mutations/workflow'
 import { addNotification } from './helper'
+import { getError } from 'utils/errors'
 
 function* saveCurrentWorkflow() {
     const currentWorkflow: Workflow = yield select(
@@ -36,8 +38,10 @@ function* saveCurrentWorkflow() {
             yield call(updateWorkflow, currentWorkflow)
             yield addNotification('success', 'Saved workflow successfully!')
         }
+
+        yield put({ type: SAVE_WORKFLOW_COMPLETED })
     } catch (error) {
-        yield addNotification('error', 'Could not save workflow')
+        yield addNotification('error', getError(error))
     }
 }
 

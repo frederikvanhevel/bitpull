@@ -1,7 +1,7 @@
+import { Page } from 'puppeteer';
 import CustomBrowser from '../browser';
 import { FlowError } from '../utils/errors';
 import { HtmlNode } from '../nodes/processing/html/typedefs';
-import { XmlNode } from '../nodes/processing/xml/typedefs';
 import Traverser from '../traverse';
 import { LogType, StorageObject, Integration, Settings } from './common';
 export declare type NodeId = string;
@@ -9,7 +9,6 @@ export declare enum NodeType {
     COLLECT = "COLLECT",
     PAGINATION = "PAGINATION",
     HTML = "HTML",
-    XML = "XML",
     CLICK = "CLICK",
     LOGIN = "LOGIN",
     FUNCTION = "FUNCTION",
@@ -34,13 +33,14 @@ export interface FlowNode {
     disabled?: boolean;
     children?: FlowNode[];
 }
-export declare type RootNode = HtmlNode | XmlNode;
+export declare type RootNode = HtmlNode;
 export interface NodeInput<T, S = any, P = any> {
     node: T;
     parent?: FlowNode;
     parentResult?: P;
     passedData?: S;
     rootAncestor?: RootNode;
+    page?: Page;
     paginationCallback?: (data: any) => void;
 }
 export interface TraverseOptions {

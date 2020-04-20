@@ -9,27 +9,15 @@ import {
 } from '@material-ui/core'
 import { PaginationNode } from '@bitpull/worker/lib/typedefs'
 import ExpandableOptionRow from 'components/ui/expandable/ExpandableOptionRow'
-import Selector, { Attributes } from './common/Selector'
+import Selector from './common/Selector'
 import { isNodeType, getNewNode } from '../helper'
 import { HTMLSelector } from '@bitpull/worker/lib/typedefs'
-import {
-    getMenuItems,
-    PaginationStep,
-    isLinkListPagination,
-    isNextLinkPagination
-} from './common/pagination-helper'
+import { getMenuItems, PaginationStep } from './common/pagination-helper'
 import { setHighlightedNodeId } from 'actions/workflow'
 import { Node } from 'typedefs/common'
 import { useDispatch } from 'react-redux'
-import {
-    NextLinkPagination,
-    PaginationTypes
-} from '@bitpull/worker/lib/nodes/processing/pagination/typedefs'
-
-enum PaginationType {
-    NEXT_LINK = 'nextLink',
-    LINK_LIST = 'linkList'
-}
+import { NextLinkPagination } from '@bitpull/worker/lib/nodes/processing/pagination/typedefs'
+import { ArrowDownward } from '@material-ui/icons'
 
 interface Props {
     node: PaginationNode
@@ -38,17 +26,19 @@ interface Props {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+    wrapper: {
+        padding: theme.spacing(3),
+        background: theme.palette.grey['100'],
+        '& > div': {
+            width: '100%'
+        }
+    },
     pages: {
         display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: theme.spacing(2),
-        padding: theme.spacing(4, 2),
+        flexDirection: 'column',
+        padding: theme.spacing(3),
         '& > div:first-child': {
-            flexBasis: '48%'
-        },
-        '& > div:last-child': {
-            flexBasis: '48%'
+            marginBottom: theme.spacing(4)
         }
     },
     select: {
@@ -75,22 +65,19 @@ const useStyles = makeStyles((theme: Theme) => ({
             width: 50,
             padding: theme.spacing(1)
         }
+    },
+    arrow: {
+        display: 'flex',
+        justifyContent: 'center',
+        marginBottom: theme.spacing(2)
     }
 }))
-
-const getInitialPanel = (pagination: PaginationTypes) => {
-    if (isNextLinkPagination(pagination)) return PaginationType.NEXT_LINK
-    else if (isLinkListPagination(pagination)) return PaginationType.LINK_LIST
-}
 
 const Pagination: React.FC<Props> = ({ node, onUpdate, onAdd }) => {
     const classes = useStyles()
     const dispatch = useDispatch()
     const [pagination, setPagination] = useState(
         node.pagination || { nextLink: '' }
-    )
-    const [activePanel, setActivePanel] = useState<PaginationType | undefined>(
-        getInitialPanel(pagination)
     )
     const updatePagination = (key: string, value: any) => {
         onUpdate('pagination', { ...pagination, [key]: value })
@@ -117,42 +104,63 @@ const Pagination: React.FC<Props> = ({ node, onUpdate, onAdd }) => {
 
     return (
         <div>
-            <ExpandableOptionRow
-                className={classes.expand}
-                title="Next page link"
-                active={activePanel === PaginationType.NEXT_LINK}
-                onChange={() => setActivePanel(PaginationType.NEXT_LINK)}
-            >
+            <div className={classes.wrapper}>
                 <Selector
-                    label="Next page selector"
+                    label="Next page button selector"
                     selector={(pagination as NextLinkPagination).nextLink}
                     node={node}
-                    defaultAttribute={Attributes.HREF}
+                    withAttribute={false}
                     onUpdate={(selector: HTMLSelector) => {
-                        updatePagination('linkList', undefined)
-                        updatePagination('nextLink', {
-                            attribute: 'href',
-                            ...selector
-                        })
+                        updatePagination('nextLink', selector)
                     }}
                 />
-            </ExpandableOptionRow>
+            </div>
 
-            {/* <ExpandableOptionRow
-                className={classes.expand}
-                title="List of links"
-                active={activePanel === PaginationType.LINK_LIST}
-                onChange={() => setActivePanel(PaginationType.LINK_LIST)}
-            >
-                <ListInput
-                    links={node.linkList}
-                    isRelative
-                    onChange={links => {
-                        updatePagination('nextLink', undefined)
-                        updatePagination('linkList', links)
-                    }}
-                />
-            </ExpandableOptionRow> */}
+            <div className={classes.pages}>
+                <FormControl>
+                    <InputLabel>For every page do</InputLabel>
+                    <Select
+                        required
+                        classes={{ select: classes.select }}
+                        value={node.goToPerPage || ''}
+                        onClose={() => onHighLightNode(undefined)}
+                        onChange={e => {
+                            onHighLightNode(undefined)
+                            selectNextNode('goToPerPage', e.target.value)
+                        }}
+                    >
+                        {getMenuItems(
+                            node,
+                            PaginationStep.PER_PAGE,
+                            onHighLightNode
+                        )}
+                    </Select>
+                </FormControl>
+
+                <div className={classes.arrow}>
+                    <ArrowDownward />
+                </div>
+
+                <FormControl>
+                    <InputLabel>Afterwards do</InputLabel>
+                    <Select
+                        required
+                        classes={{ select: classes.select }}
+                        value={node.gotoOnEnd || ''}
+                        onClose={() => onHighLightNode(undefined)}
+                        onChange={e => {
+                            onHighLightNode(undefined)
+                            selectNextNode('gotoOnEnd', e.target.value)
+                        }}
+                    >
+                        {getMenuItems(
+                            node,
+                            PaginationStep.END,
+                            onHighLightNode
+                        )}
+                    </Select>
+                </FormControl>
+            </div>
 
             <ExpandableOptionRow
                 className={classes.linkLimit}
@@ -181,48 +189,6 @@ const Pagination: React.FC<Props> = ({ node, onUpdate, onAdd }) => {
                     pages
                 </div>
             </ExpandableOptionRow>
-
-            <div className={classes.pages}>
-                <FormControl>
-                    <InputLabel>For every page go to</InputLabel>
-                    <Select
-                        required
-                        classes={{ select: classes.select }}
-                        value={node.goToPerPage || ''}
-                        onClose={() => onHighLightNode(undefined)}
-                        onChange={e => {
-                            onHighLightNode(undefined)
-                            selectNextNode('goToPerPage', e.target.value)
-                        }}
-                    >
-                        {getMenuItems(
-                            node,
-                            PaginationStep.PER_PAGE,
-                            onHighLightNode
-                        )}
-                    </Select>
-                </FormControl>
-
-                <FormControl>
-                    <InputLabel>At end go to</InputLabel>
-                    <Select
-                        required
-                        classes={{ select: classes.select }}
-                        value={node.gotoOnEnd || ''}
-                        onClose={() => onHighLightNode(undefined)}
-                        onChange={e => {
-                            onHighLightNode(undefined)
-                            selectNextNode('gotoOnEnd', e.target.value)
-                        }}
-                    >
-                        {getMenuItems(
-                            node,
-                            PaginationStep.END,
-                            onHighLightNode
-                        )}
-                    </Select>
-                </FormControl>
-            </div>
         </div>
     )
 }

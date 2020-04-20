@@ -1,4 +1,3 @@
-import nock from 'nock'
 import CustomBrowser from '../../../../browser'
 import htmlNodeMock from '../__mocks__/html.mock'
 import parseHtmlNode from '../'
@@ -36,7 +35,9 @@ describe('Html node', () => {
     })
 
     test('should parse a url node and get the html', async () => {
-        nock('https://brik.mykot.be').get('/rooms').reply(200, html)
+        browser.setMockHandler(() => ({
+            body: html
+        }))
 
         const result = await parseHtmlNode(
             { node: htmlNodeMock },
@@ -45,11 +46,15 @@ describe('Html node', () => {
             { browser }
         )
 
-        expect(result.parentResult!.html).toEqual(html)
+        const parsedHtml = await result.page!.content()
+
+        expect(parsedHtml.replace(/\s/g, '')).toContain('<div>Javascript')
     })
 
     test('should parse a url node and go to the url in the linked field', async () => {
-        nock('https://brik.mykot.be').get('/rooms').reply(200, html)
+        browser.setMockHandler(() => ({
+            body: html
+        }))
 
         const node = {
             ...htmlNodeMock,
@@ -70,27 +75,8 @@ describe('Html node', () => {
             { browser }
         )
 
-        expect(result.parentResult!.html).toEqual(html)
-    })
+        const parsedHtml = await result.page!.content()
 
-    test('should parse a url node and get the html after javascript is rendered', async () => {
-        browser.setMockHandler(() => ({
-            body: html
-        }))
-
-        const modifiedNode = { ...htmlNodeMock, parseJavascript: true }
-
-        const result = await parseHtmlNode(
-            { node: modifiedNode },
-            { integrations: [], settings: {} },
-            // @ts-ignore
-            { browser }
-        )
-
-        expect(result.parentResult!.html.replace(/\s/g, '')).toContain(
-            '<div>Javascript'
-        )
-
-        browser.resetMockHandler()
+        expect(parsedHtml.replace(/\s/g, '')).toContain('<div>Javascript')
     })
 })

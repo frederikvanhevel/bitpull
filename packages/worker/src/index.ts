@@ -49,10 +49,21 @@ import { absolutifyHtml } from './utils/absolutify'
 import NodeMap from './nodes/common/node-map'
 
 export {
+    NodeType,
+    LogType,
+    StorageService,
+    IntegrationType,
+    StorageProvider,
+    Status,
+    absolutifyHtml,
+    NodeMap,
+    PdfFormat
+}
+
+export type {
     NodeInput,
     TraverseOptions,
     FlowNode,
-    NodeType,
     RootNode,
     NodeId,
     CollectNode,
@@ -68,7 +79,6 @@ export {
     JsonNode,
     ScreenshotNode,
     PdfNode,
-    PdfFormat,
     WaitNode,
     FunctionNode,
     DropboxNode,
@@ -79,22 +89,15 @@ export {
     WebhookNode,
     SlackNode,
     EmailNode,
-    LogType,
-    StorageService,
     AmazonS3Credentials,
     StorageObject,
-    IntegrationType,
     IntegrationSettings,
     Integration,
-    StorageProvider,
     Settings,
-    Status,
     ParseLog,
     ErrorLog,
     FileStorageObject,
-    ParseResult,
-    absolutifyHtml,
-    NodeMap
+    ParseResult
 }
 
 export default Traverser

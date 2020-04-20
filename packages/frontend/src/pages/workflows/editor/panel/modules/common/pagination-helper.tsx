@@ -2,17 +2,13 @@ import React from 'react'
 import { MenuItem, ListItemIcon } from '@material-ui/core'
 import { Node } from 'typedefs/common'
 import { NodeType } from '@bitpull/worker/lib/typedefs'
-import {
-    getIcon,
-    getMenuItemsByType,
-    NodeMenuItem,
-    capitalize
-} from '../../helper'
+import { getIcon, getMenuItemsByType, NodeMenuItem } from '../../helper'
 import {
     PaginationTypes,
     NextLinkPagination,
     LinkListPagination
 } from '@bitpull/worker/lib/nodes/processing/pagination/typedefs'
+import { NODE_PROPERTIES } from '../../helper/properties'
 
 export enum PaginationStep {
     PER_PAGE = 'goToPerPage',
@@ -66,7 +62,7 @@ export const getExistingNodes = (
                         <ListItemIcon>
                             <Icon />
                         </ListItemIcon>{' '}
-                        {capitalize(childNode.type)}
+                        {NODE_PROPERTIES[childNode.type].label}
                     </MenuItem>
                 )
             })

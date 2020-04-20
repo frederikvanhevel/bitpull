@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer-core'
 import { NodeError, ParseError } from '../../common/errors'
-import { request, assert, getUriOrigin } from '../../../utils/common'
+import { assert, getUriOrigin } from '../../../utils/common'
 import { absolutifyUrl } from '../../../utils/absolutify'
 import { NodeParser } from '../../../typedefs/node'
 import { HtmlNode, HtmlParseResult } from './typedefs'
@@ -14,7 +14,6 @@ const html: NodeParser<HtmlNode, undefined, HtmlParseResult> = async (
     const { onLog, settings } = options
     const { browser } = context
     const { node, passedData, rootAncestor } = input
-    const { parseJavascript, delay, waitForNavigation } = node
     let link: string = node.link!
 
     if (node.linkedField) {
@@ -42,22 +41,9 @@ const html: NodeParser<HtmlNode, undefined, HtmlParseResult> = async (
 
     assert(link, ParseError.LINK_MISSING)
 
-    let html
-    let url = link
-    if (parseJavascript) {
-        await browser.with(async (page: Page) => {
-            const result = await browser.getPageContent(
-                page,
-                link,
-                delay,
-                waitForNavigation
-            )
-            html = result.html
-            url = result.url
-        }, settings)
-    } else {
-        html = await request(link)
-    }
+    const currentPage = await browser.with(async (page: Page) => {
+        await page.goto(link)
+    }, settings)
 
     onLog && onLog(node, `Got content of ${link}`)
 
@@ -66,10 +52,7 @@ const html: NodeParser<HtmlNode, undefined, HtmlParseResult> = async (
 
     return Promise.resolve({
         ...input,
-        parentResult: {
-            html,
-            url
-        }
+        page: currentPage
     })
 }
 

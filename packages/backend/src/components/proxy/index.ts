@@ -22,18 +22,14 @@ const prepareForSelector = async (node: FlowNode) => {
         }
     })
 
-    let parentResult
-    if (Array.isArray(result)) {
-        parentResult = result.flat(Infinity)[0].parentResult
-    } else {
-        parentResult = result.parentResult
+    if (!result) {
+        Logger.throw(
+            new Error(`Could not get website content`),
+            new Error(JSON.stringify(result))
+        )
     }
 
-    if (!parentResult) {
-        Logger.throw(new Error(`Could not get website content`))
-    }
-
-    const absolute = absolutifyHtml(parentResult.html, parentResult.url, proxy)
+    const absolute = absolutifyHtml(result.html, result.url, proxy)
 
     return addSelectorScript(absolute)
 }

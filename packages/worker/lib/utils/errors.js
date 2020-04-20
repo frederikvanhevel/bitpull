@@ -20,13 +20,13 @@ const errors_17 = require("../nodes/export/github/errors");
 const errors_18 = require("../nodes/processing/click/errors");
 exports.ErrorMessages = {
     // Node error
-    [errors_1.NodeError.NEEDS_ROOT_ANCESTOR]: 'Needs to have a html or xml node as parent',
-    [errors_1.NodeError.NODE_NOT_FOUND]: 'Node was not found',
-    [errors_1.NodeError.NO_RESULT]: 'Node did not have any results',
-    [errors_1.NodeError.TOO_MANY_CHILDREN]: "Node can't have so many child nodes",
-    [errors_1.NodeError.NO_CHILDREN_ALLOWED]: 'No child nodes allowed',
-    [errors_1.NodeError.NEEDS_PARENT]: 'Needs parent node',
-    [errors_1.NodeError.CHILD_NODE_MISSING]: 'Child node is required',
+    [errors_1.NodeError.NEEDS_ROOT_ANCESTOR]: 'Needs to have html or xml as previous step',
+    [errors_1.NodeError.NODE_NOT_FOUND]: 'Step was not found',
+    [errors_1.NodeError.NO_RESULT]: 'Step did not have any results',
+    [errors_1.NodeError.TOO_MANY_CHILDREN]: "Step can't have so many next steps",
+    [errors_1.NodeError.NO_CHILDREN_ALLOWED]: 'No next steps allowed',
+    [errors_1.NodeError.NEEDS_PARENT]: 'Needs parent step',
+    [errors_1.NodeError.CHILD_NODE_MISSING]: 'Next step is required',
     [errors_1.NodeError.NEEDS_REAL_BROWSER]: 'Feature not available in fast mode',
     [errors_1.NodeError.UNKNOWN_ERROR]: 'An unknown error occured',
     [errors_1.NodeError.TOO_MANY_ERRORS]: 'Too many errors occured',
@@ -42,7 +42,7 @@ exports.ErrorMessages = {
     [errors_1.ParseError.SELECTOR_MISSING]: 'No selector was defined',
     [errors_1.ParseError.ERROR_RENDERING_HTML]: 'Could not get website content',
     [errors_1.ParseError.NO_SELECTOR_PARSER_FOUND]: 'No suitable selecor parser found',
-    [errors_1.ParseError.HTML_MISSING]: 'Website content is not defined',
+    [errors_1.ParseError.HTML_MISSING]: 'Coudl not get website content',
     // Integration error
     [errors_1.IntegrationError.INTEGRATION_MISSING]: 'Integration is not set up',
     [errors_1.IntegrationError.INTEGRATION_INACTIVE]: 'Integration is not active',
@@ -54,7 +54,7 @@ exports.ErrorMessages = {
     [errors_8.StorageError.AWS_BUCKET_MISSING]: 'AWS bucket not specified',
     [errors_8.StorageError.AWS_ACCESS_KEY_ID_MISSING]: 'AWS access key missing',
     [errors_8.StorageError.AWS_SECRET_ACCESS_KEY_MISSING]: 'AWS secret missing',
-    [errors_8.StorageError.INVALID_PARENT_TYPE]: 'Parent node does not produce a file',
+    [errors_8.StorageError.INVALID_PARENT_TYPE]: 'Previous step does not produce a file',
     // Dropbox error
     [errors_4.DropboxError.UPLOAD_FAILED]: 'Error uploading to Dropbox',
     // OneDrive error
@@ -76,7 +76,7 @@ exports.ErrorMessages = {
     // Html error
     [errors_13.HtmlError.LINKED_FIELD_MISSING]: 'Linked field is not defined',
     // Pagination error
-    [errors_11.PaginationError.GOTOPERPAGE_NODE_MISSING]: 'No page node specified',
+    [errors_11.PaginationError.GOTOPERPAGE_NODE_MISSING]: 'No per page step specified',
     [errors_11.PaginationError.PAGINATION_METHOD_MISSING]: 'Pagination method missing',
     [errors_11.PaginationError.NEXT_LINK_MISSING]: 'Next link was not specified',
     [errors_11.PaginationError.NO_LINKS_SPECIFIED]: 'No links were specified',

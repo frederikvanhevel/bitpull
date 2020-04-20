@@ -44,15 +44,18 @@ describe('Login node', () => {
             body: ++handles === 1 ? beforeLogin : afterLogin
         }))
 
+        const page = await browser.newPage()
+        await page.goto('https://test-page.be')
+
         const result = await parseLoginNode(
             {
                 node: loginNodeMock,
                 rootAncestor: {
                     id: '00',
                     type: NodeType.HTML,
-                    parseJavascript: true,
                     parsedLink: 'https://test-page.be'
-                }
+                },
+                page
             },
             {
                 integrations: [],
@@ -68,7 +71,8 @@ describe('Login node', () => {
             { browser }
         )
 
-        expect(result.parentResult!.html.replace(/\s/g, '')).toEqual(
+        const parsedHtml = await result.page!.content()
+        expect(parsedHtml.replace(/\s/g, '')).toEqual(
             afterLogin.replace(/\s/g, '')
         )
 
@@ -81,6 +85,9 @@ describe('Login node', () => {
             body: ++handles === 1 ? beforeLogin : afterLogin
         }))
 
+        const page = await browser.newPage()
+        await page.goto('https://test-page.be')
+
         const encryptedMock = { ...loginNodeMock }
         encryptedMock.credentials.password.encrypted = true
 
@@ -90,9 +97,9 @@ describe('Login node', () => {
                 rootAncestor: {
                     id: '00',
                     type: NodeType.HTML,
-                    parseJavascript: true,
                     parsedLink: 'https://test-page.be'
-                }
+                },
+                page
             },
             {
                 integrations: [],
@@ -108,7 +115,8 @@ describe('Login node', () => {
             { browser }
         )
 
-        expect(result.parentResult!.html.replace(/\s/g, '')).toEqual(
+        const parsedHtml = await result.page!.content()
+        expect(parsedHtml.replace(/\s/g, '')).toEqual(
             afterLogin.replace(/\s/g, '')
         )
 
@@ -120,6 +128,9 @@ describe('Login node', () => {
         browser.setMockHandler(() => ({
             body: ++handles === 1 ? beforeLogin : afterLogin
         }))
+
+        const page = await browser.newPage()
+        await page.goto('https://test-page.be')
 
         const encryptedMock = { ...loginNodeMock }
         encryptedMock.credentials.password.encrypted = true
@@ -135,9 +146,9 @@ describe('Login node', () => {
             rootAncestor: {
                 id: '00',
                 type: NodeType.HTML,
-                parseJavascript: true,
                 parsedLink: 'https://test-page.be'
-            }
+            },
+            page
         })
 
         expect(result).rejects.toThrow()

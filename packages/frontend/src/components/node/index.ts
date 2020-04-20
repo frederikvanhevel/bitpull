@@ -128,13 +128,12 @@ export const findParentOfType = (
 }
 
 export const findUrlAncestor = (node: Node): Node<RootNode> | undefined => {
-    return findParentOfType(node, [NodeType.HTML, NodeType.XML]) as RootNode
+    return findParentOfType(node, [NodeType.HTML]) as RootNode
 }
 
 export const traverseAncestors = (node: Node) => {
     const traversableTypes = [
         NodeType.HTML,
-        NodeType.XML,
         NodeType.LOGIN,
         NodeType.WAIT,
         NodeType.CLICK,

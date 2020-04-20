@@ -16,6 +16,7 @@ import {
     SET_WATCHED_NODE_RESULT,
     SET_HIGHLIGHTED_NODE_ID,
     SAVE_WORKFLOW,
+    SAVE_WORKFLOW_COMPLETED,
     SET_WORKFLOW_ID
 } from '../constants/workflow'
 import { initializeNodes } from 'components/node'
@@ -215,7 +216,7 @@ export const setWatchedNodeResult = (data?: any) => {
 }
 
 export interface SaveCurrentWorkflow {
-    type: typeof SAVE_WORKFLOW
+    type: typeof SAVE_WORKFLOW | typeof SAVE_WORKFLOW_COMPLETED
 }
 
 export const saveCurrentWorkflow = () => {

@@ -33,6 +33,9 @@ const Controls: React.FC = () => {
     const workflow = useSelector<AppState, Workflow>(
         state => state.workflow.currentWorkflow!
     )
+    const hasUnsavedChanges = useSelector<AppState, boolean>(
+        state => state.workflow.hasUnsavedChanges
+    )
     const { register, errors, reset } = useForm({
         defaultValues: {
             name: workflow.name
@@ -83,7 +86,9 @@ const Controls: React.FC = () => {
                     color="primary"
                     size="small"
                     onClick={() => dispatch(saveCurrentWorkflow())}
-                    disabled={Object.values(errors).length > 0}
+                    disabled={
+                        Object.values(errors).length > 0 || !hasUnsavedChanges
+                    }
                 >
                     Save
                 </Button>

@@ -27,7 +27,6 @@ const EXPORT_NODES = [
 exports.IMPORT_PATHS = {
     [node_1.NodeType.COLLECT]: '../nodes/processing/collect',
     [node_1.NodeType.HTML]: '../nodes/processing/html',
-    [node_1.NodeType.XML]: '../nodes/processing/xml',
     [node_1.NodeType.PAGINATION]: '../nodes/processing/pagination',
     [node_1.NodeType.CLICK]: '../nodes/processing/click',
     [node_1.NodeType.LOGIN]: '../nodes/processing/login',
@@ -49,13 +48,13 @@ exports.IMPORT_PATHS = {
 };
 exports.isRootNode = (node) => {
     const linkNode = node;
-    return ((linkNode.type === node_1.NodeType.HTML || linkNode.type === node_1.NodeType.XML) &&
-        !!linkNode.link);
+    return linkNode.type === node_1.NodeType.HTML && !!linkNode.link;
 };
 exports.getModule = async (type) => {
     if (!exports.IMPORT_PATHS[type]) {
         throw new errors_1.FlowError(`Node parser missing for type ${type}`);
     }
+    // @ts-ignore
     const importedModule = await Promise.resolve().then(() => __importStar(require(exports.IMPORT_PATHS[type])));
     return importedModule.default;
 };

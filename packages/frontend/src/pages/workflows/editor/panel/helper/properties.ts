@@ -52,12 +52,6 @@ export const NODE_PROPERTIES: Record<NodeType, NodeProperty> = {
         shortLabel: 'Get HTML',
         editor: EditUrl
     },
-    [NodeType.XML]: {
-        icon: UrlIcon,
-        label: 'Get XML content',
-        shortLabel: 'Get XML',
-        editor: EditUrl
-    },
     [NodeType.COLLECT]: {
         icon: CollectIcon,
         label: 'Collect data',

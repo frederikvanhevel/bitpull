@@ -16,7 +16,11 @@ import Logger from 'utils/logging/logger'
 import { WorkerEvent } from 'components/worker/typedefs'
 import StorageService from 'services/storage'
 import { ResourceType } from 'models/storage'
-import { WorkflowInUseError, RunnerTimeoutReachedError } from 'utils/errors'
+import {
+    WorkflowInUseError,
+    RunnerTimeoutReachedError,
+    LimitReachedError
+} from 'utils/errors'
 import { AuthenticationContext } from '../directives/auth'
 import { pubsub } from '../schema'
 import { SubscriptionEvent } from '../typedefs/workflow'
@@ -59,6 +63,8 @@ export const createWorkflow: GraphQLFieldResolver<
             args.data as Workflow
         )
     } catch (error) {
+        if (error instanceof LimitReachedError) throw error
+
         Logger.throw(
             new Error('Could not create workflow'),
             error,

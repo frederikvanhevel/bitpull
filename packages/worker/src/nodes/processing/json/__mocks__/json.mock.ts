@@ -4,8 +4,10 @@ import { JsonNode } from '../typedefs'
 export default {
     id: '0',
     type: NodeType.JSON,
-    children: [{
-        id: '1',
-        type: NodeType.STORAGE
-    }]
+    children: [
+        {
+            id: '1',
+            type: NodeType.STORAGE
+        }
+    ]
 } as JsonNode

@@ -53,7 +53,13 @@ const BrowserFrame: React.FC<Props> = ({
     }, [])
 
     if (loading)
-        return <Loader delay={225} text="Getting website content ..." />
+        return (
+            <Loader
+                delay={225}
+                text="Getting website content ..."
+                subText="This could take a minute or two"
+            />
+        )
     if (!data || error)
         return (
             <ErrorScreen
@@ -62,7 +68,13 @@ const BrowserFrame: React.FC<Props> = ({
             />
         )
 
-    return <iframe srcDoc={data.fetchSiteContent} ref={frameRef} />
+    return (
+        <iframe
+            srcDoc={data.fetchSiteContent}
+            ref={frameRef}
+            sandbox="allow-scripts allow-same-origin"
+        />
+    )
 }
 
 export default BrowserFrame

@@ -5,7 +5,6 @@ var NodeType;
     NodeType["COLLECT"] = "COLLECT";
     NodeType["PAGINATION"] = "PAGINATION";
     NodeType["HTML"] = "HTML";
-    NodeType["XML"] = "XML";
     NodeType["CLICK"] = "CLICK";
     NodeType["LOGIN"] = "LOGIN";
     NodeType["FUNCTION"] = "FUNCTION";

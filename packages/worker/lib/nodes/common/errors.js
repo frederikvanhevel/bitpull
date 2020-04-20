@@ -30,6 +30,7 @@ var ParseError;
     ParseError["NO_SELECTOR_PARSER_FOUND"] = "NO_SELECTOR_PARSER_FOUND";
     ParseError["HTML_MISSING"] = "HTML_MISSING";
     ParseError["XML_PARSE_ERROR"] = "XML_PARSE_ERROR";
+    ParseError["PAGE_MISSING"] = "PAGE_MISSING";
 })(ParseError = exports.ParseError || (exports.ParseError = {}));
 var IntegrationError;
 (function (IntegrationError) {

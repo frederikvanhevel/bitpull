@@ -1,10 +1,14 @@
-import nock from 'nock'
-// import delay from 'delay'
+import { mocked } from 'ts-jest'
 import parseNodeMock from '../__mocks__/traverse.mock'
 import errorsNodeMock from '../__mocks__/errors.mock'
 import brikMock from '../__mocks__/brik.mock'
 import Traverser from '../traverse'
 import { NodeType } from '../typedefs/node'
+import CustomBrowser from '../browser'
+import * as delay from '../utils/delay'
+
+jest.mock('../utils/delay')
+const mockedDelay = mocked(delay, true)
 
 const htmlPageOne = `
     <html>
@@ -28,13 +32,21 @@ const htmlPageTwo = `
 
 describe('Traverser', () => {
     let traverser: Traverser
+    let browser: CustomBrowser
 
     beforeAll(async () => {
-        traverser = new Traverser({
-            settings: {
-                exitOnError: true
-            }
-        })
+        browser = new CustomBrowser()
+
+        traverser = new Traverser(
+            {
+                settings: {
+                    exitOnError: true
+                }
+            },
+            browser
+        )
+
+        mockedDelay.randomizedDelay.mockImplementation(() => Promise.resolve())
     })
 
     afterAll(async () => {
@@ -42,7 +54,9 @@ describe('Traverser', () => {
     })
 
     test('should parse a full tree', async () => {
-        nock('https://brik.mykot.be').get('/rooms').reply(200, htmlPageOne)
+        browser.setMockHandler(() => ({
+            body: htmlPageOne
+        }))
 
         const mockFn1 = jest.fn()
         const mockFn2 = jest.fn()
@@ -96,19 +110,19 @@ describe('Traverser', () => {
 
         await traverser.parseNode({ node })
 
-        expect(mockFn1.mock.calls[0][0]).toEqual({ first: '/some-house' })
+        expect(mockFn1.mock.calls[0][0]).toEqual({
+            first: 'https://brik.mykot.be/some-house'
+        })
         expect(mockFn1.mock.calls.length).toEqual(1)
         expect(mockFn2.mock.calls[0][0]).toEqual({ second: 1400 })
         expect(mockFn2.mock.calls.length).toEqual(1)
     })
 
     test('should parse a full tree', async () => {
-        nock('https://brik.mykot.be')
-            .persist()
-            .get('/rooms')
-            .reply(200, htmlPageOne)
-            .get('/some-house')
-            .reply(200, htmlPageTwo)
+        let handles = 0
+        browser.setMockHandler(() => ({
+            body: ++handles === 1 ? htmlPageOne : htmlPageTwo
+        }))
 
         const mockFn = jest.fn()
         const node = { ...parseNodeMock }
@@ -120,7 +134,12 @@ describe('Traverser', () => {
         })
 
         const expected = [
-            { price: 1400, surface: 40, type: 'house', url: '/some-house' }
+            {
+                price: 1400,
+                surface: 40,
+                type: 'house',
+                url: 'https://brik.mykot.be/some-house'
+            }
         ]
 
         await traverser.parseNode({ node: parseNodeMock })
@@ -140,7 +159,12 @@ describe('Traverser', () => {
         })
 
         const expected = [
-            { price: 1400, surface: 40, type: 'house', url: '/some-house' }
+            {
+                price: 1400,
+                surface: 40,
+                type: 'house',
+                url: 'https://brik.mykot.be/some-house'
+            }
         ]
 
         await traverser.parseNode({ node: brikMock })
@@ -150,11 +174,10 @@ describe('Traverser', () => {
     })
 
     test('progress callback should be called for each node', async () => {
-        nock('https://brik.mykot.be')
-            .get('/rooms')
-            .reply(200, htmlPageOne)
-            .get('/some-house')
-            .reply(200, htmlPageTwo)
+        let handles = 0
+        browser.setMockHandler(() => ({
+            body: ++handles === 1 ? htmlPageOne : htmlPageTwo
+        }))
 
         const mockFn = jest.fn()
 
@@ -167,17 +190,16 @@ describe('Traverser', () => {
             node: parseNodeMock
         })
 
-        expect(mockFn.mock.calls.length).toEqual(6)
+        expect(mockFn.mock.calls.length).toEqual(4)
 
         await tra.cleanup()
     })
 
     test('logging callback should be called while running', async () => {
-        nock('https://brik.mykot.be')
-            .get('/rooms')
-            .reply(200, htmlPageOne)
-            .get('/some-house')
-            .reply(200, htmlPageTwo)
+        let handles = 0
+        browser.setMockHandler(() => ({
+            body: ++handles === 1 ? htmlPageOne : htmlPageTwo
+        }))
 
         const mockFn = jest.fn()
 
@@ -189,17 +211,16 @@ describe('Traverser', () => {
         const result = await tra.run(parseNodeMock)
 
         expect(mockFn.mock.calls.length).toBeGreaterThan(0)
-        expect(result.logs.length).toEqual(7)
+        expect(result.logs.length).toEqual(5)
 
         await tra.cleanup()
     })
 
     test('error callback should be called on error', async () => {
-        nock('https://brik.mykot.be')
-            .get('/rooms')
-            .reply(200, htmlPageOne)
-            .get('/some-house')
-            .reply(200, htmlPageTwo)
+        let handles = 0
+        browser.setMockHandler(() => ({
+            body: ++handles === 1 ? htmlPageOne : htmlPageTwo
+        }))
 
         const mockFn = jest.fn()
 
@@ -220,11 +241,10 @@ describe('Traverser', () => {
     })
 
     test.skip('should throw when pagination endNode is missing', async () => {
-        nock('https://brik.mykot.be')
-            .get('/rooms')
-            .reply(200, htmlPageOne)
-            .get('/some-house')
-            .reply(200, htmlPageTwo)
+        let handles = 0
+        browser.setMockHandler(() => ({
+            body: ++handles === 1 ? htmlPageOne : htmlPageTwo
+        }))
 
         const modifiedNode = { ...parseNodeMock }
         modifiedNode.children[0].children.splice(1, 1)
@@ -235,11 +255,10 @@ describe('Traverser', () => {
     })
 
     test('should throw when pagination per page node is missing', async () => {
-        nock('https://brik.mykot.be')
-            .get('/rooms')
-            .reply(200, htmlPageOne)
-            .get('/some-house')
-            .reply(200, htmlPageTwo)
+        let handles = 0
+        browser.setMockHandler(() => ({
+            body: ++handles === 1 ? htmlPageOne : htmlPageTwo
+        }))
 
         const modifiedNode = { ...parseNodeMock }
         modifiedNode.children[0].children.splice(0, 1)
@@ -250,11 +269,10 @@ describe('Traverser', () => {
     })
 
     test('should call onError on error', async () => {
-        nock('https://brik.mykot.be')
-            .get('/rooms')
-            .reply(200, htmlPageOne)
-            .get('/some-house')
-            .reply(200, htmlPageTwo)
+        let handles = 0
+        browser.setMockHandler(() => ({
+            body: ++handles === 1 ? htmlPageOne : htmlPageTwo
+        }))
 
         const mockFn = jest.fn()
 
@@ -277,11 +295,10 @@ describe('Traverser', () => {
     })
 
     test('should throw when too many errors occured', async () => {
-        nock('https://brik.mykot.be')
-            .get('/rooms')
-            .reply(200, htmlPageOne)
-            .get('/some-house')
-            .reply(200, htmlPageTwo)
+        let handles = 0
+        browser.setMockHandler(() => ({
+            body: ++handles === 1 ? htmlPageOne : htmlPageTwo
+        }))
 
         const mockFn = jest.fn()
 
@@ -303,11 +320,10 @@ describe('Traverser', () => {
     })
 
     test('should continue onError when exitOnError is false', async () => {
-        nock('https://brik.mykot.be')
-            .get('/rooms')
-            .reply(200, htmlPageOne)
-            .get('/some-house')
-            .reply(200, htmlPageTwo)
+        let handles = 0
+        browser.setMockHandler(() => ({
+            body: ++handles === 1 ? htmlPageOne : htmlPageTwo
+        }))
 
         const mockFn = jest.fn()
 

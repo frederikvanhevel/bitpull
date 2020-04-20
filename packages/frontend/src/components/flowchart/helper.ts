@@ -45,7 +45,6 @@ export interface ChartClasses {
 
 const NODE_LABELS: Record<NodeType, string> = {
     [NodeType.HTML]: 'html',
-    [NodeType.XML]: 'xml',
     [NodeType.COLLECT]: 'collect',
     [NodeType.PAGINATION]: 'pagination',
     [NodeType.WEBHOOK]: 'webhook',
@@ -69,7 +68,6 @@ const NODE_LABELS: Record<NodeType, string> = {
 
 const NODE_ICONS: Record<NodeType, ReactNode> = {
     [NodeType.HTML]: urlIcon,
-    [NodeType.XML]: urlIcon,
     [NodeType.COLLECT]: collectIcon,
     [NodeType.PAGINATION]: paginateIcon,
     [NodeType.WEBHOOK]: webhookIcon,
@@ -113,7 +111,7 @@ const getHostname = (link: string) => {
 }
 
 export const getNodeText = (node: Node): string => {
-    if (node.type === NodeType.HTML || node.type === NodeType.XML) {
+    if (node.type === NodeType.HTML) {
         const htmlNode = node as HtmlNode
         const link = htmlNode.linkedField
             ? `{{${htmlNode.linkedField}}}`
@@ -132,8 +130,5 @@ export const isLinkDotted = (link: any) => {
 }
 
 export const isRootNode = (node: Node) => {
-    return (
-        (node.type === NodeType.HTML || node.type === NodeType.XML) &&
-        (node as HtmlNode).link !== undefined
-    )
+    return node.type === NodeType.HTML && (node as HtmlNode).link !== undefined
 }

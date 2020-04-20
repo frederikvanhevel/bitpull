@@ -7,7 +7,7 @@ const apiRouter = Router()
 apiRouter.get('/proxy', async (req, res) => {
     const { url } = req.query
 
-    // prevent localhosty
+    // prevent localhost
     if (typeof url !== 'string' || LOCALHOST_REGEX.test(url)) {
         res.status(400).send()
     }

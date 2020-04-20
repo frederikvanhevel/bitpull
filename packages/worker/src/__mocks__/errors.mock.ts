@@ -4,7 +4,6 @@ export default {
     id: '0',
     type: NodeType.HTML,
     link: 'https://brik.mykot.be/rooms',
-    parseJavascript: false,
     children: [
         {
             id: '1',

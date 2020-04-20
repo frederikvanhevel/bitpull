@@ -9,7 +9,7 @@ import {
     isExportOnlyNode,
     isProcessingOnlyNode,
     getNewNode,
-    isPaginationSet
+    isPaginationNode
 } from './helper'
 import SelectProcessor from './controls/SelectProcessor'
 import SelectExport from './controls/SelectExport'
@@ -112,7 +112,7 @@ const Details: React.FC<Props> = ({
                     onAdd={onAddNode}
                 />
 
-                {isPaginationSet(node) &&
+                {!isPaginationNode(node) &&
                     !isEndNode(node) &&
                     !isIntegrationNode(node) && (
                         <div>
@@ -144,7 +144,9 @@ const Details: React.FC<Props> = ({
                     </div>
                 )}
 
-                {node.children && node.children.length ? (
+                {!isPaginationNode(node) &&
+                node.children &&
+                node.children.length ? (
                     <StepOverview node={node} onSelectNode={onSelectNode} />
                 ) : null}
             </div>

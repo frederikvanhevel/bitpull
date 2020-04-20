@@ -35,7 +35,6 @@ describe('Pdf node', () => {
                 rootAncestor: {
                     id: '00',
                     type: NodeType.HTML,
-                    parseJavascript: true,
                     parsedLink: 'https://brik.mykot.be/rooms'
                 }
             },
@@ -53,8 +52,7 @@ describe('Pdf node', () => {
                 node: pdfFileNodeMock,
                 rootAncestor: {
                     id: '00',
-                    type: NodeType.HTML,
-                    parseJavascript: true
+                    type: NodeType.HTML
                 },
                 parentResult: {
                     html,

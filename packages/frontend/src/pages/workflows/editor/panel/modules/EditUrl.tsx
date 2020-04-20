@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import {
     makeStyles,
@@ -6,14 +6,10 @@ import {
     InputLabel,
     Select,
     MenuItem,
-    TextField,
-    Typography
+    TextField
 } from '@material-ui/core'
 import { Link, LowPriority } from '@material-ui/icons'
-import ExpandableOptionRow from 'components/ui/expandable/ExpandableOptionRow'
 import { HtmlNode } from '@bitpull/worker/lib/typedefs'
-import { XmlNode } from '@bitpull/worker/lib/typedefs'
-import { NodeType } from '@bitpull/worker/lib/typedefs'
 import { Node } from 'typedefs/common'
 import { CollectNode, CollectField } from '@bitpull/worker/lib/typedefs'
 import { URL_REGEX } from './common/validation'
@@ -21,7 +17,7 @@ import MoreMenu from 'components/ui/MoreMenu'
 import pathOr from 'ramda/es/pathOr'
 
 interface Props {
-    node: (HtmlNode | XmlNode) & Node
+    node: HtmlNode & Node
     onUpdate: (key: string, value: any) => void
 }
 
@@ -37,18 +33,17 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingLeft: theme.spacing(3),
-        paddingRight: theme.spacing(3),
-        '& > div:nth-child(2)': {
+        padding: theme.spacing(3),
+        '& > div:nth-child(1)': {
             flexGrow: 1
-        },
-        '& > div:first-child': {
-            flexBasis: '30%',
-            marginRight: theme.spacing(2)
-        },
-        '& > div:last-child': {
-            flexBasis: '4%'
         }
+        // '& > div:first-child': {
+        //     flexBasis: '30%',
+        //     marginRight: theme.spacing(2)
+        // },
+        // '& > div:last-child': {
+        //     flexBasis: '4%'
+        // }
     },
     expand: {
         padding: `0 ${theme.spacing(2)}px`
@@ -57,7 +52,7 @@ const useStyles = makeStyles(theme => ({
 
 const EditUrl: React.FC<Props> = ({ node, onUpdate }) => {
     const classes = useStyles()
-    const { register, errors } = useForm<(HtmlNode | XmlNode) & Node>({
+    const { register, errors, reset } = useForm<HtmlNode & Node>({
         defaultValues: node,
         mode: 'onChange'
     })
@@ -70,7 +65,10 @@ const EditUrl: React.FC<Props> = ({ node, onUpdate }) => {
               }
             : {
                   label: 'Convert to link',
-                  onClick: () => onUpdate('link', ''),
+                  onClick: () => {
+                      onUpdate('link', '')
+                      onUpdate('linkedField', undefined)
+                  },
                   icon: <Link />
               }
     const parent = node.parent as CollectNode
@@ -78,24 +76,17 @@ const EditUrl: React.FC<Props> = ({ node, onUpdate }) => {
         field => !!field.label
     )
 
+    useEffect(() => {
+        reset(node)
+    }, [node])
+
     return (
         <div className={classes.wrapper}>
             <div className={classes.link}>
-                <FormControl>
-                    <InputLabel>Type</InputLabel>
-                    <Select
-                        value={node.type}
-                        onChange={e => onUpdate('type', e.target.value)}
-                    >
-                        <MenuItem value={NodeType.HTML}>HTML</MenuItem>
-                        <MenuItem value={NodeType.XML}>XML</MenuItem>
-                    </Select>
-                </FormControl>
-
-                {node.link || node.link === '' ? (
+                {node.link || node.link === '' || !parentFields.length ? (
                     <TextField
                         error={!!errors.link}
-                        label="Url"
+                        label="Website url"
                         placeholder="http://example.com"
                         name="link"
                         inputRef={register({
@@ -135,24 +126,10 @@ const EditUrl: React.FC<Props> = ({ node, onUpdate }) => {
                     </FormControl>
                 )}
 
-                {node.parent && <MoreMenu options={[menuOption]} />}
+                {node.parent && !!parentFields.length && (
+                    <MoreMenu options={[menuOption]} />
+                )}
             </div>
-
-            {node.type === NodeType.HTML && (
-                <ExpandableOptionRow
-                    className={classes.expand}
-                    title="Disable javascript"
-                    active={!node.parseJavascript || false}
-                    onChange={(e, active) =>
-                        onUpdate('parseJavascript', !active)
-                    }
-                >
-                    <Typography variant="caption">
-                        No javascript will be executed. This is faster, but
-                        results might not be as expected.
-                    </Typography>
-                </ExpandableOptionRow>
-            )}
         </div>
     )
 }

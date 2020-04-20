@@ -7,9 +7,8 @@ import {
 } from '../../../utils/file'
 import { NodeParser, NodeInput } from '../../../typedefs/node'
 import { assert } from '../../../utils/common'
-import { NodeError, FileError, ParseError } from '../../common/errors'
+import { NodeError, FileError } from '../../common/errors'
 import { HtmlParseResult } from '../html/typedefs'
-import { absolutifyHtml } from '../../../utils/absolutify'
 import { hasChildExportNodes } from '../../../utils/helper'
 import { ScreenshotNode } from './typedefs'
 
@@ -20,30 +19,21 @@ const screenshot: NodeParser<ScreenshotNode, FileWriteResult> = async (
 ) => {
     const { settings, onLog } = options
     const { browser } = context
-    const { node, rootAncestor, parentResult } = input
+    const { node, rootAncestor, page } = input
 
     assert(hasChildExportNodes(node), NodeError.EXPORT_NODE_MISSING)
     assert(rootAncestor, NodeError.NEEDS_ROOT_ANCESTOR)
-    assert(
-        rootAncestor.parsedLink || parentResult!.html,
-        ParseError.LINK_MISSING
-    )
 
     let buffer
-    await browser.with(async page => {
-        if (parentResult?.html) {
-            const displayHtml = absolutifyHtml(
-                parentResult.html,
-                parentResult.url,
-                settings.proxyEndpoint
-            )
-            await page.setContent(displayHtml)
-        } else await page.goto(rootAncestor!.parsedLink!)
-
-        buffer = await page.screenshot({
-            fullPage: node.fullPage || false
-        })
-    }, settings)
+    await browser.with(
+        async page => {
+            buffer = await page.screenshot({
+                fullPage: node.fullPage || false
+            })
+        },
+        settings,
+        page
+    )
 
     assert(buffer, FileError.BUFFER_EMPTY)
 

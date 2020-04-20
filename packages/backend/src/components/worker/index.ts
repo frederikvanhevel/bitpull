@@ -37,12 +37,12 @@ const spawn = (
                 } else onEvent && onEvent(message)
             })
 
-            forked.on('error', () => {
+            forked.on('error', error => {
                 clearTimeout(timeout)
-                reject()
+                reject(error)
             })
 
-            forked.on('exit', (code) => {
+            forked.on('exit', code => {
                 code === 0 ? resolve() : reject()
             })
 

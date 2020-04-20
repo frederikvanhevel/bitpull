@@ -1,6 +1,6 @@
-import { FlowNode, NodeType } from '../../../typedefs/node';
+import { FlowNode } from '../../../typedefs/node';
 export declare type XmlNode = FlowNode & {
-    type: NodeType.XML;
+    type: 'XML';
     link?: string;
     linkedField?: string;
     parseJavascript?: boolean;

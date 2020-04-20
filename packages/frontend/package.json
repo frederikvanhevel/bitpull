@@ -10,7 +10,8 @@
     "build:all": "yarn build && yarn build:selector",
     "typegen": "apollo client:codegen --config apollo.config.js --target typescript --globalTypesFile ./src/typedefs/graphql.ts typedefs",
     "lint": "eslint --ext .ts --ext .tsx 'src' --fix",
-    "tsc": "tsc --skipLibCheck"
+    "tsc": "tsc --skipLibCheck",
+    "test": "jest"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.4",

@@ -96,35 +96,40 @@ const config: Configuration = {
     //     splitChunks: false
     // },
 
+    // optimization: {
+    //     splitChunks: {
+    //         // chunks: 'all',
+    //         // minChunks: 2
+    //         cacheGroups: {
+    //             vendor: {
+    //                 // chunks: 'initial',
+    //                 name: 'vendor',
+    //                 test: /[\\/]node_modules[\\/]/,
+    //                 chunks: 'initial'
+    //             },
+    //             // auth: {
+    //             //     // chunks: 'initial',
+    //             //     name: 'auth',
+    //             //     test: /[\\/]pages\/auth[\\/]/,
+    //             //     chunks: 'all'
+    //             //     // enforce: true
+    //             // },
+    //             pages: {
+    //                 // chunks: 'initial',
+    //                 name: 'pages',
+    //                 test: /[\\/]pages[\\/]/,
+    //                 chunks: 'all'
+    //                 // enforce: true
+    //             }
+    //         }
+    //     },
+    //     runtimeChunk: true
+    // },
+
     optimization: {
-        splitChunks: {
-            // chunks: 'all',
-            // minChunks: 2
-            cacheGroups: {
-                vendor: {
-                    // chunks: 'initial',
-                    name: 'vendor',
-                    test: /[\\/]node_modules[\\/]/,
-                    chunks: 'initial'
-                },
-                // auth: {
-                //     // chunks: 'initial',
-                //     name: 'auth',
-                //     test: /[\\/]pages\/auth[\\/]/,
-                //     chunks: 'all'
-                //     // enforce: true
-                // },
-                pages: {
-                    // chunks: 'initial',
-                    name: 'pages',
-                    test: /[\\/]pages[\\/]/,
-                    chunks: 'all'
-                    // enforce: true
-                }
-            }
-        },
-        runtimeChunk: true
-    },
+		// We no not want to minimize our code.
+		minimize: false
+	},
 
     plugins: [
         // new ForkTsCheckerWebpackPlugin(),

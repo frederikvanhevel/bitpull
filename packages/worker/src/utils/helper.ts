@@ -23,7 +23,6 @@ const EXPORT_NODES = [
 export const IMPORT_PATHS: Record<NodeType, string> = {
     [NodeType.COLLECT]: '../nodes/processing/collect',
     [NodeType.HTML]: '../nodes/processing/html',
-    [NodeType.XML]: '../nodes/processing/xml',
     [NodeType.PAGINATION]: '../nodes/processing/pagination',
     [NodeType.CLICK]: '../nodes/processing/click',
     [NodeType.LOGIN]: '../nodes/processing/login',
@@ -46,11 +45,7 @@ export const IMPORT_PATHS: Record<NodeType, string> = {
 
 export const isRootNode = (node: FlowNode): boolean => {
     const linkNode = node as HtmlNode | XmlNode
-
-    return (
-        (linkNode.type === NodeType.HTML || linkNode.type === NodeType.XML) &&
-        !!linkNode.link
-    )
+    return linkNode.type === NodeType.HTML && !!linkNode.link
 }
 
 export const getModule = async (
@@ -60,6 +55,7 @@ export const getModule = async (
         throw new FlowError(`Node parser missing for type ${type}`)
     }
 
+    // @ts-ignore
     const importedModule = await import(IMPORT_PATHS[type])
 
     return importedModule.default

@@ -16,23 +16,17 @@
       ]
     },
     "baseUrl": ".",
-    "types": [
-      "node",
-      "@types/jest"
-    ],
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "sourceMap": false,
-    "declaration": false
+    "sourceMap": true,
+    "declaration": true
   },
   "exclude": [
     "**/lib/*",
-    // "src/tryout.ts",
-    // "src/**/*.spec.ts",
-    // "src/**/*.mock.ts",
+    // "src/**/*",
     "node_modules"
   ],
   "include": [
-    "src/**/*"
+    "src/typedefs.ts"
   ]
 }

@@ -23,7 +23,8 @@ const EditorPage: React.FC = () => {
         {
             variables: {
                 id
-            }
+            },
+            fetchPolicy: 'network-only'
         }
     )
 

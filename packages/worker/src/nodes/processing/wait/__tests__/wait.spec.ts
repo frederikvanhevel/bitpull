@@ -12,7 +12,7 @@ const html = `
     </html>
 `
 
-describe('Wait node', () => {
+describe.skip('Wait node', () => {
     let browser: CustomBrowser
 
     beforeAll(async () => {
@@ -28,14 +28,13 @@ describe('Wait node', () => {
         browser.resetMockHandler()
     })
 
-    test.skip('should wait 2 seconds', async () => {
+    test('should wait 2 seconds', async () => {
         const result = await waitNode(
             {
                 node: waitNodeMock,
                 rootAncestor: {
                     id: '00',
                     type: NodeType.HTML,
-                    parseJavascript: true,
                     parsedLink: 'https://brik.mykot.be/rooms'
                 }
             },

@@ -47,10 +47,20 @@ import { EmailNode } from './nodes/notification/email/typedefs'
 import NodeMap from './nodes/common/node-map'
 
 export {
+    NodeType,
+    LogType,
+    StorageService,
+    IntegrationType,
+    StorageProvider,
+    Status,
+    NodeMap,
+    PdfFormat
+}
+
+export type {
     NodeInput,
     TraverseOptions,
     FlowNode,
-    NodeType,
     RootNode,
     NodeId,
     CollectNode,
@@ -66,7 +76,6 @@ export {
     JsonNode,
     ScreenshotNode,
     PdfNode,
-    PdfFormat,
     WaitNode,
     FunctionNode,
     DropboxNode,
@@ -77,19 +86,13 @@ export {
     WebhookNode,
     SlackNode,
     EmailNode,
-    LogType,
-    StorageService,
     AmazonS3Credentials,
     StorageObject,
-    IntegrationType,
     IntegrationSettings,
     Integration,
-    StorageProvider,
     Settings,
-    Status,
     ParseLog,
     ErrorLog,
     FileStorageObject,
-    ParseResult,
-    NodeMap
+    ParseResult
 }

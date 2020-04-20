@@ -8,6 +8,7 @@ import { Theme } from '@material-ui/core'
 interface Props {
     delay?: number
     text?: string
+    subText?: string
     hideText?: boolean
     fullPage?: boolean
 }
@@ -33,12 +34,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     text: {
         margin: theme.spacing(2),
         color: theme.palette.grey['500']
+    },
+    subText: {
+        margin: theme.spacing(2),
+        marginTop: 0,
+        color: theme.palette.grey['500']
     }
 }))
 
 const Loader: React.FC<Props> = ({
     children,
     text = 'Hang on, we are loading your data.',
+    subText,
     hideText = false,
     delay = 500,
     fullPage = false
@@ -65,6 +72,12 @@ const Loader: React.FC<Props> = ({
 
                 {!hideText && (
                     <Typography className={classes.text}>{text}</Typography>
+                )}
+
+                {!hideText && !!subText && (
+                    <Typography className={classes.subText}>
+                        {subText}
+                    </Typography>
                 )}
 
                 <div>{children}</div>

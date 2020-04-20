@@ -25,13 +25,13 @@ import { ClickError } from '../nodes/processing/click/errors'
 export const ErrorMessages: Record<string, string> = {
     // Node error
     [NodeError.NEEDS_ROOT_ANCESTOR]:
-        'Needs to have a html or xml node as parent',
-    [NodeError.NODE_NOT_FOUND]: 'Node was not found',
-    [NodeError.NO_RESULT]: 'Node did not have any results',
-    [NodeError.TOO_MANY_CHILDREN]: "Node can't have so many child nodes",
-    [NodeError.NO_CHILDREN_ALLOWED]: 'No child nodes allowed',
-    [NodeError.NEEDS_PARENT]: 'Needs parent node',
-    [NodeError.CHILD_NODE_MISSING]: 'Child node is required',
+        'Needs to have html or xml as previous step',
+    [NodeError.NODE_NOT_FOUND]: 'Step was not found',
+    [NodeError.NO_RESULT]: 'Step did not have any results',
+    [NodeError.TOO_MANY_CHILDREN]: "Step can't have so many next steps",
+    [NodeError.NO_CHILDREN_ALLOWED]: 'No next steps allowed',
+    [NodeError.NEEDS_PARENT]: 'Needs parent step',
+    [NodeError.CHILD_NODE_MISSING]: 'Next step is required',
     [NodeError.NEEDS_REAL_BROWSER]: 'Feature not available in fast mode',
     [NodeError.UNKNOWN_ERROR]: 'An unknown error occured',
     [NodeError.TOO_MANY_ERRORS]: 'Too many errors occured',
@@ -49,7 +49,7 @@ export const ErrorMessages: Record<string, string> = {
     [ParseError.SELECTOR_MISSING]: 'No selector was defined',
     [ParseError.ERROR_RENDERING_HTML]: 'Could not get website content',
     [ParseError.NO_SELECTOR_PARSER_FOUND]: 'No suitable selecor parser found',
-    [ParseError.HTML_MISSING]: 'Website content is not defined',
+    [ParseError.HTML_MISSING]: 'Coudl not get website content',
 
     // Integration error
     [IntegrationError.INTEGRATION_MISSING]: 'Integration is not set up',
@@ -65,7 +65,7 @@ export const ErrorMessages: Record<string, string> = {
     [StorageError.AWS_BUCKET_MISSING]: 'AWS bucket not specified',
     [StorageError.AWS_ACCESS_KEY_ID_MISSING]: 'AWS access key missing',
     [StorageError.AWS_SECRET_ACCESS_KEY_MISSING]: 'AWS secret missing',
-    [StorageError.INVALID_PARENT_TYPE]: 'Parent node does not produce a file',
+    [StorageError.INVALID_PARENT_TYPE]: 'Previous step does not produce a file',
 
     // Dropbox error
     [DropboxError.UPLOAD_FAILED]: 'Error uploading to Dropbox',
@@ -97,7 +97,7 @@ export const ErrorMessages: Record<string, string> = {
     [HtmlError.LINKED_FIELD_MISSING]: 'Linked field is not defined',
 
     // Pagination error
-    [PaginationError.GOTOPERPAGE_NODE_MISSING]: 'No page node specified',
+    [PaginationError.GOTOPERPAGE_NODE_MISSING]: 'No per page step specified',
     [PaginationError.PAGINATION_METHOD_MISSING]: 'Pagination method missing',
     [PaginationError.NEXT_LINK_MISSING]: 'Next link was not specified',
     [PaginationError.NO_LINKS_SPECIFIED]: 'No links were specified',

@@ -16,8 +16,7 @@ const getItems = (node: Node) => {
 
     return items.map(item => ({
         ...item,
-        disabled:
-            item.needsJavascript && urlAncestor && !urlAncestor.parseJavascript
+        disabled: item.needsJavascript && !!urlAncestor
     }))
     // .filter(item => node.type !== item.type)
 }

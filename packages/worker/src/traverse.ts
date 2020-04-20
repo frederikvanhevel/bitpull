@@ -22,6 +22,9 @@ import {
 import CustomBrowser from './browser'
 import { NodeError } from './nodes/common/errors'
 import { FlowError } from './utils/errors'
+import { HtmlNode } from './nodes/processing/html/typedefs'
+import { CollectNode } from './nodes/processing/collect/typedefs'
+import { CollectError } from './nodes/processing/collect/errors'
 
 const DEFAULT_OPTIONS: TraverseOptions = {
     integrations: [],
@@ -40,14 +43,17 @@ class Traverser {
     private canceled: boolean = false
     private errorCount: number = 0
 
-    constructor(options: TraverseOptions = DEFAULT_OPTIONS) {
+    constructor(
+        options: TraverseOptions = DEFAULT_OPTIONS,
+        browser?: CustomBrowser
+    ) {
         this.options = {
             ...DEFAULT_OPTIONS,
             ...options
         }
         this.context = {
             traverser: this,
-            browser: new CustomBrowser()
+            browser: browser || new CustomBrowser()
         }
     }
 
@@ -100,7 +106,7 @@ class Traverser {
     public async parseNode(
         input: NodeInput<FlowNode>
     ): Promise<NodeInput<FlowNode>> {
-        const { node: currentNode, rootAncestor } = input
+        const { node: currentNode, rootAncestor, page } = input
         const { onError, onLog, settings } = this.options
 
         if (this.canceled) {
@@ -121,13 +127,23 @@ class Traverser {
 
             if (
                 node.type === NodeType.COLLECT &&
+                (node as CollectNode).fields.length &&
                 node.children &&
                 node.children.length &&
                 node.children[0].type === NodeType.HTML &&
+                !!(node.children[0] as HtmlNode).linkedField &&
                 Array.isArray(passedData)
             ) {
-                assert(node.children.length === 1, NodeError.TOO_MANY_CHILDREN)
+                assert(
+                    node.children.length === 1,
+                    new FlowError(NodeError.TOO_MANY_CHILDREN)
+                )
+                assert(
+                    (node as CollectNode).fields.length > 0,
+                    new FlowError(CollectError.FIELDS_MISSING)
+                )
 
+                // TODO sequential
                 const result = await Promise.all(
                     passedData.map(data => {
                         return this.parseNode({
@@ -174,6 +190,9 @@ class Traverser {
 
                 // @ts-ignore
                 return result
+            } else if ((!node.children || !node.children.length) && page) {
+                // no children, so close the page
+                // await page.close()
             }
 
             return {

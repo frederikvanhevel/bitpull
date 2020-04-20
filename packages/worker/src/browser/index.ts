@@ -27,7 +27,7 @@ const getPuppeteerArgs = (settings: Settings) => {
 
     return [
         ...args,
-        ...(puppeteer?.proxy ? [`--proxy-server=${puppeteer?.proxy}`] : [])
+        ...(puppeteer?.proxy ? [`--proxy-server=${puppeteer.proxy}`] : [])
     ]
 }
 
@@ -59,53 +59,34 @@ class CustomBrowser {
         }
     }
 
-    async with(func: PageCallback, settings: Settings) {
-        const { puppeteer } = settings
-
+    async with(
+        func: PageCallback,
+        settings: Settings,
+        currentPage?: Page
+    ): Promise<Page> {
         if (!this.browser) await this.initialize(settings)
 
-        let page
+        let page = currentPage
         try {
-            page = await this.browser!.newPage()
-
-            if (puppeteer?.proxy && puppeteer?.authorization) {
-                await page.setExtraHTTPHeaders({
-                    'Proxy-Authorization': puppeteer.authorization
-                })
-            }
-
-            this.settings.debug &&
-                page.on('console', msg => console.log('DEBUG:', msg.text()))
-
-            if (isTestEnv() && this.mockHandler) {
-                page.setRequestInterception(true)
-                page.on('request', async req => {
-                    const mockResult = await this.mockHandler!(req.url())
-                    mockResult && req.respond(mockResult)
-                })
-            }
-
-            const userAgent = new UserAgent({ deviceCategory: 'desktop' })
-            await page.setUserAgent(userAgent.toString())
-            await page.setExtraHTTPHeaders({
-                'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8'
-            })
-
+            if (!page) page = await this.newPage(settings)
             await func(page)
+        } catch (error) {
+            console.log(error)
         } finally {
-            if (page) await page.close()
+            // if (page) await page.close()
         }
+
+        return page!
     }
 
     async getPageContent(
         page: Page,
         link: string,
-        delay?: number,
-        waitForNavigation?: boolean
+        before?: (page: Page) => Promise<void>
     ) {
         const response = await page.goto(link)
-        if (waitForNavigation) await page.waitForNavigation()
-        if (delay) await page.waitFor(delay)
+        if (before) await before(page)
+
         await stripScriptTags(page)
         await removeAttribute(page, 'img', 'srcset')
 
@@ -128,6 +109,35 @@ class CustomBrowser {
             url,
             html
         }
+    }
+
+    async newPage(settings: Settings = {}) {
+        const { debug, puppeteer } = settings
+        const page = await this.browser!.newPage()
+
+        if (puppeteer?.proxy && puppeteer?.authorization) {
+            await page.setExtraHTTPHeaders({
+                'Proxy-Authorization': puppeteer.authorization
+            })
+        }
+
+        debug && page.on('console', msg => console.log('DEBUG:', msg.text()))
+
+        if (isTestEnv() && this.mockHandler) {
+            await page.setRequestInterception(true)
+            page.on('request', async req => {
+                const mockResult = await this.mockHandler!(req.url())
+                mockResult && req.respond(mockResult)
+            })
+        }
+
+        const userAgent = new UserAgent({ deviceCategory: 'desktop' })
+        await page.setUserAgent(userAgent.toString())
+        await page.setExtraHTTPHeaders({
+            'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8'
+        })
+
+        return page
     }
 
     setMockHandler(handler: MockHandler) {

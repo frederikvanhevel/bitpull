@@ -23,9 +23,7 @@ import HelpPage from './help/HelpPage'
 
 export const history = createBrowserHistory()
 
-history.listen(location => {
-    Segment.page(location.pathname)
-})
+history.listen(location => Segment.page(location.pathname))
 
 export interface Route {
     exact: boolean

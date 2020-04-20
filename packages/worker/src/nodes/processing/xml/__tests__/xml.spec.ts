@@ -20,7 +20,7 @@ const xml = `
     </ikot>
 `
 
-describe('Xml node', () => {
+describe.skip('Xml node', () => {
     test('should parse a url node and get the xml', async () => {
         nock('https://brik.mykot.be').get('/rooms.xml').reply(200, xml)
 

@@ -9,6 +9,7 @@ import { Attributes } from '../modules/common/Selector'
 export interface NodeMenuItem {
     type: NodeType
     label: string
+    shortLabel: string
     disabled?: boolean
     needsJavascript?: boolean
 }
@@ -42,7 +43,8 @@ export const getMenuItemsByType = (types: NodeType[]): NodeMenuItem[] => {
         if (types.includes(key as NodeType)) {
             items.push({
                 type: key as NodeType,
-                label: NODE_PROPERTIES[key as NodeType].shortLabel
+                label: NODE_PROPERTIES[key as NodeType].label,
+                shortLabel: NODE_PROPERTIES[key as NodeType].shortLabel
             })
         }
     }
@@ -65,15 +67,6 @@ export const isIntegrationNode = (node: Node) => {
     return node.type === NodeType.SLACK || node.type === NodeType.EMAIL
 }
 
-export const isPaginationSet = (node: Node) => {
-    if (node.type !== NodeType.PAGINATION) return true
-
-    return (
-        !!(node as PaginationNode).goToPerPage &&
-        !!(node as PaginationNode).gotoOnEnd
-    )
-}
-
 export const isExportOnlyNode = (node: Node) => {
     return (
         node.type === NodeType.JSON ||
@@ -87,9 +80,9 @@ export const isExportOnlyNode = (node: Node) => {
 export const isProcessingOnlyNode = (node: Node) => {
     return (
         node.type === NodeType.HTML ||
-        node.type === NodeType.XML ||
         node.type === NodeType.CLICK ||
-        node.type === NodeType.LOGIN
+        node.type === NodeType.LOGIN ||
+        node.type === NodeType.WAIT
     )
 }
 
@@ -127,7 +120,7 @@ export const getNewCollectField = (): CollectField => ({
 export const getNewNode = (type: NodeType, parent?: Node): Node => {
     const newNode = { id: uuid(), type }
 
-    if (type === NodeType.HTML || type === NodeType.XML) {
+    if (type === NodeType.HTML) {
         // TODO if parent is collect node, auto search for links
         // and add them as linked field
 

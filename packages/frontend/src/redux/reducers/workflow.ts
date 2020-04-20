@@ -12,7 +12,7 @@ import {
     SET_WATCHED_NODE_RESULT,
     SET_HIGHLIGHTED_NODE_ID,
     SET_WORKFLOW_ID,
-    SAVE_WORKFLOW,
+    SAVE_WORKFLOW_COMPLETED,
     UPDATE_NODE,
     CHANGE_WORKFLOW_SETTINGS,
     DELETE_NODE
@@ -151,7 +151,7 @@ export default (state = initialState, action: Actions): WorkflowState => {
                 ...state,
                 hasUnsavedChanges: true
             }
-        case SAVE_WORKFLOW:
+        case SAVE_WORKFLOW_COMPLETED:
             return {
                 ...state,
                 hasUnsavedChanges: false

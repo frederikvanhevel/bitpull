@@ -18,7 +18,7 @@ spec:
       containers:
         - image: browserless/chrome:latest
           name: chrome
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           ports:
             - name: chrome
               containerPort: 3000
@@ -49,4 +49,3 @@ spec:
               value: "1"
             - name: MAXIMUM_QUEUE_SIZE
               value: "5"
-           

@@ -16,7 +16,7 @@ import Segment, { TrackingEvent } from 'components/segment'
 import { ResourceType } from 'models/storage'
 import { NodeEventHandler } from './typedefs'
 
-const WORKFLOW_LIMIT = 30
+const WORKFLOW_LIMIT = 50
 
 const getWorkflow = async (user: User, id: string) => {
     const workflow = await WorkflowModel.findById(id)

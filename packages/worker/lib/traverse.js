@@ -10,6 +10,7 @@ const common_1 = require("./typedefs/common");
 const browser_1 = __importDefault(require("./browser"));
 const errors_1 = require("./nodes/common/errors");
 const errors_2 = require("./utils/errors");
+const errors_3 = require("./nodes/processing/collect/errors");
 const DEFAULT_OPTIONS = {
     integrations: [],
     settings: {
@@ -21,13 +22,13 @@ const DEFAULT_OPTIONS = {
     }
 };
 class Traverser {
-    constructor(options = DEFAULT_OPTIONS) {
+    constructor(options = DEFAULT_OPTIONS, browser) {
         this.canceled = false;
         this.errorCount = 0;
         this.options = Object.assign(Object.assign({}, DEFAULT_OPTIONS), options);
         this.context = {
             traverser: this,
-            browser: new browser_1.default()
+            browser: browser || new browser_1.default()
         };
     }
     async getNodeResult(input) {
@@ -59,7 +60,7 @@ class Traverser {
         return nodeResult;
     }
     async parseNode(input) {
-        const { node: currentNode, rootAncestor } = input;
+        const { node: currentNode, rootAncestor, page } = input;
         const { onError, onLog, settings } = this.options;
         if (this.canceled) {
             throw new Error('Operation was canceled');
@@ -72,11 +73,15 @@ class Traverser {
             assert_1.default(nodeResult, errors_1.NodeError.NO_RESULT);
             const { node, passedData } = nodeResult;
             if (node.type === node_1.NodeType.COLLECT &&
+                node.fields.length &&
                 node.children &&
                 node.children.length &&
                 node.children[0].type === node_1.NodeType.HTML &&
+                !!node.children[0].linkedField &&
                 Array.isArray(passedData)) {
-                assert_1.default(node.children.length === 1, errors_1.NodeError.TOO_MANY_CHILDREN);
+                assert_1.default(node.children.length === 1, new errors_2.FlowError(errors_1.NodeError.TOO_MANY_CHILDREN));
+                assert_1.default(node.fields.length > 0, new errors_2.FlowError(errors_3.CollectError.FIELDS_MISSING));
+                // TODO sequential
                 const result = await Promise.all(passedData.map(data => {
                     return this.parseNode(Object.assign(Object.assign({}, input), { node: node.children[0], parent: node, parentResult: data, passedData: data, rootAncestor: isPrimaryNode
                             ? currentNode
@@ -105,6 +110,10 @@ class Traverser {
                 })));
                 // @ts-ignore
                 return result;
+            }
+            else if ((!node.children || !node.children.length) && page) {
+                // no children, so close the page
+                // await page.close()
             }
             return Object.assign(Object.assign({}, input), nodeResult);
         }

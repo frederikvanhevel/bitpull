@@ -29,15 +29,18 @@ describe('Screenshot node', () => {
     })
 
     test('should take a screenshot', async () => {
+        const page = await browser.newPage()
+        await page.goto('https://brik.mykot.be/rooms')
+
         const result = await screenshotNode(
             {
                 node: screenshotNodeMock,
                 rootAncestor: {
                     id: '00',
                     type: NodeType.HTML,
-                    parseJavascript: true,
                     parsedLink: 'https://brik.mykot.be/rooms'
-                }
+                },
+                page
             },
             { integrations: [], settings: {} },
             // @ts-ignore
@@ -48,18 +51,17 @@ describe('Screenshot node', () => {
     })
 
     test('should take a screenshot from a parent result', async () => {
+        const page = await browser.newPage()
+        await page.goto('https://brik.mykot.be/rooms')
+
         const result = await screenshotNode(
             {
                 node: screenshotNodeMock,
                 rootAncestor: {
                     id: '00',
-                    type: NodeType.HTML,
-                    parseJavascript: true
+                    type: NodeType.HTML
                 },
-                parentResult: {
-                    html,
-                    url: 'http://google.be'
-                }
+                page
             },
             { integrations: [], settings: {} },
             // @ts-ignore

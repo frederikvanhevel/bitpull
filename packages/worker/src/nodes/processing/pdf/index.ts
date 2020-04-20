@@ -9,7 +9,6 @@ import {
 import { assert } from '../../../utils/common'
 import { NodeError, ParseError, FileError } from '../../common/errors'
 import { HtmlParseResult } from '../html/typedefs'
-import { absolutifyHtml } from '../../../utils/absolutify'
 import { hasChildExportNodes } from '../../../utils/helper'
 import { PdfNode, PdfFormat } from './typedefs'
 
@@ -31,15 +30,6 @@ const pdf: NodeParser<PdfNode, FileWriteResult> = async (
 
     let buffer
     await browser.with(async page => {
-        if (parentResult && parentResult.html) {
-            const displayHtml = absolutifyHtml(
-                parentResult.html,
-                parentResult.url,
-                settings.proxyEndpoint
-            )
-            await page.setContent(displayHtml)
-        } else await page.goto(rootAncestor!.parsedLink!)
-
         buffer = await page.pdf({
             landscape: node.landscape || false,
             format: node.format || PdfFormat.A4

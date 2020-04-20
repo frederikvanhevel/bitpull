@@ -1,5 +1,6 @@
 import collectNodeMock from '../__mocks__/collect.mock'
 import collect from '../'
+import CustomBrowser from '../../../../browser'
 
 const DEFAULT_OPTIONS = {
     integrations: [],
@@ -43,15 +44,34 @@ const html2 = `
 `
 
 describe('Collect node', () => {
+    let browser: CustomBrowser
+
+    beforeAll(async () => {
+        browser = new CustomBrowser()
+        await browser.initialize()
+    })
+
+    afterAll(async () => {
+        await browser.cleanup()
+    })
+
     test('should parse a collect node as an array', async () => {
+        browser.setMockHandler(() => ({
+            body: html
+        }))
+
+        const page = await browser.newPage()
+        await page.goto('https://test-page.be')
+
         const expected = [
             { url: '/some-path', price: 1400 },
             { price: 430, url: '/some-other-path' }
         ]
+
         const result = await collect(
             {
                 node: collectNodeMock,
-                parentResult: { html }
+                page
             },
             DEFAULT_OPTIONS,
             // @ts-ignore
@@ -62,12 +82,19 @@ describe('Collect node', () => {
     })
 
     test('should find nested value when attribute is specified', async () => {
+        browser.setMockHandler(() => ({
+            body: html2
+        }))
+
+        const page = await browser.newPage()
+        await page.goto('https://test-page.be')
+
         let expected = [{ url: '/some-path' }, { url: '/some-other-path' }]
 
         const result = await collect(
             {
                 node: collectNodeMock,
-                parentResult: { html: html2 }
+                page
             },
             DEFAULT_OPTIONS,
             // @ts-ignore
@@ -83,7 +110,7 @@ describe('Collect node', () => {
         const resultWithoutAttribute = await collect(
             {
                 node: nodeWithoutAtrr,
-                parentResult: { html: html2 }
+                page
             },
             DEFAULT_OPTIONS,
             // @ts-ignore

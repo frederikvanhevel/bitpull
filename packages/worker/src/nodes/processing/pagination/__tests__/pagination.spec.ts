@@ -1,10 +1,14 @@
-import nock from 'nock'
-
+import { mocked } from 'ts-jest'
 import { NodeType } from '../../../../typedefs/node'
 import { FunctionNode } from '../../../../nodes/export/function/typedefs'
 import paginationNodeMock from '../__mocks__/pagination.mock'
 import complexPaginationNodeMock from '../__mocks__/complex.mock'
 import Traverser from '../../../../traverse'
+import CustomBrowser from '../../../../browser'
+import * as delay from '../../../../utils/delay'
+
+jest.mock('../../../../utils/delay')
+const mockedDelay = mocked(delay, true)
 
 const htmlPageOne = `
     <html>
@@ -53,9 +57,33 @@ const htmlPageFour = `
 
 describe('Pagination node', () => {
     let traverser: Traverser
+    let browser: CustomBrowser
 
-    beforeAll(() => {
-        traverser = new Traverser()
+    beforeAll(async () => {
+        browser = new CustomBrowser()
+        await browser.initialize()
+        browser.setMockHandler(url => {
+            switch (url) {
+                case 'https://test.be/rooms/1':
+                    return { body: htmlPageTwo }
+                case 'https://test.be/rooms/2':
+                    return { body: htmlPageThree }
+                case 'https://test.be/some-down-path':
+                    return { body: htmlPageFour }
+                default:
+                    return { body: htmlPageOne }
+            }
+        })
+
+        traverser = new Traverser(
+            {
+                settings: {},
+                onError: (a, e) => console.log(e)
+            },
+            browser
+        )
+
+        mockedDelay.randomizedDelay.mockImplementation(() => Promise.resolve())
     })
 
     afterAll(async () => {
@@ -63,13 +91,8 @@ describe('Pagination node', () => {
     })
 
     test('should parse a pagination node', async () => {
-        nock('https://brik.mykot.be')
-            .get('/rooms')
-            .reply(200, htmlPageOne)
-            .get('/rooms/1')
-            .reply(200, htmlPageTwo)
-            .get('/rooms/2')
-            .reply(200, htmlPageThree)
+        const page = await browser.newPage()
+        await page.goto('https://test.be')
 
         const mockFn = jest.fn()
         const node = { ...paginationNodeMock }
@@ -91,23 +114,18 @@ describe('Pagination node', () => {
             rootAncestor: {
                 id: '00',
                 type: NodeType.HTML,
-                link: 'https://brik.mykot.be'
+                link: 'https://test.be'
             },
-            parentResult: { html: htmlPageOne }
+            page
         })
 
         expect(mockFn.mock.calls.length).toEqual(1)
         expect(mockFn.mock.calls[0][0]).toEqual(expected)
-    })
+    }, 10000)
 
     test('should limit amount of parsed links', async () => {
-        nock('https://brik.mykot.be')
-            .get('/rooms')
-            .reply(200, htmlPageOne)
-            .get('/rooms/1')
-            .reply(200, htmlPageTwo)
-            .get('/rooms/2')
-            .reply(200, htmlPageThree)
+        const page = await browser.newPage()
+        await page.goto('https://test.be')
 
         const mockFn = jest.fn()
         const node = { ...paginationNodeMock }
@@ -127,24 +145,16 @@ describe('Pagination node', () => {
             rootAncestor: {
                 id: '00',
                 type: NodeType.HTML,
-                link: 'https://brik.mykot.be'
+                link: 'https://test.be'
             },
-            parentResult: { html: htmlPageOne }
+            page
         })
 
         expect(mockFn.mock.calls.length).toEqual(1)
         expect(mockFn.mock.calls[0][0]).toEqual(expected)
     })
 
-    test('should parse a pagination node with a link list', async () => {
-        nock('https://brik.mykot.be')
-            .get('/rooms')
-            .reply(200, htmlPageOne)
-            .get('/rooms/1')
-            .reply(200, htmlPageTwo)
-            .get('/rooms/2')
-            .reply(200, htmlPageThree)
-
+    test.skip('should parse a pagination node with a link list', async () => {
         const mockFn = jest.fn()
 
         const node = { ...paginationNodeMock }
@@ -182,15 +192,8 @@ describe('Pagination node', () => {
     })
 
     test('should parse a complex pagination node', async () => {
-        nock('https://brik.mykot.be')
-            .get('/rooms')
-            .reply(200, htmlPageOne)
-            .get('/rooms/1')
-            .reply(200, htmlPageTwo)
-            .get('/rooms/2')
-            .reply(200, htmlPageThree)
-            .get('/some-down-path')
-            .reply(200, htmlPageFour)
+        const page = await browser.newPage()
+        await page.goto('https://test.be')
 
         const mockFn = jest.fn()
         const node = { ...complexPaginationNodeMock }
@@ -201,16 +204,20 @@ describe('Pagination node', () => {
             function: mockFn
         } as FunctionNode)
 
-        const expected = [{ price: 480, url: '/some-down-path', new: 480 }]
+        const expected = [
+            { price: 1400, url: '/some-path' },
+            { price: 400, url: '/some-other-path' },
+            { price: 480, url: '/some-down-path', new: 480 }
+        ]
 
         await traverser.parseNode({
             node,
             rootAncestor: {
                 id: '00',
                 type: NodeType.HTML,
-                link: 'https://brik.mykot.be'
+                link: 'https://test.be'
             },
-            parentResult: { html: htmlPageOne }
+            page
         })
 
         expect(mockFn.mock.calls.length).toEqual(1)

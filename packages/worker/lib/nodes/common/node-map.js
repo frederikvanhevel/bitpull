@@ -15,21 +15,8 @@ const NodeMap = {
         export: [],
         notification: []
     },
-    [node_1.NodeType.XML]: {
-        processing: [
-            node_1.NodeType.COLLECT,
-            node_1.NodeType.PAGINATION,
-            node_1.NodeType.CLICK,
-            node_1.NodeType.LOGIN,
-            node_1.NodeType.SCREENSHOT,
-            node_1.NodeType.PDF,
-            node_1.NodeType.WAIT
-        ],
-        export: [],
-        notification: []
-    },
     [node_1.NodeType.COLLECT]: {
-        processing: [node_1.NodeType.HTML, node_1.NodeType.XML],
+        processing: [node_1.NodeType.HTML],
         export: [node_1.NodeType.EXCEL, node_1.NodeType.JSON, node_1.NodeType.CSV, node_1.NodeType.WEBHOOK],
         notification: []
     },

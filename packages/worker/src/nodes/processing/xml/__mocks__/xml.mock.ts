@@ -1,8 +1,7 @@
-import { NodeType } from '../../../../typedefs/node'
 import { XmlNode } from '../typedefs'
 
 export default {
     id: '0',
-    type: NodeType.XML,
+    type: 'XML',
     link: 'https://brik.mykot.be/rooms.xml'
 } as XmlNode

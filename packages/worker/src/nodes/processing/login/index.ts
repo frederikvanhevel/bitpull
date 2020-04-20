@@ -31,7 +31,7 @@ const login: NodeParser<LoginNode, undefined, HtmlParseResult> = async (
 ) => {
     const { onLog, settings } = options
     const { browser } = context
-    const { node, rootAncestor } = input
+    const { node, rootAncestor, page } = input
     const { credentials, delay = DEFAULT_DELAY, waitForNavigation } = node
 
     assert(credentials, LoginError.CREDENTIALS_MISSING)
@@ -39,7 +39,6 @@ const login: NodeParser<LoginNode, undefined, HtmlParseResult> = async (
     const { username, password, submit } = credentials
 
     assert(rootAncestor, NodeError.NEEDS_ROOT_ANCESTOR)
-    assert(rootAncestor.parseJavascript, NodeError.NEEDS_REAL_BROWSER)
     assert(rootAncestor.parsedLink, ParseError.LINK_MISSING)
     assert(username && username.value, LoginError.CREDENTIALS_MISSING)
     assert(username && username.selector, ParseError.SELECTOR_MISSING)
@@ -55,46 +54,36 @@ const login: NodeParser<LoginNode, undefined, HtmlParseResult> = async (
         ? getDecryptedValue(password.value, options)
         : password.value
 
-    let renderedHtml: string
-
     try {
-        await browser.with(async page => {
-            await page.goto(rootAncestor.parsedLink!)
+        await browser.with(
+            async page => {
+                if (waitForNavigation) await page.waitForNavigation()
+                else await page.waitFor(clamp(delay, 0, MAX_DELAY))
 
-            await page.waitFor(username.selector, { visible: true })
+                await page.waitFor(username.selector, { visible: true })
 
-            await page.waitFor(120)
+                await page.waitFor(120)
 
-            await page.type(username.selector, usernameInput)
+                await page.type(username.selector, usernameInput)
 
-            await page.waitFor(232)
+                await page.waitFor(232)
 
-            await page.type(password.selector, passwordInput)
+                await page.type(password.selector, passwordInput)
 
-            await page.waitFor(112)
+                await page.waitFor(112)
 
-            await page.click(submit)
-
-            if (waitForNavigation) await page.waitForNavigation()
-            else await page.waitFor(clamp(delay, 0, MAX_DELAY))
-
-            renderedHtml = await page.content()
-        }, settings)
+                await page.click(submit)
+            },
+            settings,
+            page
+        )
     } catch (error) {
         throw new Error(LoginError.COULD_NOT_LOGIN)
     }
 
-    assert(renderedHtml!, ParseError.ERROR_RENDERING_HTML)
-
     if (onLog) onLog(node, 'Logged in')
 
-    return {
-        ...input,
-        parentResult: {
-            html: renderedHtml!,
-            url: rootAncestor.parsedLink!
-        }
-    }
+    return input
 }
 
 export default login

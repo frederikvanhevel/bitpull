@@ -103,6 +103,7 @@ const Selector: React.FC<Props> = ({
                     validate: validateSelector
                 })}
                 onChange={e => onUpdateSelector('value', e.target.value)}
+                inputProps={{ autoComplete: 'off' }}
                 InputLabelProps={{ shrink: !!selector.value }}
             />
 

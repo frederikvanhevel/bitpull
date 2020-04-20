@@ -59,47 +59,29 @@ describe('Click node', () => {
     })
 
     test('should parse a click node and get the html', async () => {
+        browser.setMockHandler(() => ({
+            body: html
+        }))
+
+        const page = await browser.newPage()
+        await page.goto('https://test-page.be')
+
         const result = await parseClickNode(
             {
                 node: clickNodeMock,
                 rootAncestor: {
                     id: '00',
-                    type: NodeType.HTML,
-                    parseJavascript: true,
-                    parsedLink: 'https://brik.mykot.be/rooms'
-                } as HtmlNode
-            },
-            { integrations: [], settings: {} },
-            // @ts-ignore
-            { browser }
-        )
-
-        expect(result.parentResult!.html.replace(/\s/g, '')).toEqual(
-            renderedHtml.replace(/\s/g, '')
-        )
-        expect(true).toBe(true)
-    })
-
-    test('should parse a click node and get the html from parent result', async () => {
-        const result = await parseClickNode(
-            {
-                node: clickNodeMock,
-                rootAncestor: {
-                    id: '00',
-                    type: NodeType.HTML,
-                    parseJavascript: true
+                    type: NodeType.HTML
                 } as HtmlNode,
-                parentResult: {
-                    html,
-                    url: 'http://google.be'
-                }
+                page
             },
             { integrations: [], settings: {} },
             // @ts-ignore
             { browser }
         )
 
-        expect(result.parentResult!.html.replace(/\s/g, '')).toEqual(
+        const parsedHtml = await result.page!.content()
+        expect(parsedHtml.replace(/\s/g, '')).toEqual(
             renderedHtml.replace(/\s/g, '')
         )
         expect(true).toBe(true)

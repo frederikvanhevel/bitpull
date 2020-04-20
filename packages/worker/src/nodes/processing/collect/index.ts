@@ -4,7 +4,7 @@ import { getFieldsFromHtml } from '../selectors'
 import { CollectNode, CollectParseResult } from './typedefs'
 import { CollectError } from './errors'
 
-const collect: NodeParser<CollectNode, CollectParseResult> = (
+const collect: NodeParser<CollectNode, CollectParseResult> = async (
     input,
     options
 ) => {
@@ -12,8 +12,9 @@ const collect: NodeParser<CollectNode, CollectParseResult> = (
     const { node } = input
 
     assert(node.fields && node.fields.length, CollectError.FIELDS_MISSING)
+    assert(node.fields[0].label !== '', CollectError.FIELDS_MISSING)
 
-    const parsedFields = getFieldsFromHtml(input, settings)
+    const parsedFields = await getFieldsFromHtml(input, settings)
 
     if (onLog) {
         const fields = node.fields.map(field => field.label)

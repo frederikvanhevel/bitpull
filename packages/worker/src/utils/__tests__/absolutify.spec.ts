@@ -2,7 +2,6 @@ import assert from 'assert'
 import { absolutifyUrl, absolutifyHtml } from '../absolutify'
 
 describe('absolutify', () => {
-
     // // Non-changing string, should not get replaced
     // const ok =
     //     '' +
@@ -106,13 +105,10 @@ describe('absolutify', () => {
 
     it('convert relative url to absolute', () => {
         assert.strictEqual(
-            absolutifyUrl(
-                '/rooms',
-                'https://brik.mykot.be'
-            ),
+            absolutifyUrl('/rooms', 'https://brik.mykot.be'),
             'https://brik.mykot.be/rooms'
         )
-        
+
         assert.strictEqual(
             absolutifyUrl('/index.php', 'http://www.google.be'),
             'http://www.google.be/index.php'

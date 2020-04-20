@@ -1,6 +1,7 @@
 import assert from 'assert'
 import cheerio from 'cheerio'
-import { NodeInput, FlowNode, NodeType } from '../../typedefs/node'
+import { Page } from 'puppeteer'
+import { NodeInput } from '../../typedefs/node'
 import { Settings } from '../../typedefs/common'
 import { getUriOrigin } from '../../utils/common'
 import { absolutifyUrl } from '../../utils/absolutify'
@@ -12,7 +13,7 @@ export interface HTMLSelector {
     attribute?: string
 }
 
-const HTML_MISSING = 'HTML_MISSING'
+const PAGE_MISSING = 'PAGE_MISSING'
 
 enum ATTRIBUTE_TO_ELEMENT_MAP {
     href = 'a',
@@ -32,12 +33,13 @@ function isValidAttribute(
     return attribute in ATTRIBUTE_TO_ELEMENT_MAP
 }
 
-export const getFieldFromHtml = (
-    html: string,
+export const getFieldFromPage = async (
+    page: Page,
     selector: HTMLSelector,
     url?: string,
     xmlMode: boolean = false
 ) => {
+    const html = await page!.content()
     const $ = cheerio.load(html, { xmlMode })
     let result =
         selector.attribute && selector.attribute !== 'text'
@@ -53,16 +55,18 @@ export const getFieldFromHtml = (
     return result
 }
 
-export const getFieldsFromHtml = (
+export const getFieldsFromHtml = async (
     input: NodeInput<CollectNode, any, HtmlParseResult>,
     settings: Settings,
     xmlMode: boolean = false
 ) => {
-    const { node, parentResult } = input
+    const { node, page, rootAncestor } = input
 
-    assert(parentResult!.html, HTML_MISSING)
+    assert(!!page, PAGE_MISSING)
 
-    const $ = cheerio.load(parentResult!.html, { xmlMode })
+    const html = await page!.content()
+
+    const $ = cheerio.load(html, { xmlMode })
     const arrayMapping: Result[] = []
 
     node.fields.forEach(field => {
@@ -105,8 +109,14 @@ export const getFieldsFromHtml = (
                 trimmedVal = decodeURIComponent(url)
             }
 
-            // TODO check if link with proxy url prefixed
-            // if so then remove and decode
+            if (
+                trimmedVal &&
+                rootAncestor?.parsedLink &&
+                field.selector.attribute === 'href'
+            ) {
+                const origin = getUriOrigin(rootAncestor.parsedLink)
+                trimmedVal = absolutifyUrl(trimmedVal, origin)
+            }
 
             arrayMapping[i] = {
                 ...arrayMapping[i],
@@ -120,29 +130,4 @@ export const getFieldsFromHtml = (
     })
 
     return arrayMapping.length === 1 ? arrayMapping[0] : arrayMapping
-}
-
-export const getFieldFromXml = (
-    html: string,
-    field: HTMLSelector,
-    url?: string
-) => {
-    return getFieldFromHtml(html, field, url, true)
-}
-
-export const getFieldsFromXml = (
-    input: NodeInput<CollectNode>,
-    settings: Settings
-) => {
-    return getFieldsFromHtml(input, settings, true)
-}
-
-export const getSelectorParser = (node: FlowNode) => {
-    if (node.type === NodeType.HTML) {
-        return getFieldFromHtml
-    } else if (node.type === NodeType.XML) {
-        return getFieldFromXml
-    }
-
-    return null
 }

@@ -5,10 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const assert_1 = __importDefault(require("assert"));
 const cheerio_1 = __importDefault(require("cheerio"));
-const node_1 = require("../../typedefs/node");
 const common_1 = require("../../utils/common");
 const absolutify_1 = require("../../utils/absolutify");
-const HTML_MISSING = 'HTML_MISSING';
+const PAGE_MISSING = 'PAGE_MISSING';
 var ATTRIBUTE_TO_ELEMENT_MAP;
 (function (ATTRIBUTE_TO_ELEMENT_MAP) {
     ATTRIBUTE_TO_ELEMENT_MAP["href"] = "a";
@@ -21,7 +20,8 @@ function isNumeric(num) {
 function isValidAttribute(attribute) {
     return attribute in ATTRIBUTE_TO_ELEMENT_MAP;
 }
-exports.getFieldFromHtml = (html, selector, url, xmlMode = false) => {
+exports.getFieldFromPage = async (page, selector, url, xmlMode = false) => {
+    const html = await page.content();
     const $ = cheerio_1.default.load(html, { xmlMode });
     let result = selector.attribute && selector.attribute !== 'text'
         ? $(selector.value).attr(selector.attribute)
@@ -33,10 +33,11 @@ exports.getFieldFromHtml = (html, selector, url, xmlMode = false) => {
     }
     return result;
 };
-exports.getFieldsFromHtml = (input, settings, xmlMode = false) => {
-    const { node, parentResult } = input;
-    assert_1.default(parentResult.html, HTML_MISSING);
-    const $ = cheerio_1.default.load(parentResult.html, { xmlMode });
+exports.getFieldsFromHtml = async (input, settings, xmlMode = false) => {
+    const { node, page, rootAncestor } = input;
+    assert_1.default(!!page, PAGE_MISSING);
+    const html = await page.content();
+    const $ = cheerio_1.default.load(html, { xmlMode });
     const arrayMapping = [];
     node.fields.forEach(field => {
         $(field.selector.value).each((i, element) => {
@@ -66,8 +67,11 @@ exports.getFieldsFromHtml = (input, settings, xmlMode = false) => {
                 const url = trimmedVal.replace(settings.proxyEndpoint, '');
                 trimmedVal = decodeURIComponent(url);
             }
-            // TODO check if link with proxy url prefixed
-            // if so then remove and decode
+            if (trimmedVal && (rootAncestor === null || rootAncestor === void 0 ? void 0 : rootAncestor.parsedLink) &&
+                field.selector.attribute === 'href') {
+                const origin = common_1.getUriOrigin(rootAncestor.parsedLink);
+                trimmedVal = absolutify_1.absolutifyUrl(trimmedVal, origin);
+            }
             arrayMapping[i] = Object.assign(Object.assign({}, arrayMapping[i]), {
                 [field.label]: isNumeric(val)
                     ? parseInt(trimmedVal, 10)
@@ -76,20 +80,5 @@ exports.getFieldsFromHtml = (input, settings, xmlMode = false) => {
         });
     });
     return arrayMapping.length === 1 ? arrayMapping[0] : arrayMapping;
-};
-exports.getFieldFromXml = (html, field, url) => {
-    return exports.getFieldFromHtml(html, field, url, true);
-};
-exports.getFieldsFromXml = (input, settings) => {
-    return exports.getFieldsFromHtml(input, settings, true);
-};
-exports.getSelectorParser = (node) => {
-    if (node.type === node_1.NodeType.HTML) {
-        return exports.getFieldFromHtml;
-    }
-    else if (node.type === node_1.NodeType.XML) {
-        return exports.getFieldFromXml;
-    }
-    return null;
 };
 //# sourceMappingURL=selectors.js.map

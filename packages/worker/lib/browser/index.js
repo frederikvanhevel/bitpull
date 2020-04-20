@@ -22,7 +22,7 @@ const getPuppeteerArgs = (settings) => {
     const args = (puppeteer === null || puppeteer === void 0 ? void 0 : puppeteer.endpoint) ? [] : chrome_aws_lambda_1.default.args;
     return [
         ...args,
-        ...((puppeteer === null || puppeteer === void 0 ? void 0 : puppeteer.proxy) ? [`--proxy-server=${puppeteer === null || puppeteer === void 0 ? void 0 : puppeteer.proxy}`] : [])
+        ...((puppeteer === null || puppeteer === void 0 ? void 0 : puppeteer.proxy) ? [`--proxy-server=${puppeteer.proxy}`] : [])
     ];
 };
 class CustomBrowser {
@@ -44,45 +44,27 @@ class CustomBrowser {
             throw new Error('Could not launch browser');
         }
     }
-    async with(func, settings) {
-        const { puppeteer } = settings;
+    async with(func, settings, currentPage) {
         if (!this.browser)
             await this.initialize(settings);
-        let page;
+        let page = currentPage;
         try {
-            page = await this.browser.newPage();
-            if ((puppeteer === null || puppeteer === void 0 ? void 0 : puppeteer.proxy) && (puppeteer === null || puppeteer === void 0 ? void 0 : puppeteer.authorization)) {
-                await page.setExtraHTTPHeaders({
-                    'Proxy-Authorization': puppeteer.authorization
-                });
-            }
-            this.settings.debug &&
-                page.on('console', msg => console.log('DEBUG:', msg.text()));
-            if (common_1.isTestEnv() && this.mockHandler) {
-                page.setRequestInterception(true);
-                page.on('request', async (req) => {
-                    const mockResult = await this.mockHandler(req.url());
-                    mockResult && req.respond(mockResult);
-                });
-            }
-            const userAgent = new user_agents_1.default({ deviceCategory: 'desktop' });
-            await page.setUserAgent(userAgent.toString());
-            await page.setExtraHTTPHeaders({
-                'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8'
-            });
+            if (!page)
+                page = await this.newPage(settings);
             await func(page);
         }
-        finally {
-            if (page)
-                await page.close();
+        catch (error) {
+            console.log(error);
         }
+        finally {
+            // if (page) await page.close()
+        }
+        return page;
     }
-    async getPageContent(page, link, delay, waitForNavigation) {
+    async getPageContent(page, link, before) {
         const response = await page.goto(link);
-        if (waitForNavigation)
-            await page.waitForNavigation();
-        if (delay)
-            await page.waitFor(delay);
+        if (before)
+            await before(page);
         await scripts_1.stripScriptTags(page);
         await scripts_1.removeAttribute(page, 'img', 'srcset');
         if (!response) {
@@ -101,6 +83,29 @@ class CustomBrowser {
             url,
             html
         };
+    }
+    async newPage(settings = {}) {
+        const { debug, puppeteer } = settings;
+        const page = await this.browser.newPage();
+        if ((puppeteer === null || puppeteer === void 0 ? void 0 : puppeteer.proxy) && (puppeteer === null || puppeteer === void 0 ? void 0 : puppeteer.authorization)) {
+            await page.setExtraHTTPHeaders({
+                'Proxy-Authorization': puppeteer.authorization
+            });
+        }
+        debug && page.on('console', msg => console.log('DEBUG:', msg.text()));
+        if (common_1.isTestEnv() && this.mockHandler) {
+            await page.setRequestInterception(true);
+            page.on('request', async (req) => {
+                const mockResult = await this.mockHandler(req.url());
+                mockResult && req.respond(mockResult);
+            });
+        }
+        const userAgent = new user_agents_1.default({ deviceCategory: 'desktop' });
+        await page.setUserAgent(userAgent.toString());
+        await page.setExtraHTTPHeaders({
+            'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8'
+        });
+        return page;
     }
     setMockHandler(handler) {
         this.mockHandler = handler;
