@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/styles'
 import { Theme, Link } from '@material-ui/core'
 import { Link as RouterLink } from 'react-router-dom'
 import Warning from './Warning'
-import { IntegrationType } from '@bitpull/worker'
+import { IntegrationType } from '@bitpull/worker/lib/typedefs'
 import { capitalizeWords } from 'utils/text'
 
 type Props = {
