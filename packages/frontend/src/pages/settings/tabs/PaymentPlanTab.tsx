@@ -347,7 +347,7 @@ const PaymentPlanTab: React.FC = () => {
                                                 $
                                             </span>
                                             {process.env.MONTLY_PLAN_PRICE ||
-                                                68}
+                                                38}
                                         </Typography>
                                         <Typography
                                             variant="subtitle1"
