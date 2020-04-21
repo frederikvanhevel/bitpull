@@ -12,6 +12,7 @@ declare class CustomBrowser {
         html: string;
     }>;
     newPage(settings?: Settings): Promise<puppeteer.Page>;
+    forkPage(page: Page, settings?: Settings): Promise<puppeteer.Page>;
     setMockHandler(handler: MockHandler): void;
     resetMockHandler(): void;
     cleanup(): Promise<void>;

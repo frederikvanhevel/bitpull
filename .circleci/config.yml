@@ -135,9 +135,10 @@ jobs:
           command: |
             sed -i "s/latest/$CIRCLE_SHA1/" k8s_config/overlays/production/backend/deployment.yaml
             kubectl apply -k k8s_config/overlays/production/backend
+            kubectl rollout status deployment/backend
+            
             sed -i "s/latest/$CIRCLE_SHA1/" k8s_config/overlays/production/frontend/deployment.yaml
             kubectl apply -k k8s_config/overlays/production/frontend
-            kubectl rollout status deployment/backend
             kubectl rollout status deployment/frontend
 
 workflows:

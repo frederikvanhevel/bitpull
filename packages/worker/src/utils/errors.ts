@@ -50,7 +50,8 @@ export const ErrorMessages: Record<string, string> = {
     [ParseError.SELECTOR_MISSING]: 'No selector was defined',
     [ParseError.ERROR_RENDERING_HTML]: 'Could not get website content',
     [ParseError.NO_SELECTOR_PARSER_FOUND]: 'No suitable selecor parser found',
-    [ParseError.HTML_MISSING]: 'Coudl not get website content',
+    [ParseError.HTML_MISSING]: 'Could not get website content',
+    [ParseError.PAGE_MISSING]: 'Could not open website',
 
     // Integration error
     [IntegrationError.INTEGRATION_MISSING]: 'Integration is not set up',
@@ -129,15 +130,17 @@ export const ErrorMessages: Record<string, string> = {
 
 export class FlowError extends Error {
     public code: string
-    constructor(code: string) {
+    constructor(code: string, relatedError?: Error) {
         if (!ErrorMessages[code]) {
-            console.warn(`Missing error message for ${code}`)
             super(ErrorMessages[NodeError.UNKNOWN_ERROR])
+            console.warn(`Missing error message for ${code}`, this.stack)
             this.code = NodeError.UNKNOWN_ERROR
             return
         }
 
         super(ErrorMessages[code])
         this.code = code
+
+        if (relatedError) console.error(relatedError.stack)
     }
 }

@@ -1,8 +1,7 @@
-import { ClickNode } from '../typedefs'
+import { ScrollNode } from '../typedefs'
 import { NodeType } from '../../../../typedefs/node'
 
 export default {
     id: '1',
-    type: NodeType.CLICK,
-    selector: 'button'
-} as ClickNode
+    type: NodeType.SCROLL
+} as ScrollNode

@@ -42,7 +42,7 @@ const renderedHtml = `
     </html>
 `
 
-describe('Scroll node', () => {
+describe.skip('Scroll node', () => {
     let browser: CustomBrowser
 
     beforeAll(async () => {

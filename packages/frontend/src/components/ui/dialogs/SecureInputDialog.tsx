@@ -36,7 +36,7 @@ const SecureInputDialog: React.FC<Props> = ({ open, onConfirm, onClose }) => {
 
     return (
         <ConfirmDialog
-            title="Secure password input"
+            title="Secure input"
             confirmLabel="Encrypt"
             open={!!open}
             loading={loading}

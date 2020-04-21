@@ -7,7 +7,8 @@ const assert_1 = __importDefault(require("assert"));
 const cheerio_1 = __importDefault(require("cheerio"));
 const common_1 = require("../../utils/common");
 const absolutify_1 = require("../../utils/absolutify");
-const PAGE_MISSING = 'PAGE_MISSING';
+const errors_1 = require("../../utils/errors");
+const errors_2 = require("../common/errors");
 var ATTRIBUTE_TO_ELEMENT_MAP;
 (function (ATTRIBUTE_TO_ELEMENT_MAP) {
     ATTRIBUTE_TO_ELEMENT_MAP["href"] = "a";
@@ -35,7 +36,7 @@ exports.getFieldFromPage = async (page, selector, url, xmlMode = false) => {
 };
 exports.getFieldsFromHtml = async (input, settings, xmlMode = false) => {
     const { node, page, rootAncestor } = input;
-    assert_1.default(!!page, PAGE_MISSING);
+    assert_1.default(!!page, new errors_1.FlowError(errors_2.ParseError.PAGE_MISSING));
     const html = await page.content();
     const $ = cheerio_1.default.load(html, { xmlMode });
     const arrayMapping = [];

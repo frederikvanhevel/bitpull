@@ -50,8 +50,11 @@ export const clamp = (number: number, min: number, max: number) => {
     return Math.min(Math.max(number, min), max)
 }
 
-export const sequentialPromise = async (data: any[], executor: (data: any) => Promise<any>) => {
-    return data.reduce((p, next) => {
-        return p.then(async () => await executor(next))
-    }, Promise.resolve());
+export const sequentialPromise = async (
+    data: any[],
+    executor: (data: any, i: number) => Promise<any>
+) => {
+    return data.reduce((p, next, i) => {
+        return p.then(async () => await executor(next, i))
+    }, Promise.resolve())
 }

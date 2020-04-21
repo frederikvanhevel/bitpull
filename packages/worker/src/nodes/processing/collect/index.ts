@@ -3,6 +3,7 @@ import { assert } from '../../../utils/common'
 import { getFieldsFromHtml } from '../selectors'
 import { CollectNode, CollectParseResult } from './typedefs'
 import { CollectError } from './errors'
+import { mergeData } from './helper'
 
 const collect: NodeParser<CollectNode, CollectParseResult> = async (
     input,
@@ -21,22 +22,10 @@ const collect: NodeParser<CollectNode, CollectParseResult> = async (
         onLog(node, `Collected fields [${fields}] from page`)
     }
 
-    let data: any = parsedFields
-    if (node.append === true) {
-        if (Array.isArray(data)) {
-            if (!data.length) return
-
-            const keys = Object.keys(data[0])
-
-            keys.forEach(key => {
-                input.passedData[key] = data.map((item: any) => item[key])
-            })
-
-            data = input.passedData
-        } else {
-            data = { ...parsedFields, ...input.passedData }
-        }
-    }
+    const data =
+        node.append === true && !!input.passedData
+            ? mergeData(input.passedData, parsedFields)
+            : parsedFields
 
     if (onWatch && node.id === watchedNodeId) onWatch(data)
 

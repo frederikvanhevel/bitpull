@@ -140,6 +140,12 @@ class CustomBrowser {
         return page
     }
 
+    async forkPage(page: Page, settings: Settings = {}) {
+        const newPage = await this.newPage(settings)
+        await newPage.goto(page.url())
+        return newPage
+    }
+
     setMockHandler(handler: MockHandler) {
         this.mockHandler = handler
     }

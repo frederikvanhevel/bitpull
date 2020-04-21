@@ -107,6 +107,7 @@ class Traverser {
     public async parseNode(
         input: NodeInput<FlowNode>
     ): Promise<NodeInput<FlowNode>> {
+        const browser = this.context.browser
         const { node: currentNode, rootAncestor, page } = input
         const { onError, onLog, settings } = this.options
 
@@ -144,52 +145,34 @@ class Traverser {
                     new FlowError(CollectError.FIELDS_MISSING)
                 )
 
-                // TODO sequential
-                // const result = await Promise.all(
-                //     passedData.map(data => {
-                //         return this.parseNode({
-                //             ...input,
-                //             node: node.children![0],
-                //             parent: node,
-                //             parentResult: data,
-                //             passedData: data,
-                //             rootAncestor: isPrimaryNode
-                //                 ? (currentNode as RootNode)
-                //                 : rootAncestor
-                //         }).catch(error => {
-                //             if (settings.exitOnError) {
-                //                 throw error
-                //             } else if (onError) {
-                //                 onError(node.children![0], error)
-                //             }
-                //         })
-                //     })
-                // )
-
-                const result = await sequentialPromise(passedData, async data => {
-                    return this.parseNode({
-                        ...input,
-                        node: node.children![0],
-                        parent: node,
-                        parentResult: data,
-                        passedData: data,
-                        rootAncestor: isPrimaryNode
-                            ? (currentNode as RootNode)
-                            : rootAncestor
-                    }).catch(error => {
-                        if (settings.exitOnError) {
-                            throw error
-                        } else if (onError) {
-                            onError(node.children![0], error)
-                        }
-                    })
-                })
+                const result = await sequentialPromise(
+                    passedData,
+                    async (data, i) => {
+                        return this.parseNode({
+                            ...input,
+                            node: node.children![0],
+                            parent: node,
+                            parentResult: data,
+                            passedData: data,
+                            rootAncestor: isPrimaryNode
+                                ? (currentNode as RootNode)
+                                : rootAncestor,
+                            page: i > 0 ? await browser.forkPage(page!) : page
+                        }).catch(error => {
+                            if (settings.exitOnError) {
+                                throw error
+                            } else if (onError) {
+                                onError(node.children![0], error)
+                            }
+                        })
+                    }
+                )
 
                 // @ts-ignore
                 return result
             } else if (node.children && node.children.length) {
                 const result = Promise.all(
-                    node.children.map(child =>
+                    node.children.map(async (child, i) =>
                         this.parseNode({
                             ...input,
                             ...nodeResult,
@@ -198,6 +181,7 @@ class Traverser {
                             rootAncestor: isPrimaryNode
                                 ? (currentNode as RootNode)
                                 : rootAncestor
+                            // page: i > 0 ? await browser.forkPage(page!) : page
                         }).catch(error => {
                             if (settings.exitOnError) {
                                 throw error
@@ -212,7 +196,7 @@ class Traverser {
                 return result
             } else if ((!node.children || !node.children.length) && page) {
                 // no children, so close the page
-                // await page.close()
+                await page.close()
             }
 
             return {

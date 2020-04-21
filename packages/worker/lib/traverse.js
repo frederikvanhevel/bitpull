@@ -11,6 +11,7 @@ const browser_1 = __importDefault(require("./browser"));
 const errors_1 = require("./nodes/common/errors");
 const errors_2 = require("./utils/errors");
 const errors_3 = require("./nodes/processing/collect/errors");
+const common_2 = require("./utils/common");
 const DEFAULT_OPTIONS = {
     integrations: [],
     settings: {
@@ -60,6 +61,7 @@ class Traverser {
         return nodeResult;
     }
     async parseNode(input) {
+        const browser = this.context.browser;
         const { node: currentNode, rootAncestor, page } = input;
         const { onError, onLog, settings } = this.options;
         if (this.canceled) {
@@ -81,11 +83,10 @@ class Traverser {
                 Array.isArray(passedData)) {
                 assert_1.default(node.children.length === 1, new errors_2.FlowError(errors_1.NodeError.TOO_MANY_CHILDREN));
                 assert_1.default(node.fields.length > 0, new errors_2.FlowError(errors_3.CollectError.FIELDS_MISSING));
-                // TODO sequential
-                const result = await Promise.all(passedData.map(data => {
+                const result = await common_2.sequentialPromise(passedData, async (data, i) => {
                     return this.parseNode(Object.assign(Object.assign({}, input), { node: node.children[0], parent: node, parentResult: data, passedData: data, rootAncestor: isPrimaryNode
                             ? currentNode
-                            : rootAncestor })).catch(error => {
+                            : rootAncestor, page: i > 0 ? await browser.forkPage(page) : page })).catch(error => {
                         if (settings.exitOnError) {
                             throw error;
                         }
@@ -93,12 +94,12 @@ class Traverser {
                             onError(node.children[0], error);
                         }
                     });
-                }));
+                });
                 // @ts-ignore
                 return result;
             }
             else if (node.children && node.children.length) {
-                const result = Promise.all(node.children.map(child => this.parseNode(Object.assign(Object.assign(Object.assign({}, input), nodeResult), { node: child, parent: node, rootAncestor: isPrimaryNode
+                const result = Promise.all(node.children.map(async (child, i) => this.parseNode(Object.assign(Object.assign(Object.assign({}, input), nodeResult), { node: child, parent: node, rootAncestor: isPrimaryNode
                         ? currentNode
                         : rootAncestor })).catch(error => {
                     if (settings.exitOnError) {
@@ -113,7 +114,7 @@ class Traverser {
             }
             else if ((!node.children || !node.children.length) && page) {
                 // no children, so close the page
-                // await page.close()
+                await page.close();
             }
             return Object.assign(Object.assign({}, input), nodeResult);
         }

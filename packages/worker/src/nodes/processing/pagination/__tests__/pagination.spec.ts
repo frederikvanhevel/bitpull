@@ -49,7 +49,7 @@ const htmlPageFour = `
     <html>
         <body>
             <div class="list">
-                <div class="field">480</div>
+                <div class="field">500</div>
             </div>
         </body>
     </html>
@@ -207,7 +207,7 @@ describe('Pagination node', () => {
         const expected = [
             { price: 1400, url: '/some-path' },
             { price: 400, url: '/some-other-path' },
-            { price: 480, url: '/some-down-path', new: 480 }
+            { price: 480, url: '/some-down-path', new: 500 }
         ]
 
         await traverser.parseNode({

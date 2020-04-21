@@ -5,6 +5,8 @@ import { NodeInput } from '../../typedefs/node'
 import { Settings } from '../../typedefs/common'
 import { getUriOrigin } from '../../utils/common'
 import { absolutifyUrl } from '../../utils/absolutify'
+import { FlowError } from '../../utils/errors'
+import { ParseError } from '../common/errors'
 import { CollectNode } from './collect/typedefs'
 import { HtmlParseResult } from './html/typedefs'
 
@@ -12,8 +14,6 @@ export interface HTMLSelector {
     value: string
     attribute?: string
 }
-
-const PAGE_MISSING = 'PAGE_MISSING'
 
 enum ATTRIBUTE_TO_ELEMENT_MAP {
     href = 'a',
@@ -62,7 +62,7 @@ export const getFieldsFromHtml = async (
 ) => {
     const { node, page, rootAncestor } = input
 
-    assert(!!page, PAGE_MISSING)
+    assert(!!page, new FlowError(ParseError.PAGE_MISSING))
 
     const html = await page!.content()
 

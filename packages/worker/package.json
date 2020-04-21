@@ -20,6 +20,7 @@
     "aws-sdk": "^2.653.0",
     "cheerio": "^1.0.0-rc.3",
     "chrome-aws-lambda": "^2.1.1",
+    "clone-deep": "^4.0.1",
     "json2csv": "^5.0.0",
     "p3x-json2xls-worker-thread": "^2020.4.144",
     "puppeteer-core": "^2.1.1",
@@ -33,6 +34,7 @@
   "devDependencies": {
     "@types/assert": "^1.4.6",
     "@types/cheerio": "^0.22.17",
+    "@types/clone-deep": "^4.0.1",
     "@types/jest": "^25.2.1",
     "@types/json2csv": "^5.0.0",
     "@types/node": "^13.11.0",

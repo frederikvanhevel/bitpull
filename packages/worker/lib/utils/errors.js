@@ -43,7 +43,8 @@ exports.ErrorMessages = {
     [errors_1.ParseError.SELECTOR_MISSING]: 'No selector was defined',
     [errors_1.ParseError.ERROR_RENDERING_HTML]: 'Could not get website content',
     [errors_1.ParseError.NO_SELECTOR_PARSER_FOUND]: 'No suitable selecor parser found',
-    [errors_1.ParseError.HTML_MISSING]: 'Coudl not get website content',
+    [errors_1.ParseError.HTML_MISSING]: 'Could not get website content',
+    [errors_1.ParseError.PAGE_MISSING]: 'Could not open website',
     // Integration error
     [errors_1.IntegrationError.INTEGRATION_MISSING]: 'Integration is not set up',
     [errors_1.IntegrationError.INTEGRATION_INACTIVE]: 'Integration is not active',
@@ -98,15 +99,17 @@ exports.ErrorMessages = {
     [errors_19.ScrollError.COULD_NOT_SCROLL]: 'Could not scroll page'
 };
 class FlowError extends Error {
-    constructor(code) {
+    constructor(code, relatedError) {
         if (!exports.ErrorMessages[code]) {
-            console.warn(`Missing error message for ${code}`);
             super(exports.ErrorMessages[errors_1.NodeError.UNKNOWN_ERROR]);
+            console.warn(`Missing error message for ${code}`, this.stack);
             this.code = errors_1.NodeError.UNKNOWN_ERROR;
             return;
         }
         super(exports.ErrorMessages[code]);
         this.code = code;
+        if (relatedError)
+            console.error(relatedError.stack);
     }
 }
 exports.FlowError = FlowError;
