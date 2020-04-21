@@ -32,9 +32,10 @@ class Logger {
             type: LogType.ERROR,
             timestamp: new Date(),
             error,
+            message: error.stack,
             relatedError,
             stack: relatedError ? relatedError.stack : error.stack,
-            userId: user?._id.toHexString()
+            userId: user?.id || user?._id.toHexString()
         }
 
         this.executeLog(data)
