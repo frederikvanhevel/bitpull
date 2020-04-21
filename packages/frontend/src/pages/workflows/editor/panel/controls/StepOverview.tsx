@@ -46,7 +46,7 @@ const getNodeLabel = (node: Node) => {
     } else if (node.type === NodeType.WAIT) {
         return `Wait ${(node as WaitNode).delay} seconds`
     } else if (isRootNode(node)) {
-        return `${label} of ${truncate(node.link) || node.linkedField}`
+        return `${label} of ${node.link ? truncate(node.link) : node.linkedField}`
     }
 
     return label

@@ -82,7 +82,8 @@ export const isProcessingOnlyNode = (node: Node) => {
         node.type === NodeType.HTML ||
         node.type === NodeType.CLICK ||
         node.type === NodeType.LOGIN ||
-        node.type === NodeType.WAIT
+        node.type === NodeType.WAIT ||
+        node.type === NodeType.SCROLL
     )
 }
 
