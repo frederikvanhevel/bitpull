@@ -21,9 +21,22 @@ const collect: NodeParser<CollectNode, CollectParseResult> = async (
         onLog(node, `Collected fields [${fields}] from page`)
     }
 
-    const data = node.append
-        ? { ...parsedFields, ...input.passedData }
-        : parsedFields
+    let data: any = parsedFields
+    if (node.append === true) {
+        if (Array.isArray(data)) {
+            if (!data.length) return
+
+            const keys = Object.keys(data[0])
+
+            keys.forEach(key => {
+                input.passedData[key] = data.map((item: any) => item[key])
+            })
+
+            data = input.passedData
+        } else {
+            data = { ...parsedFields, ...input.passedData }
+        }
+    }
 
     if (onWatch && node.id === watchedNodeId) onWatch(data)
 

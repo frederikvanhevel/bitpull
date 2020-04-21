@@ -150,13 +150,13 @@ const Collect: React.FC<Props> = ({ node, onUpdate }) => {
 
             <ExpandableOptionRow
                 className={classes.expand}
-                title="Append to previous results"
+                title="Merge with previous results"
                 active={node.append || false}
                 onChange={e => onUpdate('append', e.target.checked)}
             >
                 <Typography variant="caption">
-                    The result of this collect step will be appended to the
-                    result of any previous collect steps
+                    The data collected will be merged with the previous
+                    collected data. For example from before pagination.
                 </Typography>
             </ExpandableOptionRow>
         </div>

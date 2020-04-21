@@ -22,7 +22,8 @@ import {
     waitIcon,
     disabledIcon,
     emailIcon,
-    githubIcon
+    githubIcon,
+    scrollIcon
 } from './icons'
 
 export interface ChartClasses {
@@ -62,6 +63,7 @@ const NODE_LABELS: Record<NodeType, string> = {
     [NodeType.PDF]: 'pdf file',
     [NodeType.SCREENSHOT]: 'screenshot',
     [NodeType.WAIT]: 'wait',
+    [NodeType.SCROLL]: 'scroll',
     [NodeType.LOGIN]: 'login',
     [NodeType.FUNCTION]: 'function'
 }
@@ -85,6 +87,7 @@ const NODE_ICONS: Record<NodeType, ReactNode> = {
     [NodeType.PDF]: pdfIcon,
     [NodeType.SCREENSHOT]: screenshotIcon,
     [NodeType.WAIT]: waitIcon,
+    [NodeType.SCROLL]: scrollIcon,
     [NodeType.LOGIN]: loginIcon,
     [NodeType.FUNCTION]: urlIcon
 }

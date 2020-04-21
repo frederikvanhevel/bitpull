@@ -21,6 +21,7 @@ import { WaitError } from '../nodes/processing/wait/errors'
 import { EmailError } from '../nodes/notification/email/errors'
 import { GithubError } from '../nodes/export/github/errors'
 import { ClickError } from '../nodes/processing/click/errors'
+import { ScrollError } from '../nodes/processing/scroll/errors'
 
 export const ErrorMessages: Record<string, string> = {
     // Node error
@@ -120,7 +121,10 @@ export const ErrorMessages: Record<string, string> = {
     [CsvError.COULD_NOT_CREATE]: 'Could not write csv file',
 
     // Eccel error
-    [ExeclError.COULD_NOT_CREATE]: 'Could not write excel file'
+    [ExeclError.COULD_NOT_CREATE]: 'Could not write excel file',
+
+    // Scroll error
+    [ScrollError.COULD_NOT_SCROLL]: 'Could not scroll page'
 }
 
 export class FlowError extends Error {

@@ -18,6 +18,7 @@ const errors_15 = require("../nodes/processing/wait/errors");
 const errors_16 = require("../nodes/notification/email/errors");
 const errors_17 = require("../nodes/export/github/errors");
 const errors_18 = require("../nodes/processing/click/errors");
+const errors_19 = require("../nodes/processing/scroll/errors");
 exports.ErrorMessages = {
     // Node error
     [errors_1.NodeError.NEEDS_ROOT_ANCESTOR]: 'Needs to have html or xml as previous step',
@@ -92,7 +93,9 @@ exports.ErrorMessages = {
     // CSV error
     [errors_2.CsvError.COULD_NOT_CREATE]: 'Could not write csv file',
     // Eccel error
-    [errors_3.ExeclError.COULD_NOT_CREATE]: 'Could not write excel file'
+    [errors_3.ExeclError.COULD_NOT_CREATE]: 'Could not write excel file',
+    // Scroll error
+    [errors_19.ScrollError.COULD_NOT_SCROLL]: 'Could not scroll page'
 };
 class FlowError extends Error {
     constructor(code) {

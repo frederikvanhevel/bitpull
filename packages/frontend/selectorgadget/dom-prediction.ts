@@ -97,7 +97,6 @@ class DomPredictionHelper {
         }
 
         if (node.className && typeof node.className === 'string') {
-            console.log(node.className)
             for (const cssName of Array.from(node.className.split(' '))) {
                 escaped = this.escapeCssNames(cssName)
                 if (cssName && escaped.length > 0) {

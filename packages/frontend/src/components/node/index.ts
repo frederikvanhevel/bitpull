@@ -137,6 +137,7 @@ export const traverseAncestors = (node: Node) => {
         NodeType.LOGIN,
         NodeType.WAIT,
         NodeType.CLICK,
+        NodeType.SCROLL,
         NodeType.COLLECT
     ]
 

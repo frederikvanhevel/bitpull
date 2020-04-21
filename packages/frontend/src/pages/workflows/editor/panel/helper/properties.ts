@@ -37,6 +37,8 @@ import Wait from '../modules/Wait'
 import Email from '../modules/Email'
 import Csv from '../modules/Csv'
 import CsvIcon from 'components/ui/icons/csv-icon'
+import Scroll from '../modules/Scroll'
+import ScrollIcon from 'components/ui/icons/scroll-icon'
 
 export interface NodeProperty {
     icon: ElementType
@@ -159,6 +161,12 @@ export const NODE_PROPERTIES: Record<NodeType, NodeProperty> = {
         label: 'Wait x amount',
         shortLabel: 'Wait',
         editor: Wait
+    },
+    [NodeType.SCROLL]: {
+        icon: ScrollIcon,
+        label: 'Scroll page',
+        shortLabel: 'Scroll',
+        editor: Scroll
     },
     [NodeType.FUNCTION]: {
         icon: UrlIcon,

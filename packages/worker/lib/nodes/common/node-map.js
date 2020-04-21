@@ -8,6 +8,7 @@ const NodeMap = {
             node_1.NodeType.PAGINATION,
             node_1.NodeType.CLICK,
             node_1.NodeType.LOGIN,
+            node_1.NodeType.SCROLL,
             node_1.NodeType.SCREENSHOT,
             node_1.NodeType.PDF,
             node_1.NodeType.WAIT
@@ -25,6 +26,7 @@ const NodeMap = {
             node_1.NodeType.COLLECT,
             node_1.NodeType.CLICK,
             node_1.NodeType.LOGIN,
+            node_1.NodeType.SCROLL,
             node_1.NodeType.SCREENSHOT,
             node_1.NodeType.PDF,
             node_1.NodeType.WAIT
@@ -45,6 +47,7 @@ const NodeMap = {
             node_1.NodeType.PAGINATION,
             node_1.NodeType.CLICK,
             node_1.NodeType.LOGIN,
+            node_1.NodeType.SCROLL,
             node_1.NodeType.SCREENSHOT,
             node_1.NodeType.PDF,
             node_1.NodeType.WAIT
@@ -58,6 +61,7 @@ const NodeMap = {
             node_1.NodeType.COLLECT,
             node_1.NodeType.PAGINATION,
             node_1.NodeType.CLICK,
+            node_1.NodeType.SCROLL,
             node_1.NodeType.LOGIN,
             node_1.NodeType.SCREENSHOT,
             node_1.NodeType.PDF,
@@ -132,6 +136,21 @@ const NodeMap = {
             node_1.NodeType.COLLECT,
             node_1.NodeType.PAGINATION,
             node_1.NodeType.CLICK,
+            node_1.NodeType.SCROLL,
+            node_1.NodeType.LOGIN,
+            node_1.NodeType.SCREENSHOT,
+            node_1.NodeType.PDF
+        ],
+        export: [],
+        notification: []
+    },
+    [node_1.NodeType.SCROLL]: {
+        processing: [
+            node_1.NodeType.HTML,
+            node_1.NodeType.COLLECT,
+            node_1.NodeType.PAGINATION,
+            node_1.NodeType.CLICK,
+            node_1.NodeType.WAIT,
             node_1.NodeType.LOGIN,
             node_1.NodeType.SCREENSHOT,
             node_1.NodeType.PDF

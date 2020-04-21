@@ -49,3 +49,9 @@ export const isTestEnv = () => process.env.NODE_ENV === 'test'
 export const clamp = (number: number, min: number, max: number) => {
     return Math.min(Math.max(number, min), max)
 }
+
+export const sequentialPromise = async (data: any[], executor: (data: any) => Promise<any>) => {
+    return data.reduce((p, next) => {
+        return p.then(async () => await executor(next))
+    }, Promise.resolve());
+}

@@ -27,7 +27,8 @@ export enum NodeType {
     ONEDRIVE = 'ONEDRIVE',
     GITHUB = 'GITHUB',
     WEBHOOK = 'WEBHOOK',
-    WAIT = 'WAIT'
+    WAIT = 'WAIT',
+    SCROLL = 'SCROLL'
 }
 
 export interface FlowNode {

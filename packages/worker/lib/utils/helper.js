@@ -36,6 +36,7 @@ exports.IMPORT_PATHS = {
     [node_1.NodeType.SCREENSHOT]: '../nodes/processing/screenshot',
     [node_1.NodeType.PDF]: '../nodes/processing/pdf',
     [node_1.NodeType.WAIT]: '../nodes/processing/wait',
+    [node_1.NodeType.SCROLL]: '../nodes/processing/scroll',
     [node_1.NodeType.FUNCTION]: '../nodes/export/function',
     [node_1.NodeType.DROPBOX]: '../nodes/export/dropbox',
     [node_1.NodeType.GOOGLE_DRIVE]: '../nodes/export/google-drive',

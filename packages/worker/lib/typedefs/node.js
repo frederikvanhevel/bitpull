@@ -22,5 +22,6 @@ var NodeType;
     NodeType["GITHUB"] = "GITHUB";
     NodeType["WEBHOOK"] = "WEBHOOK";
     NodeType["WAIT"] = "WAIT";
+    NodeType["SCROLL"] = "SCROLL";
 })(NodeType = exports.NodeType || (exports.NodeType = {}));
 //# sourceMappingURL=node.js.map

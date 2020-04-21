@@ -18,6 +18,7 @@ export enum PaginationStep {
 export const ALLOWED_CHILD_NODES: Record<PaginationStep, NodeType[]> = {
     [PaginationStep.PER_PAGE]: [
         NodeType.COLLECT,
+        NodeType.SCROLL,
         NodeType.SCREENSHOT,
         NodeType.PDF
     ],

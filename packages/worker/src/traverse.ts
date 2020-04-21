@@ -25,6 +25,7 @@ import { FlowError } from './utils/errors'
 import { HtmlNode } from './nodes/processing/html/typedefs'
 import { CollectNode } from './nodes/processing/collect/typedefs'
 import { CollectError } from './nodes/processing/collect/errors'
+import { sequentialPromise } from './utils/common'
 
 const DEFAULT_OPTIONS: TraverseOptions = {
     integrations: [],
@@ -144,26 +145,45 @@ class Traverser {
                 )
 
                 // TODO sequential
-                const result = await Promise.all(
-                    passedData.map(data => {
-                        return this.parseNode({
-                            ...input,
-                            node: node.children![0],
-                            parent: node,
-                            parentResult: data,
-                            passedData: data,
-                            rootAncestor: isPrimaryNode
-                                ? (currentNode as RootNode)
-                                : rootAncestor
-                        }).catch(error => {
-                            if (settings.exitOnError) {
-                                throw error
-                            } else if (onError) {
-                                onError(node.children![0], error)
-                            }
-                        })
+                // const result = await Promise.all(
+                //     passedData.map(data => {
+                //         return this.parseNode({
+                //             ...input,
+                //             node: node.children![0],
+                //             parent: node,
+                //             parentResult: data,
+                //             passedData: data,
+                //             rootAncestor: isPrimaryNode
+                //                 ? (currentNode as RootNode)
+                //                 : rootAncestor
+                //         }).catch(error => {
+                //             if (settings.exitOnError) {
+                //                 throw error
+                //             } else if (onError) {
+                //                 onError(node.children![0], error)
+                //             }
+                //         })
+                //     })
+                // )
+
+                const result = await sequentialPromise(passedData, async data => {
+                    return this.parseNode({
+                        ...input,
+                        node: node.children![0],
+                        parent: node,
+                        parentResult: data,
+                        passedData: data,
+                        rootAncestor: isPrimaryNode
+                            ? (currentNode as RootNode)
+                            : rootAncestor
+                    }).catch(error => {
+                        if (settings.exitOnError) {
+                            throw error
+                        } else if (onError) {
+                            onError(node.children![0], error)
+                        }
                     })
-                )
+                })
 
                 // @ts-ignore
                 return result

@@ -13,6 +13,7 @@ const NodeMap: Record<NodeType, Map> = {
             NodeType.PAGINATION,
             NodeType.CLICK,
             NodeType.LOGIN,
+            NodeType.SCROLL,
             NodeType.SCREENSHOT,
             NodeType.PDF,
             NodeType.WAIT
@@ -30,6 +31,7 @@ const NodeMap: Record<NodeType, Map> = {
             NodeType.COLLECT,
             NodeType.CLICK,
             NodeType.LOGIN,
+            NodeType.SCROLL,
             NodeType.SCREENSHOT,
             NodeType.PDF,
             NodeType.WAIT
@@ -50,6 +52,7 @@ const NodeMap: Record<NodeType, Map> = {
             NodeType.PAGINATION,
             NodeType.CLICK,
             NodeType.LOGIN,
+            NodeType.SCROLL,
             NodeType.SCREENSHOT,
             NodeType.PDF,
             NodeType.WAIT
@@ -63,6 +66,7 @@ const NodeMap: Record<NodeType, Map> = {
             NodeType.COLLECT,
             NodeType.PAGINATION,
             NodeType.CLICK,
+            NodeType.SCROLL,
             NodeType.LOGIN,
             NodeType.SCREENSHOT,
             NodeType.PDF,
@@ -137,6 +141,21 @@ const NodeMap: Record<NodeType, Map> = {
             NodeType.COLLECT,
             NodeType.PAGINATION,
             NodeType.CLICK,
+            NodeType.SCROLL,
+            NodeType.LOGIN,
+            NodeType.SCREENSHOT,
+            NodeType.PDF
+        ],
+        export: [],
+        notification: []
+    },
+    [NodeType.SCROLL]: {
+        processing: [
+            NodeType.HTML,
+            NodeType.COLLECT,
+            NodeType.PAGINATION,
+            NodeType.CLICK,
+            NodeType.WAIT,
             NodeType.LOGIN,
             NodeType.SCREENSHOT,
             NodeType.PDF

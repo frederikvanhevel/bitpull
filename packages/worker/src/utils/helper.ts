@@ -32,6 +32,7 @@ export const IMPORT_PATHS: Record<NodeType, string> = {
     [NodeType.SCREENSHOT]: '../nodes/processing/screenshot',
     [NodeType.PDF]: '../nodes/processing/pdf',
     [NodeType.WAIT]: '../nodes/processing/wait',
+    [NodeType.SCROLL]: '../nodes/processing/scroll',
     [NodeType.FUNCTION]: '../nodes/export/function',
     [NodeType.DROPBOX]: '../nodes/export/dropbox',
     [NodeType.GOOGLE_DRIVE]: '../nodes/export/google-drive',

@@ -36,6 +36,7 @@ import { JsonNode } from './nodes/processing/json/typedefs'
 import { ScreenshotNode } from './nodes/processing/screenshot/typedefs'
 import { PdfNode, PdfFormat } from './nodes/processing/pdf/typedefs'
 import { WaitNode } from './nodes/processing/wait/typedefs'
+import { ScrollNode } from './nodes/processing/scroll/typedefs'
 import { FunctionNode } from './nodes/export/function/typedefs'
 import { DropboxNode } from './nodes/export/dropbox/typedefs'
 import { GoogleDriveNode } from './nodes/export/google-drive/typedefs'
@@ -80,6 +81,7 @@ export type {
     ScreenshotNode,
     PdfNode,
     WaitNode,
+    ScrollNode,
     FunctionNode,
     DropboxNode,
     GoogleDriveNode,

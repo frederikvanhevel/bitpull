@@ -42,7 +42,7 @@ const html: NodeParser<HtmlNode, undefined, HtmlParseResult> = async (
     assert(link, ParseError.LINK_MISSING)
 
     const currentPage = await browser.with(async (page: Page) => {
-        await page.goto(link)
+        await page.goto(link, {waitUntil: 'load'})
     }, settings)
 
     onLog && onLog(node, `Got content of ${link}`)
