@@ -1,5 +1,5 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/core'
+import { makeStyles, Typography } from '@material-ui/core'
 import { ScrollNode } from '@bitpull/worker/lib/typedefs'
 
 interface Props {
@@ -33,7 +33,7 @@ const Scroll: React.FC<Props> = ({ node, onUpdate }) => {
     return (
         <div className={classes.wrapper}>
             <div className={classes.inlineInput}>
-                Scroll
+                <Typography>Scroll the whole page to the bottom</Typography>
             </div>
         </div>
     )

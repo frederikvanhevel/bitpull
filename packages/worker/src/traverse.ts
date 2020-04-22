@@ -196,7 +196,7 @@ class Traverser {
                 return result
             } else if ((!node.children || !node.children.length) && page) {
                 // no children, so close the page
-                await page.close()
+                // await page.close()
             }
 
             return {

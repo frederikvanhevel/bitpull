@@ -97,7 +97,7 @@ const EditUrl: React.FC<Props> = ({ node, onUpdate }) => {
                     />
                 ) : (
                     <FormControl>
-                        <InputLabel>Url from collect field</InputLabel>
+                        <InputLabel>Link from previous step</InputLabel>
                         <Select
                             value={node.linkedField}
                             placeholder="select "

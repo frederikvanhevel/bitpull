@@ -1,5 +1,6 @@
 import Traverser from '@bitpull/worker'
 import { WorkerArgs, WorkerEvent } from '../typedefs'
+import { stripScriptTags } from '@bitpull/worker/src/utils/scripts'
 
 let traverser: Traverser
 
@@ -17,6 +18,8 @@ process.on('message', async (args: WorkerArgs) => {
         } else {
             page = result.page
         }
+
+        await stripScriptTags(page)
 
         process.send!({
             event: WorkerEvent.FINISHED,
