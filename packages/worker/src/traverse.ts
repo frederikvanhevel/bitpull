@@ -95,7 +95,7 @@ class Traverser {
         }
 
         if (!node.children || !node.children.length) {
-            await page?.close()
+            // await page?.close()
             // if we are at the end of a pagination tree return the data to it
             if (paginationCallback) paginationCallback(nodeResult!.passedData)
         }
