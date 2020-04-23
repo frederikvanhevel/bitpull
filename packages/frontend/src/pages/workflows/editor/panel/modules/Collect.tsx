@@ -105,7 +105,7 @@ const Collect: React.FC<Props> = ({ node, onUpdate }) => {
                                     placeholder="name"
                                     error={
                                         errors.fields &&
-                                        !!errors.fields[index].label
+                                        !!errors.fields[index]?.label
                                     }
                                     name={`${fieldName}.label`}
                                     inputRef={register({

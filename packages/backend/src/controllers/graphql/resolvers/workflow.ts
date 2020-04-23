@@ -21,9 +21,12 @@ import {
     RunnerTimeoutReachedError,
     LimitReachedError
 } from 'utils/errors'
+import Worker from 'components/worker'
 import { AuthenticationContext } from '../directives/auth'
 import { pubsub } from '../schema'
 import { SubscriptionEvent } from '../typedefs/workflow'
+
+const TIMEOUT = Number(process.env.RUNNER_TIMEOUT || 900000)
 
 export const getWorkflow: GraphQLFieldResolver<
     any,
@@ -122,14 +125,17 @@ export const runWorkflow: GraphQLFieldResolver<
 
     const kill = () => {
         try {
-            childWorkflow && childWorkflow.kill()
+            Worker.kill(childWorkflow)
         } catch (error) {
             Logger.error(error)
         }
     }
 
     try {
-        if (context.req) context.req.on('close', kill)
+        if (context.req) {
+            context.req.setTimeout(TIMEOUT)
+            context.req.on('close', kill)
+        }
 
         const handler = (event: NodeEventType | WorkerEvent, data: any) => {
             if (event === WorkerEvent.CREATED) {
@@ -163,19 +169,22 @@ export const runWorkflow: GraphQLFieldResolver<
 
         if (!result) throw new Error()
 
+        kill()
+
         return result
     } catch (error) {
+        kill()
+
         if (error instanceof RunnerTimeoutReachedError) {
             throw error
         } else {
+            console.log(error.stack)
             Logger.throw(
                 new Error('Could not run workflow'),
                 error,
                 context.user
             )
         }
-    } finally {
-        kill()
     }
 }
 

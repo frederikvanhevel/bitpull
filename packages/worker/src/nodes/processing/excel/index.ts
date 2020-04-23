@@ -28,7 +28,8 @@ const excel: NodeParser<ExcelNode, FileWriteResult> = async (
         const excelData = await json2xls(passedData)
         path = await writeFile(excelData, FileType.EXCEL, FileEncoding.BINARY)
     } catch (error) {
-        throw new FlowError(ExeclError.COULD_NOT_CREATE, error)
+        console.log(error)
+        throw new FlowError(ExeclError.COULD_NOT_CREATE_EXCEL, error)
     }
 
     if (onLog) onLog(node, 'Succesfully converted to excel file')

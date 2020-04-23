@@ -61,7 +61,7 @@ class Traverser {
     private async getNodeResult(
         input: NodeInput<FlowNode>
     ): Promise<NodeInput<FlowNode>> {
-        const { node, paginationCallback } = input
+        const { node, paginationCallback, page } = input
         const { onStart, onComplete, onLog } = this.options
         onStart && onStart(node)
 
@@ -94,9 +94,10 @@ class Traverser {
             nodeResult = await module(input, this.options, this.context)
         }
 
-        // if we are at the end of a pagination tree return the data to it
-        if ((!node.children || !node.children.length) && paginationCallback) {
-            paginationCallback(nodeResult!.passedData)
+        if (!node.children || !node.children.length) {
+            await page?.close()
+            // if we are at the end of a pagination tree return the data to it
+            if (paginationCallback) paginationCallback(nodeResult!.passedData)
         }
 
         onComplete && onComplete(node)
@@ -145,6 +146,8 @@ class Traverser {
                     new FlowError(CollectError.FIELDS_MISSING)
                 )
 
+                const newPage = await browser.forkPage(page!)
+
                 const result = await sequentialPromise(
                     passedData,
                     async (data, i) => {
@@ -157,7 +160,8 @@ class Traverser {
                             rootAncestor: isPrimaryNode
                                 ? (currentNode as RootNode)
                                 : rootAncestor,
-                            page: i > 0 ? await browser.forkPage(page!) : page
+                            page: newPage
+                            // page: i > 0 ? await browser.forkPage(page!) : page
                         }).catch(error => {
                             if (settings.exitOnError) {
                                 throw error
@@ -171,6 +175,7 @@ class Traverser {
                 // @ts-ignore
                 return result
             } else if (node.children && node.children.length) {
+                // const newPage = await browser.forkPage(page!)
                 const result = Promise.all(
                     node.children.map(async (child, i) =>
                         this.parseNode({
@@ -181,6 +186,7 @@ class Traverser {
                             rootAncestor: isPrimaryNode
                                 ? (currentNode as RootNode)
                                 : rootAncestor
+                            // page: newPage
                             // page: i > 0 ? await browser.forkPage(page!) : page
                         }).catch(error => {
                             if (settings.exitOnError) {
@@ -194,9 +200,6 @@ class Traverser {
 
                 // @ts-ignore
                 return result
-            } else if ((!node.children || !node.children.length) && page) {
-                // no children, so close the page
-                // await page.close()
             }
 
             return {
@@ -239,6 +242,8 @@ class Traverser {
                 code: error.code
             })
 
+            console.error(error.stack)
+
             originalErrorFn && originalErrorFn(node, error)
         }
 
@@ -279,6 +284,7 @@ class Traverser {
                 status = errors.length ? Status.PARTIAL_SUCCESS : Status.SUCCESS
             }
         } catch (error) {
+            console.error(error.stack)
             status = Status.ERROR
         } finally {
             this.options.onError = originalErrorFn

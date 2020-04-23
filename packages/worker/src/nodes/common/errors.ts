@@ -27,7 +27,8 @@ export enum ParseError {
     NO_SELECTOR_PARSER_FOUND = 'NO_SELECTOR_PARSER_FOUND',
     HTML_MISSING = 'HTML_MISSING',
     XML_PARSE_ERROR = 'XML_PARSE_ERROR',
-    PAGE_MISSING = 'PAGE_MISSING'
+    PAGE_MISSING = 'PAGE_MISSING',
+    NO_DATA = 'NO_DATA'
 }
 
 export enum IntegrationError {

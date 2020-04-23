@@ -38,8 +38,8 @@ spec:
                   name: env-vars
             - name: PREBOOT_CHROME
               value: "false"
-            # - name: CONNECTION_TIMEOUT
-            #   value: "900000"
+            - name: CONNECTION_TIMEOUT
+              value: "1200000"
         - image: gcr.io/bitpull/pressure:latest
           name: pressure
           env:

@@ -33,7 +33,7 @@ const getNodeLabel = (node: Node) => {
     const label = getTitle(node)
 
     if (isCollectNode(node)) {
-        return `${label}: ${node.fields.length} field(s)`
+        return node.fields?.length ? `${label}: ${node.fields.length} field(s)` : label
     } else if (isPaginationNode(node)) {
         let links
         if (isNextLinkPagination(node.pagination)) {

@@ -1,5 +1,6 @@
 import { join } from 'path'
 import { fork, ChildProcess } from 'child_process'
+import treekill from 'tree-kill'
 import { RunnerTimeoutReachedError } from 'utils/errors'
 import { Handler, WorkerArgs, WorkerEvent } from './typedefs'
 
@@ -8,6 +9,11 @@ const TIMEOUT = Number(process.env.RUNNER_TIMEOUT || 900000)
 export enum Work {
     WORKFLOW = 'workflow.ts',
     SINGLE_NODE = 'single-node.ts'
+}
+
+const kill = (proc: ChildProcess) => {
+    if (!proc) return
+    treekill(proc.pid)
 }
 
 const spawn = (
@@ -21,8 +27,8 @@ const spawn = (
     return new Promise((resolve, reject) => {
         try {
             timeout = setTimeout(() => {
-                if (forked) forked.kill()
                 reject(new RunnerTimeoutReachedError())
+                kill(forked)
             }, TIMEOUT)
 
             forked = fork(join(__dirname, './work', work), [
@@ -31,9 +37,13 @@ const spawn = (
             ])
 
             forked.on('message', message => {
+                // @ts-ignore
+                if (message.data?.error) console.log(message.data?.error)
+
                 if ((message as any).event === WorkerEvent.FINISHED) {
                     clearTimeout(timeout)
                     resolve((message as any).data)
+                    kill(forked)
                 } else onEvent && onEvent(message)
             })
 
@@ -44,6 +54,7 @@ const spawn = (
 
             forked.on('exit', code => {
                 code === 0 ? resolve() : reject()
+                kill(forked)
             })
 
             // forked.on('close', () => resolve())
@@ -57,6 +68,7 @@ const spawn = (
                 })
         } catch (error) {
             reject(error)
+            kill(forked)
         }
     })
 }
@@ -75,7 +87,8 @@ const runSingleNode = async (args: WorkerArgs) => {
 const Worker = {
     spawn,
     runWorkflow,
-    runSingleNode
+    runSingleNode,
+    kill
 }
 
 export default Worker

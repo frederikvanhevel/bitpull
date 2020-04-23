@@ -52,6 +52,7 @@ export const ErrorMessages: Record<string, string> = {
     [ParseError.NO_SELECTOR_PARSER_FOUND]: 'No suitable selecor parser found',
     [ParseError.HTML_MISSING]: 'Could not get website content',
     [ParseError.PAGE_MISSING]: 'Could not open website',
+    [ParseError.NO_DATA]: 'No data to export',
 
     // Integration error
     [IntegrationError.INTEGRATION_MISSING]: 'Integration is not set up',
@@ -119,10 +120,10 @@ export const ErrorMessages: Record<string, string> = {
     [ClickError.COULD_NOT_CLICK]: 'Could not click element',
 
     // CSV error
-    [CsvError.COULD_NOT_CREATE]: 'Could not write csv file',
+    [CsvError.COULD_NOT_CREATE_CSV]: 'Could not write csv file',
 
     // Eccel error
-    [ExeclError.COULD_NOT_CREATE]: 'Could not write excel file',
+    [ExeclError.COULD_NOT_CREATE_EXCEL]: 'Could not write excel file',
 
     // Scroll error
     [ScrollError.COULD_NOT_SCROLL]: 'Could not scroll page'
