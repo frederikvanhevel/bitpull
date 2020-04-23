@@ -76,7 +76,6 @@ export interface Settings {
     maxErrorsBeforeExit?: number
     encryption?: EncryptionSettings
     debug?: boolean
-    keepPagesOpen?: boolean
     metaData?: {
         isJob: boolean
         name: string

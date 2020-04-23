@@ -13,7 +13,7 @@ const html: NodeParser<HtmlNode, undefined, HtmlParseResult> = async (
 ) => {
     const { onLog, settings } = options
     const { browser } = context
-    const { node, passedData, rootAncestor } = input
+    const { node, passedData, rootAncestor, page } = input
     let link: string = node.link!
 
     if (node.linkedField) {
@@ -41,9 +41,13 @@ const html: NodeParser<HtmlNode, undefined, HtmlParseResult> = async (
 
     assert(link, ParseError.LINK_MISSING)
 
-    const currentPage = await browser.with(async (page: Page) => {
-        await page.goto(link, {waitUntil: 'load'})
-    }, settings)
+    const currentPage = await browser.with(
+        async (page: Page) => {
+            await page.goto(link, { waitUntil: 'load' })
+        },
+        settings,
+        page
+    )
 
     onLog && onLog(node, `Got content of ${link}`)
 

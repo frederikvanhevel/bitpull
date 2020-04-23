@@ -17,8 +17,7 @@ const prepareForSelector = async (node: FlowNode) => {
                     version: 'v1',
                     key: process.env.ENCRYPTION_KEY!
                 },
-                exitOnError: true,
-                keepPagesOpen: true
+                exitOnError: true
             }
         }
     })
