@@ -7,6 +7,7 @@ import { CollectNode, CollectField } from '@bitpull/worker/lib/typedefs'
 import MoreMenu from 'components/ui/MoreMenu'
 import ExpandableOptionRow from 'components/ui/expandable/ExpandableOptionRow'
 import Selector from './common/Selector'
+import SelectorButton from './common/SelectorButton'
 import { getNewCollectField } from '../helper'
 
 interface Props {
@@ -119,18 +120,33 @@ const Collect: React.FC<Props> = ({ node, onUpdate }) => {
                                         )
                                     }
                                 />
-                                <Selector
-                                    label="CSS selector"
-                                    selector={field.selector}
-                                    node={node}
-                                    onUpdate={selector => {
-                                        onUpdateField(
-                                            field,
-                                            'selector',
-                                            selector
-                                        )
-                                    }}
-                                />
+
+                                {field.selector?.value !== '' ? (
+                                    <Selector
+                                        label="Selected element"
+                                        selector={field.selector}
+                                        node={node}
+                                        onUpdate={selector => {
+                                            onUpdateField(
+                                                field,
+                                                'selector',
+                                                selector
+                                            )
+                                        }}
+                                    />
+                                ) : (
+                                    <SelectorButton
+                                        selector={field.selector}
+                                        node={node}
+                                        onUpdate={selector => {
+                                            onUpdateField(
+                                                field,
+                                                'selector',
+                                                selector
+                                            )
+                                        }}
+                                    />
+                                )}
                             </div>
                             <MoreMenu options={getMenuOptions(field)} />
                         </div>

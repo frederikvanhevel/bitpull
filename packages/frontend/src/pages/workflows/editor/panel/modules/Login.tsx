@@ -53,24 +53,26 @@ const Login: React.FC<Props> = ({ node, onUpdate }) => {
                 <div className={classes.inline}>
                     <Typography variant="subtitle1">Username</Typography>
 
-                    <SecureInput
-                        value={credentials.username.value}
-                        name="username"
-                        onUpdate={value =>
-                            onUpdate(
-                                'credentials',
-                                mergeDeepLeft(
-                                    {
-                                        username: {
-                                            value,
-                                            encrypted: true
-                                        }
-                                    },
-                                    credentials
+                    {credentials.username.selector && (
+                        <SecureInput
+                            value={credentials.username.value}
+                            name="username"
+                            onUpdate={value =>
+                                onUpdate(
+                                    'credentials',
+                                    mergeDeepLeft(
+                                        {
+                                            username: {
+                                                value,
+                                                encrypted: true
+                                            }
+                                        },
+                                        credentials
+                                    )
                                 )
-                            )
-                        }
-                    />
+                            }
+                        />
+                    )}
                 </div>
 
                 <Selector
@@ -104,24 +106,26 @@ const Login: React.FC<Props> = ({ node, onUpdate }) => {
                 <div className={classes.inline}>
                     <Typography variant="subtitle1">Password</Typography>
 
-                    <SecureInput
-                        value={credentials.password.value}
-                        name="password"
-                        onUpdate={value =>
-                            onUpdate(
-                                'credentials',
-                                mergeDeepLeft(
-                                    {
-                                        password: {
-                                            value,
-                                            encrypted: true
-                                        }
-                                    },
-                                    credentials
+                    {credentials.username.password && (
+                        <SecureInput
+                            value={credentials.password.value}
+                            name="password"
+                            onUpdate={value =>
+                                onUpdate(
+                                    'credentials',
+                                    mergeDeepLeft(
+                                        {
+                                            password: {
+                                                value,
+                                                encrypted: true
+                                            }
+                                        },
+                                        credentials
+                                    )
                                 )
-                            )
-                        }
-                    />
+                            }
+                        />
+                    )}
                 </div>
 
                 <Selector

@@ -4,6 +4,7 @@ import Selector from './common/Selector'
 import { HTMLSelector } from '@bitpull/worker/lib/typedefs'
 import { ClickNode } from '@bitpull/worker/lib/typedefs'
 import ExpandableOptionRow from 'components/ui/expandable/ExpandableOptionRow'
+import SelectorButton from './common/SelectorButton'
 
 interface Props {
     node: ClickNode
@@ -39,7 +40,7 @@ const Click: React.FC<Props> = ({ node, onUpdate }) => {
         <>
             <div className={classes.wrapper}>
                 <Selector
-                    label="Click element selector"
+                    label="Selected element"
                     selector={{ value: node.selector }}
                     node={node}
                     withAttribute={false}

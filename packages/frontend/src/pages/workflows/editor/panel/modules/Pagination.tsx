@@ -107,6 +107,7 @@ const Pagination: React.FC<Props> = ({ node, onUpdate, onAdd }) => {
             <div className={classes.wrapper}>
                 <Selector
                     label="Next page button selector"
+                    buttonLabel="Select next page button"
                     selector={(pagination as NextLinkPagination).nextLink}
                     node={node}
                     withAttribute={false}

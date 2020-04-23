@@ -126,6 +126,7 @@ const sendReferralAwardEmail = async (
 const sendFeedbackEmail = (user: User, type: string, question: string) => {
     Email.send({
         to: 'help@bitpull.io',
+        from: {name: `${user.firstName} ${user.lastName}`, email: user.email},
         template: Template.FEEDBACK,
         params: {
             id: user.id,
