@@ -178,7 +178,6 @@ export const runWorkflow: GraphQLFieldResolver<
         if (error instanceof RunnerTimeoutReachedError) {
             throw error
         } else {
-            console.log(error.stack)
             Logger.throw(
                 new Error('Could not run workflow'),
                 error,
