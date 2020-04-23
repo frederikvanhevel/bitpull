@@ -163,10 +163,15 @@ class CustomBrowser {
 
         this.browser.removeAllListeners()
 
+        for (const page of await this.browser.pages()) {
+            await page.close()
+        }
+
+        await this.browser.close()
+
         if (this.settings.puppeteer?.endpoint) {
             this.browser.disconnect()
         } else {
-            await this.browser.close()
             treekill(this.browser.process().pid, 'SIGKILL')
         }
     }
