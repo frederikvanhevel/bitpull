@@ -62,7 +62,9 @@ class Traverser {
         input: NodeInput<FlowNode>
     ): Promise<NodeInput<FlowNode>> {
         const { node, paginationCallback, page } = input
-        const { onStart, onComplete, onLog } = this.options
+        const { onStart, onComplete, onLog, settings } = this.options
+        const { keepPagesOpen } = settings
+
         onStart && onStart(node)
 
         let nodeResult: NodeInput<FlowNode>
@@ -95,7 +97,7 @@ class Traverser {
         }
 
         if (!node.children || !node.children.length) {
-            // await page?.close()
+            if (!keepPagesOpen) await page?.close()
             // if we are at the end of a pagination tree return the data to it
             if (paginationCallback) paginationCallback(nodeResult!.passedData)
         }
