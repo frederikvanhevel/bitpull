@@ -106,7 +106,7 @@ const Login: React.FC<Props> = ({ node, onUpdate }) => {
                 <div className={classes.inline}>
                     <Typography variant="subtitle1">Password</Typography>
 
-                    {credentials.username.password && (
+                    {credentials.password.selector && (
                         <SecureInput
                             value={credentials.password.value}
                             name="password"
