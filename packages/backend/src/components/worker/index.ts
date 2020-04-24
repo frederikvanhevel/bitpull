@@ -3,6 +3,7 @@ import { fork, ChildProcess } from 'child_process'
 import treekill from 'tree-kill'
 import { RunnerTimeoutReachedError } from 'utils/errors'
 import { Handler, WorkerArgs, WorkerEvent } from './typedefs'
+import Logger from 'utils/logging/logger'
 
 const TIMEOUT = Number(process.env.RUNNER_TIMEOUT || 900000)
 
@@ -27,6 +28,7 @@ const spawn = (
     return new Promise((resolve, reject) => {
         try {
             timeout = setTimeout(() => {
+                Logger.info(`Worker timeout reached`)
                 reject(new RunnerTimeoutReachedError())
                 kill(forked)
             }, TIMEOUT)
@@ -47,12 +49,13 @@ const spawn = (
                 } else onEvent && onEvent(message)
             })
 
-            forked.on('error', error => {
+            forked.on('error', error => {  
                 clearTimeout(timeout)
-                reject(error)
+                throw error
             })
 
             forked.on('exit', code => {
+                Logger.info(`Worker exited with exit code ${code}`)
                 code === 0 ? resolve() : reject()
                 kill(forked)
             })
@@ -67,6 +70,7 @@ const spawn = (
                     data: forked
                 })
         } catch (error) {
+            Logger.error(new Error(`Worker error occured`), error)
             reject(error)
             kill(forked)
         }
