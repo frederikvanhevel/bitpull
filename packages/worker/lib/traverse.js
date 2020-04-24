@@ -53,16 +53,17 @@ class Traverser {
         else {
             nodeResult = await module(input, this.options, this.context);
         }
-        // if we are at the end of a pagination tree return the data to it
-        if ((!node.children || !node.children.length) && paginationCallback) {
-            paginationCallback(nodeResult.passedData);
+        if (!node.children || !node.children.length) {
+            // if we are at the end of a pagination tree return the data to it
+            if (paginationCallback)
+                paginationCallback(nodeResult.passedData);
         }
         onComplete && onComplete(node);
         return nodeResult;
     }
     async parseNode(input) {
         const browser = this.context.browser;
-        const { node: currentNode, rootAncestor, page } = input;
+        const { node: currentNode, rootAncestor } = input;
         const { onError, onLog, settings } = this.options;
         if (this.canceled) {
             throw new Error('Operation was canceled');
@@ -83,10 +84,11 @@ class Traverser {
                 Array.isArray(passedData)) {
                 assert_1.default(node.children.length === 1, new errors_2.FlowError(errors_1.NodeError.TOO_MANY_CHILDREN));
                 assert_1.default(node.fields.length > 0, new errors_2.FlowError(errors_3.CollectError.FIELDS_MISSING));
-                const result = await common_2.sequentialPromise(passedData, async (data, i) => {
+                const newPage = await browser.newPage();
+                const result = await common_2.sequentialPromise(passedData, async (data) => {
                     return this.parseNode(Object.assign(Object.assign({}, input), { node: node.children[0], parent: node, parentResult: data, passedData: data, rootAncestor: isPrimaryNode
                             ? currentNode
-                            : rootAncestor, page: i > 0 ? await browser.forkPage(page) : page })).catch(error => {
+                            : rootAncestor, page: newPage })).catch(error => {
                         if (settings.exitOnError) {
                             throw error;
                         }
@@ -94,12 +96,15 @@ class Traverser {
                             onError(node.children[0], error);
                         }
                     });
+                }).finally(async () => {
+                    await newPage.close();
                 });
                 // @ts-ignore
                 return result;
             }
             else if (node.children && node.children.length) {
-                const result = Promise.all(node.children.map(async (child, i) => this.parseNode(Object.assign(Object.assign(Object.assign({}, input), nodeResult), { node: child, parent: node, rootAncestor: isPrimaryNode
+                // const newPage = await browser.forkPage(page!)
+                const result = await Promise.all(node.children.map(async (child) => this.parseNode(Object.assign(Object.assign(Object.assign({}, input), nodeResult), { node: child, parent: node, rootAncestor: isPrimaryNode
                         ? currentNode
                         : rootAncestor })).catch(error => {
                     if (settings.exitOnError) {
@@ -111,10 +116,6 @@ class Traverser {
                 })));
                 // @ts-ignore
                 return result;
-            }
-            else if ((!node.children || !node.children.length) && page) {
-                // no children, so close the page
-                await page.close();
             }
             return Object.assign(Object.assign({}, input), nodeResult);
         }
@@ -149,6 +150,7 @@ class Traverser {
                 message: error.message,
                 code: error.code
             });
+            console.error(error.stack);
             originalErrorFn && originalErrorFn(node, error);
         };
         this.options.onLog = (node, message, type = common_1.LogType.INFO) => {
@@ -177,6 +179,7 @@ class Traverser {
             }
         }
         catch (error) {
+            console.error(error.stack);
             status = common_1.Status.ERROR;
         }
         finally {

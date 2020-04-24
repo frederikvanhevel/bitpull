@@ -45,6 +45,7 @@ exports.ErrorMessages = {
     [errors_1.ParseError.NO_SELECTOR_PARSER_FOUND]: 'No suitable selecor parser found',
     [errors_1.ParseError.HTML_MISSING]: 'Could not get website content',
     [errors_1.ParseError.PAGE_MISSING]: 'Could not open website',
+    [errors_1.ParseError.NO_DATA]: 'No data to export',
     // Integration error
     [errors_1.IntegrationError.INTEGRATION_MISSING]: 'Integration is not set up',
     [errors_1.IntegrationError.INTEGRATION_INACTIVE]: 'Integration is not active',
@@ -92,9 +93,9 @@ exports.ErrorMessages = {
     // Click error
     [errors_18.ClickError.COULD_NOT_CLICK]: 'Could not click element',
     // CSV error
-    [errors_2.CsvError.COULD_NOT_CREATE]: 'Could not write csv file',
+    [errors_2.CsvError.COULD_NOT_CREATE_CSV]: 'Could not write csv file',
     // Eccel error
-    [errors_3.ExeclError.COULD_NOT_CREATE]: 'Could not write excel file',
+    [errors_3.ExeclError.COULD_NOT_CREATE_EXCEL]: 'Could not write excel file',
     // Scroll error
     [errors_19.ScrollError.COULD_NOT_SCROLL]: 'Could not scroll page'
 };

@@ -31,6 +31,7 @@ var ParseError;
     ParseError["HTML_MISSING"] = "HTML_MISSING";
     ParseError["XML_PARSE_ERROR"] = "XML_PARSE_ERROR";
     ParseError["PAGE_MISSING"] = "PAGE_MISSING";
+    ParseError["NO_DATA"] = "NO_DATA";
 })(ParseError = exports.ParseError || (exports.ParseError = {}));
 var IntegrationError;
 (function (IntegrationError) {

@@ -118,16 +118,23 @@ class CustomBrowser {
     resetMockHandler() {
         this.mockHandler = undefined;
     }
+    async logPages() {
+        var _a, _b;
+        console.log((_b = (await ((_a = this.browser) === null || _a === void 0 ? void 0 : _a.pages()))) === null || _b === void 0 ? void 0 : _b.length);
+    }
     async cleanup() {
         var _a;
         if (!this.browser)
             return;
         this.browser.removeAllListeners();
+        for (const page of await this.browser.pages()) {
+            await page.close();
+        }
+        await this.browser.close();
         if ((_a = this.settings.puppeteer) === null || _a === void 0 ? void 0 : _a.endpoint) {
             this.browser.disconnect();
         }
         else {
-            await this.browser.close();
             tree_kill_1.default(this.browser.process().pid, 'SIGKILL');
         }
     }
