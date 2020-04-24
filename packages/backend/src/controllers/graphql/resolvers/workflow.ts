@@ -169,11 +169,11 @@ export const runWorkflow: GraphQLFieldResolver<
             args.watchedNodeId!
         )
 
-        Logger.info("Worker resolver finished")
+        Logger.info(`Worker resolver finished, has result: ${!!result}`)
 
         if (!result) throw new Error()
 
-        // kill()
+        kill()
 
         return result
     } catch (error) {
