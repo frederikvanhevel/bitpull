@@ -4,11 +4,9 @@ services:
     backend:
         build:
             context: .
-            dockerfile: Dockerfile
+            dockerfile: packages/backend/Dockerfile
         image: bitpull-backend:latest
         restart: always
-        # volumes:
-        #     - "./app:/src"
         ports:
             - 5000:5000
         depends_on:
@@ -17,7 +15,7 @@ services:
         links:
             # - mongo
             - chrome
-        env_file: './.env'
+        env_file: 'packages/backend/.env'
         environment:
             - PORT=5000
             # - DATABASE_URI=mongodb://mongo:27017/scrippy
@@ -25,12 +23,10 @@ services:
 
     frontend:
         build:
-            context: packages/client
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: packages/frontend/Dockerfile
         image: bitpull-frontend:latest
         restart: always
-        # volumes:
-        #     - "./app:/src"
         ports:
             - 8080:8080
         depends_on:
@@ -39,7 +35,7 @@ services:
         links:
             # - mongo
             - backend
-        env_file: '../client/.env'
+        env_file: './packages/frontend/.env'
         environment:
             - PORT=8080
 
