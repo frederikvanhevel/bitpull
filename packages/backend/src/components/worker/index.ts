@@ -43,6 +43,7 @@ const spawn = (
                 if (message.data?.error) console.log(message.data?.error)
 
                 if ((message as any).event === WorkerEvent.FINISHED) {
+                    Logger.info('Worker finished, stopping.')
                     clearTimeout(timeout)
                     resolve((message as any).data)
                     kill(forked)

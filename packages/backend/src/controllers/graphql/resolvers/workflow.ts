@@ -124,6 +124,7 @@ export const runWorkflow: GraphQLFieldResolver<
     let childWorkflow: ChildProcess
 
     const kill = () => {
+        Logger.info('Killing worker in resolver')
         try {
             Worker.kill(childWorkflow)
         } catch (error) {
