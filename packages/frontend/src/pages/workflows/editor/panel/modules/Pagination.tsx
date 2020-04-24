@@ -5,7 +5,8 @@ import {
     TextField,
     FormControl,
     InputLabel,
-    Select
+    Select,
+    FormHelperText
 } from '@material-ui/core'
 import { PaginationNode } from '@bitpull/worker/lib/typedefs'
 import ExpandableOptionRow from 'components/ui/expandable/ExpandableOptionRow'
@@ -18,6 +19,7 @@ import { Node } from 'typedefs/common'
 import { useDispatch } from 'react-redux'
 import { NextLinkPagination } from '@bitpull/worker/lib/nodes/processing/pagination/typedefs'
 import { ArrowDownward } from '@material-ui/icons'
+import TestRunWarning from './common/TestRunWarning'
 
 interface Props {
     node: PaginationNode
@@ -103,7 +105,7 @@ const Pagination: React.FC<Props> = ({ node, onUpdate, onAdd }) => {
     }, [node])
 
     return (
-        <div>
+        <>
             <div className={classes.wrapper}>
                 <Selector
                     label="Next page button selector"
@@ -190,7 +192,9 @@ const Pagination: React.FC<Props> = ({ node, onUpdate, onAdd }) => {
                     pages
                 </div>
             </ExpandableOptionRow>
-        </div>
+
+            <TestRunWarning />
+        </>
     )
 }
 

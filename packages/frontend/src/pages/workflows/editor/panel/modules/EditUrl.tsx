@@ -15,6 +15,7 @@ import { CollectNode, CollectField } from '@bitpull/worker/lib/typedefs'
 import { URL_REGEX } from './common/validation'
 import MoreMenu from 'components/ui/MoreMenu'
 import pathOr from 'ramda/es/pathOr'
+import TestRunWarning from './common/TestRunWarning'
 
 interface Props {
     node: HtmlNode & Node
@@ -81,6 +82,7 @@ const EditUrl: React.FC<Props> = ({ node, onUpdate }) => {
     }, [node])
 
     return (
+        <>
         <div className={classes.wrapper}>
             <div className={classes.link}>
                 {node.link || node.link === '' || !parentFields.length ? (
@@ -131,6 +133,9 @@ const EditUrl: React.FC<Props> = ({ node, onUpdate }) => {
                 )}
             </div>
         </div>
+
+        {!!node.linkedField && <TestRunWarning />}
+        </>
     )
 }
 

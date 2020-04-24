@@ -25,6 +25,7 @@ import Worker from 'components/worker'
 import { AuthenticationContext } from '../directives/auth'
 import { pubsub } from '../schema'
 import { SubscriptionEvent } from '../typedefs/workflow'
+import { limitFollowedLinks } from 'services/workflow/helper'
 
 const TIMEOUT = Number(process.env.RUNNER_TIMEOUT || 900000)
 
@@ -161,12 +162,14 @@ export const runWorkflow: GraphQLFieldResolver<
 
         const result = await WorkflowService.run(
             context.user,
-            args.node,
+            limitFollowedLinks(args.node),
             args.name,
             ResourceType.TEST_RUN,
             handler,
             args.watchedNodeId!
         )
+
+        Logger.info("Worker resolver finished")
 
         if (!result) throw new Error()
 
