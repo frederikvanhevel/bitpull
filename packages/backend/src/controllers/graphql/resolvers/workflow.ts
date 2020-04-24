@@ -170,10 +170,11 @@ export const runWorkflow: GraphQLFieldResolver<
 
         if (!result) throw new Error()
 
-        kill()
+        // kill()
 
         return result
     } catch (error) {
+        Logger.error(new Error('Error occured in workflow run resolver'), error)
         kill()
 
         if (error instanceof RunnerTimeoutReachedError) {
