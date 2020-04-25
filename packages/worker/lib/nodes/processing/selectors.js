@@ -74,9 +74,9 @@ exports.getFieldsFromHtml = async (input, settings, xmlMode = false) => {
                 trimmedVal = absolutify_1.absolutifyUrl(trimmedVal, origin);
             }
             arrayMapping[i] = Object.assign(Object.assign({}, arrayMapping[i]), {
-                [field.label]: isNumeric(val)
+                [field.label]: (isNumeric(val)
                     ? parseInt(trimmedVal, 10)
-                    : trimmedVal
+                    : trimmedVal) || ''
             });
         });
     });

@@ -13,6 +13,7 @@ import { hasChildExportNodes } from '../../../utils/helper'
 import { NodeError } from '../../../nodes/common/errors'
 import { ExeclError } from './errors'
 import { ExcelNode } from './typedefs'
+import { transformToExcelFormat } from './helper'
 
 const excel: NodeParser<ExcelNode, FileWriteResult> = async (
     input,
@@ -25,10 +26,10 @@ const excel: NodeParser<ExcelNode, FileWriteResult> = async (
 
     let path
     try {
-        const excelData = await json2xls(passedData)
+        const transformed = transformToExcelFormat(passedData)
+        const excelData = await json2xls(transformed)
         path = await writeFile(excelData, FileType.EXCEL, FileEncoding.BINARY)
     } catch (error) {
-        console.log(error)
         throw new FlowError(ExeclError.COULD_NOT_CREATE_EXCEL, error)
     }
 

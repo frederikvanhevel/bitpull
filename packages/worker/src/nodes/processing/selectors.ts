@@ -121,9 +121,10 @@ export const getFieldsFromHtml = async (
             arrayMapping[i] = {
                 ...arrayMapping[i],
                 ...{
-                    [field.label]: isNumeric(val!)
-                        ? parseInt(trimmedVal!, 10)
-                        : trimmedVal!
+                    [field.label]:
+                        (isNumeric(val!)
+                            ? parseInt(trimmedVal!, 10)
+                            : trimmedVal!) || ''
                 }
             }
         })

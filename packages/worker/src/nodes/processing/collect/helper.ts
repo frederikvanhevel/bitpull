@@ -12,7 +12,9 @@ const mergeObjectAndArray = (arr: object[], obj: object) => {
 
         keys.forEach(key => {
             // @ts-ignore
-            merged[key] = arr.map((item: any) => item[key])
+            merged[key] = arr
+                .filter((item: any) => !!item[key])
+                .map((item: any) => item[key])
         })
     } else {
         merged = obj
