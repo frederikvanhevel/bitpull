@@ -85,7 +85,7 @@ const SelectorTopControls: React.FC<Props> = ({
             </div>
 
             <div className={classes.buttonWrapper}>
-                {payload && (
+                {payload?.prediction && (
                     <Button size="small" onClick={onClear}>
                         Clear
                     </Button>
@@ -98,7 +98,7 @@ const SelectorTopControls: React.FC<Props> = ({
                     size="small"
                     color="primary"
                     onClick={onConfirm}
-                    disabled={!payload}
+                    disabled={!payload?.prediction}
                 >
                     Accept
                 </Button>
