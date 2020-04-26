@@ -146,9 +146,12 @@ class Traverser {
                     new FlowError(CollectError.FIELDS_MISSING)
                 )
 
+                const iteratedResult = (node as CollectNode).limit
+                    ? passedData.slice(0, (node as CollectNode).limit)
+                    : passedData
                 const newPage = await browser.newPage()
                 const result = await sequentialPromise(
-                    passedData,
+                    iteratedResult,
                     async data => {
                         return this.parseNode({
                             ...input,
