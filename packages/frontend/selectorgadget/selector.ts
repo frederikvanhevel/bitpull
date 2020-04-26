@@ -63,7 +63,7 @@ class SelectorGadget {
             .css(
                 'width',
                 this.px(
-                    width + this.borderPadding * 2 + this.borderWidth * 2 - 5
+                    width + this.borderPadding * 2 + this.borderWidth * 2// - 5
                 )
             )
             .css('top', this.px(top + height + this.borderPadding))
@@ -136,7 +136,7 @@ class SelectorGadget {
             this.borderBottom = jQuery('<div>')
                 .addClass('selectorgadget_border')
                 .addClass('selectorgadget_bottom_border')
-                .css('height', this.px(this.borderWidth + 6))
+                .css('height', this.px(this.borderWidth + 13))
                 .hide()
                 .bind('mousedown.sg', { self: this }, this.sgMousedown)
             this.borderLeft = jQuery('<div>')
@@ -480,7 +480,19 @@ class SelectorGadget {
     }
 
     setPath(prediction) {
-        window.parent.postMessage(prediction, '*')
+        let selectedItems = 0
+        try {
+            selectedItems = document.querySelectorAll(prediction).length
+        } catch (error) {
+            selectedItems = 0
+        }
+
+        const payload = {
+            bitpull: true,
+            selectedItems,
+            prediction
+        }
+        window.parent.postMessage(payload, '*')
 
         if (prediction && prediction.length > 0) {
             return (this.pathOutputField.value = prediction)

@@ -7,16 +7,21 @@ import ErrorScreen from 'components/ui/ErrorScreen'
 import { Node } from 'typedefs/common'
 import { traverseAncestors } from 'components/node'
 
+export interface SelectorPayload {
+    selectedItems: number
+    prediction: string
+}
+
 interface Props {
     node: Node
-    currentSelector?: string
-    setSelector: (selector: string) => void
+    payload?: SelectorPayload
+    setSelectorPayload: (payload: SelectorPayload) => void
 }
 
 const BrowserFrame: React.FC<Props> = ({
     node,
-    currentSelector,
-    setSelector
+    payload,
+    setSelectorPayload
 }) => {
     const frameRef = useRef() as React.MutableRefObject<HTMLIFrameElement>
     const { data, loading, error } = useQuery<fetchSiteContent>(
@@ -37,15 +42,15 @@ const BrowserFrame: React.FC<Props> = ({
     const receiveMessage = (event: MessageEvent) => {
         if (
             event.origin === document.location.origin &&
-            typeof event.data === 'string'
+            !!event.data?.bitpull
         ) {
-            setSelector(event.data)
+            setSelectorPayload(event.data as any)
         }
     }
 
     useEffect(() => {
-        if (!currentSelector) clearSelector()
-    }, [currentSelector])
+        if (!payload) clearSelector()
+    }, [payload])
 
     useEffect(() => {
         window.addEventListener('message', receiveMessage)

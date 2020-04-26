@@ -48,6 +48,7 @@ const loopNextButton = async (
     const linkLimit = node.linkLimit || Number.POSITIVE_INFINITY
     let parsedPages = 1
     let hasNext = await hasNextButton()
+    let lastContent = await page.content()
 
     if (!hasNext && onLog) {
         onLog(node, 'No next page link found')
@@ -61,6 +62,14 @@ const loopNextButton = async (
         await func()
 
         hasNext = await hasNextButton()
+
+        const currentContent = await page.content()
+
+        if (currentContent === lastContent) {
+            break
+        }
+
+        lastContent = currentContent
 
         parsedPages++
     }

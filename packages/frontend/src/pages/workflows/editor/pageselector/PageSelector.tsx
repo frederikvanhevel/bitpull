@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme, Slide } from '@material-ui/core'
 import SelectorTopControls from './SelectorTopControls'
-import BrowserFrame from './BrowserFrame'
+import BrowserFrame, {SelectorPayload} from './BrowserFrame'
 import { Node } from 'typedefs/common'
 
 interface Props {
@@ -42,23 +42,23 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const PageSelector: React.FC<Props> = ({ open, node, onSelect, onClose }) => {
     const classes = useStyles()
-    const [currentSelector, setCurrentSelector] = useState<string>()
+    const [selectorPayload, setSelectorPayload] = useState<SelectorPayload>()
 
     return (
         <Slide direction="up" in={open} mountOnEnter unmountOnExit>
             <div className={classes.wrapper}>
                 <SelectorTopControls
-                    onConfirm={() => onSelect(currentSelector)}
-                    currentSelector={currentSelector}
-                    onClear={() => setCurrentSelector(undefined)}
+                    onConfirm={() => onSelect(selectorPayload?.prediction)}
+                    payload={selectorPayload}
+                    onClear={() => setSelectorPayload(undefined)}
                     onClose={onClose}
                 />
 
                 <div className={classes.fullHeight}>
                     <BrowserFrame
                         node={node}
-                        setSelector={setCurrentSelector}
-                        currentSelector={currentSelector}
+                        setSelectorPayload={setSelectorPayload}
+                        payload={selectorPayload}
                     />
                 </div>
             </div>

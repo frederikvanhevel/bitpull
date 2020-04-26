@@ -3,12 +3,13 @@ import { makeStyles } from '@material-ui/styles'
 import HelpIcon from '@material-ui/icons/Help'
 import { Theme, Paper, Typography, IconButton, Button } from '@material-ui/core'
 import HelpDialog from './HelpDialog'
+import { SelectorPayload } from './BrowserFrame'
 
 interface Props {
     onConfirm: () => void
     onClear: () => void
     onClose: () => void
-    currentSelector?: string
+    payload?: SelectorPayload
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -51,7 +52,7 @@ const SelectorTopControls: React.FC<Props> = ({
     onConfirm,
     onClear,
     onClose,
-    currentSelector
+    payload
 }) => {
     const classes = useStyles()
     const [helpDialogOpen, setHelpDialogOpen] = useState(false)
@@ -71,15 +72,20 @@ const SelectorTopControls: React.FC<Props> = ({
             </div>
 
             <div className={classes.middle}>
-                {currentSelector && (
+                {payload?.prediction && (
+                    <>
                     <Typography variant="body2">
-                        Selector: <b>{currentSelector}</b>
+                        Selected items: <b>{payload.selectedItems}</b>
                     </Typography>
+                    {/* <Typography variant="body2">
+                        Selector: <b>{payload.prediction}</b>
+                    </Typography> */}
+                    </>
                 )}
             </div>
 
             <div className={classes.buttonWrapper}>
-                {currentSelector && (
+                {payload && (
                     <Button size="small" onClick={onClear}>
                         Clear
                     </Button>
@@ -92,7 +98,7 @@ const SelectorTopControls: React.FC<Props> = ({
                     size="small"
                     color="primary"
                     onClick={onConfirm}
-                    disabled={!currentSelector}
+                    disabled={!payload}
                 >
                     Accept
                 </Button>

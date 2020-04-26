@@ -84,7 +84,7 @@ const LogView: React.FC<Props> = ({ logs, onClose }) => {
                             className={classes.logMessage}
                         >
                             <span className={classes.date}>
-                                {format(new Date(log.date), 'Pp')}
+                                {format(new Date(log.date), 'Ppp')}
                             </span>{' '}
                             {log.type === LogType.ERROR ||
                             log.type === LogType.WARN ? (

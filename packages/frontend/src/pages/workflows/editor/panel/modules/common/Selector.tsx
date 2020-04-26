@@ -32,8 +32,6 @@ const Selector: React.FC<Props> = ({
     node,
     onUpdate
 }) => {
-    console.log()
-    console.log(selector?.value !== '')
     return (
         <>
             {selector && selector.value && selector.value !== '' ? (
