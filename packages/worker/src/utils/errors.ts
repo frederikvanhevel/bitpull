@@ -117,7 +117,8 @@ export const ErrorMessages: Record<string, string> = {
     [WaitError.DELAY_MISSING]: 'No time to wait specified',
 
     // Click error
-    [ClickError.COULD_NOT_CLICK]: 'Could not click element',
+    [ClickError.COULD_NOT_CLICK]:
+        'Could not click element, perhaps it is not visble',
 
     // CSV error
     [CsvError.COULD_NOT_CREATE_CSV]: 'Could not write csv file',

@@ -2,6 +2,8 @@ import { NodeError, ParseError } from '../../common/errors'
 import { NodeParser, NodeInput, TraverseOptions } from '../../../typedefs/node'
 import { assert } from '../../../utils/common'
 import { randomizedDelay } from '../../../utils/delay'
+import { FlowError } from '../../../utils/errors'
+import { ClickError } from '../click/errors'
 import { PaginationError } from './errors'
 import {
     PaginationNode,
@@ -18,7 +20,11 @@ const clickNextButton = async (
 
     assert(!!page, ParseError.PAGE_MISSING)
 
-    await page.click(selector)
+    try {
+        await page.click(selector)
+    } catch (error) {
+        throw new FlowError(ClickError.COULD_NOT_CLICK)
+    }
 
     // add random delay between requests
     await randomizedDelay()
