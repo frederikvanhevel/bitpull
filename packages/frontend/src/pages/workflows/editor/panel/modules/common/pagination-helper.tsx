@@ -75,24 +75,44 @@ export const getMenuItems = (
     type: PaginationStep,
     onHighlightNode: (node?: Node) => void
 ) => {
-    if (hasValidChildren(node, type)) {
-        const menuItems = getMenuItemsByType(ALLOWED_CHILD_NODES[type])
+    let menuItems: JSX.Element[] = []
+    const existingNodes = node.children?.filter(childNode =>
+        ALLOWED_CHILD_NODES[type].includes(childNode.type)
+    ) || []
+    const existingNodesTypes = existingNodes.map(item => item.type)
+    const newNodes = getMenuItemsByType(ALLOWED_CHILD_NODES[type]).filter(item => !existingNodesTypes.includes(item.type))
 
-        return menuItems.map((item: NodeMenuItem) => {
-            const Icon = getIcon(item.type)
+    existingNodes.forEach(childNode => {
+        const Icon = getIcon(childNode.type)
+        menuItems.push(
+            <MenuItem
+                key={childNode.id}
+                value={childNode.id}
+                onMouseOver={() => onHighlightNode(childNode)}
+                onMouseOut={() => onHighlightNode(undefined)}
+            >
+                <ListItemIcon>
+                    <Icon />
+                </ListItemIcon>{' '}
+                {NODE_PROPERTIES[childNode.type].label}
+            </MenuItem>
+        )
+    })
 
-            return (
-                <MenuItem key={item.type} value={item.type}>
-                    <ListItemIcon>
-                        <Icon />
-                    </ListItemIcon>{' '}
-                    {item.label}
-                </MenuItem>
-            )
-        })
-    }
+    newNodes.forEach((item: NodeMenuItem) => {
+        const Icon = getIcon(item.type)
 
-    return getExistingNodes(node, type, onHighlightNode)
+        menuItems.push(
+            <MenuItem key={item.type} value={item.type}>
+                <ListItemIcon>
+                    <Icon />
+                </ListItemIcon>{' '}
+                {item.label}
+            </MenuItem>
+        )
+    })
+
+    return menuItems
 }
 
 export const isNextLinkPagination = (
