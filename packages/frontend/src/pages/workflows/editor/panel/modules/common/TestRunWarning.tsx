@@ -36,7 +36,7 @@ const TestRunWarning: React.FC = () => {
     return (
         <FormHelperText className={classes.wrapper}>
             <Info className={classes.icon} />
-            <div className={classes.text}>Only one page will be followed during test runs. <Link component={RouterLink} to={link}>Schedule a job</Link> to scrape without limitations.</div>
+            <div className={classes.text}>Only maximum two pages will be followed during test runs. <Link component={RouterLink} to={link}>Schedule a job</Link> to scrape without limitations.</div>
         </FormHelperText>
     )
 }

@@ -26,19 +26,19 @@ describe('Workflow helper', () => {
             children: [{
                 id: '2',
                 type: NodeType.COLLECT,
-                limit: 1,
+                limit: 2,
                 children: [{
                     id: '3',
                     type: NodeType.PAGINATION,
                     // @ts-ignore
-                    linkLimit: 1
+                    linkLimit: 2
                 }]
             },
             {
                 id: '4',
                 type: NodeType.PAGINATION,
                 // @ts-ignore
-                linkLimit: 1
+                linkLimit: 2
             }]
         }
 
