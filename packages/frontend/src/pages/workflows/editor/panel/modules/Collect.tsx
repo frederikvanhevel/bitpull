@@ -172,7 +172,7 @@ const Collect: React.FC<Props> = ({ node, onUpdate }) => {
                 </Button>
             </div>}
 
-            {findParentOfType(node.parent, [NodeType.COLLECT]) && <ExpandableOptionRow
+            {findParentOfType(node.parent!, [NodeType.COLLECT]) && <ExpandableOptionRow
                 className={classes.expand}
                 title="Merge with previous results"
                 active={node.append || false}
