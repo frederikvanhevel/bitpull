@@ -3,12 +3,13 @@ import { useForm } from 'react-hook-form'
 import { makeStyles, TextField, Button, Typography } from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { Node } from 'typedefs/common'
-import { CollectNode, CollectField } from '@bitpull/worker/lib/typedefs'
+import { CollectNode, CollectField, NodeType } from '@bitpull/worker/lib/typedefs'
 import MoreMenu from 'components/ui/MoreMenu'
 import ExpandableOptionRow from 'components/ui/expandable/ExpandableOptionRow'
 import Selector from './common/Selector'
 import SelectorButton from './common/SelectorButton'
 import { getNewCollectField } from '../helper'
+import { findParentOfType } from 'components/node'
 
 interface Props {
     node: CollectNode & Node
@@ -84,6 +85,9 @@ const Collect: React.FC<Props> = ({ node, onUpdate }) => {
             onClick: () => onRemoveField(field)
         }
     ]
+    const hasValidField = () => {
+        return fields.length && fields[0]?.selector?.value !== ''
+    }
 
     useEffect(() => {
         setFields(node.fields)
@@ -101,9 +105,13 @@ const Collect: React.FC<Props> = ({ node, onUpdate }) => {
                             className={classes.fieldWrapper}
                         >
                             <div className={classes.field}>
-                                <TextField
+                                
+
+                                {field.selector?.value !== '' ? (
+                                    <>
+                                    <TextField
                                     label="Your data field name"
-                                    placeholder="name"
+                                    placeholder="my-field-name"
                                     error={
                                         errors.fields &&
                                         !!errors.fields[index]?.label
@@ -112,6 +120,7 @@ const Collect: React.FC<Props> = ({ node, onUpdate }) => {
                                     inputRef={register({
                                         required: true
                                     })}
+                                    autoFocus
                                     onChange={e =>
                                         onUpdateField(
                                             field,
@@ -120,8 +129,6 @@ const Collect: React.FC<Props> = ({ node, onUpdate }) => {
                                         )
                                     }
                                 />
-
-                                {field.selector?.value !== '' ? (
                                     <Selector
                                         label="Selected element"
                                         selector={field.selector}
@@ -134,6 +141,7 @@ const Collect: React.FC<Props> = ({ node, onUpdate }) => {
                                             )
                                         }}
                                     />
+                                    </>
                                 ) : (
                                     <SelectorButton
                                         selector={field.selector}
@@ -148,23 +156,23 @@ const Collect: React.FC<Props> = ({ node, onUpdate }) => {
                                     />
                                 )}
                             </div>
-                            <MoreMenu options={getMenuOptions(field)} />
+                            {fields.length > 1 && <MoreMenu options={getMenuOptions(field)} />}
                         </div>
                     )
                 })}
 
-            <div className={classes.addButton}>
+            {hasValidField() && <div className={classes.addButton}>
                 <Button
                     variant="outlined"
                     size="small"
                     color="primary"
                     onClick={onAddField}
                 >
-                    Add field
+                    Collect more data
                 </Button>
-            </div>
+            </div>}
 
-            <ExpandableOptionRow
+            {findParentOfType(node.parent, [NodeType.COLLECT]) && <ExpandableOptionRow
                 className={classes.expand}
                 title="Merge with previous results"
                 active={node.append || false}
@@ -174,7 +182,7 @@ const Collect: React.FC<Props> = ({ node, onUpdate }) => {
                     The data collected will be merged with the previous
                     collected data. For example from before pagination.
                 </Typography>
-            </ExpandableOptionRow>
+            </ExpandableOptionRow>}
         </div>
     )
 }

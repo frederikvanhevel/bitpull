@@ -91,6 +91,7 @@ const EditUrl: React.FC<Props> = ({ node, onUpdate }) => {
                         label="Website url"
                         placeholder="http://example.com"
                         name="link"
+                        autoFocus
                         inputRef={register({
                             required: true,
                             pattern: URL_REGEX

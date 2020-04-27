@@ -98,7 +98,7 @@ export const NODE_PROPERTIES: Record<NodeType, NodeProperty> = {
     },
     [NodeType.STORAGE]: {
         icon: StorageIcon,
-        label: 'Add to storage',
+        label: 'Save to storage',
         shortLabel: 'Storage',
         editor: Storage
     },
@@ -122,25 +122,25 @@ export const NODE_PROPERTIES: Record<NodeType, NodeProperty> = {
     },
     [NodeType.EXCEL]: {
         icon: ExcelIcon,
-        label: 'Convert to Excel doc',
+        label: 'Save to Excel doc',
         shortLabel: 'Excel',
         editor: Excel
     },
     [NodeType.CSV]: {
         icon: CsvIcon,
-        label: 'Convert to Csv file',
+        label: 'Save to CSV file',
         shortLabel: 'Csv',
         editor: Csv
     },
     [NodeType.JSON]: {
         icon: JsonIcon,
-        label: 'Convert to JSON file',
+        label: 'Save to JSON file',
         shortLabel: 'JSON file',
         editor: Json
     },
     [NodeType.PDF]: {
         icon: PdfIcon,
-        label: 'Convert to PDF file',
+        label: 'Save to PDF file',
         shortLabel: 'PDF file',
         editor: Pdf
     },

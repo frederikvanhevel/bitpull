@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     image: {
         width: 140,
         height: '100%',
+        minHeight: 140,
         marginBottom: theme.spacing(2)
     }
 }))
