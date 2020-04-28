@@ -12,13 +12,11 @@ export interface Log {
 
 export interface InfoLog extends Log {
     message: string
-    userId?: string
 }
 
 export interface ErrorLog extends Log {
     type: LogType.ERROR
     message?: string
-    userId?: string
     error: Error
     relatedError?: Error
     stack?: string

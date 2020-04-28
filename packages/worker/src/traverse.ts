@@ -26,6 +26,7 @@ import { HtmlNode } from './nodes/processing/html/typedefs'
 import { CollectNode } from './nodes/processing/collect/typedefs'
 import { CollectError } from './nodes/processing/collect/errors'
 import { sequentialPromise } from './utils/common'
+import Logger from './utils/logging/logger'
 
 const DEFAULT_OPTIONS: TraverseOptions = {
     integrations: [],
@@ -55,6 +56,10 @@ class Traverser {
         this.context = {
             traverser: this,
             browser: browser || new CustomBrowser()
+        }
+
+        if (options.settings.traceId) {
+            Logger.setTraceId(options.settings.traceId)
         }
     }
 
@@ -243,7 +248,7 @@ class Traverser {
                 code: error.code
             })
 
-            console.error(error.stack)
+            Logger.error(new Error('Error happend during node run'), error)
 
             originalErrorFn && originalErrorFn(node, error)
         }
@@ -285,7 +290,7 @@ class Traverser {
                 status = errors.length ? Status.PARTIAL_SUCCESS : Status.SUCCESS
             }
         } catch (error) {
-            console.error(error.stack)
+            Logger.error(new Error('Fatal error during run'), error)
             status = Status.ERROR
         } finally {
             this.options.onError = originalErrorFn

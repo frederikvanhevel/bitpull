@@ -135,8 +135,6 @@ const oAuth = async (
 
     Segment.identify(user)
 
-    // console.log(user, generateLoginToken(user))
-
     return {
         user,
         token: generateLoginToken(user)

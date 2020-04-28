@@ -9,6 +9,7 @@ const chrome_aws_lambda_1 = __importDefault(require("chrome-aws-lambda"));
 const tree_kill_1 = __importDefault(require("tree-kill"));
 const common_1 = require("../utils/common");
 const scripts_1 = require("../utils/scripts");
+const logger_1 = __importDefault(require("../utils/logging/logger"));
 const DEFAULT_OPTIONS = {
     defaultViewport: {
         width: 1920,
@@ -54,7 +55,7 @@ class CustomBrowser {
             await func(page);
         }
         catch (error) {
-            console.log(error);
+            logger_1.default.error(new Error('Browser error'), error);
         }
         finally {
             // if (page) await page.close()

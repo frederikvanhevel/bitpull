@@ -74,6 +74,7 @@ export interface Settings {
     }
     exitOnError?: boolean
     maxErrorsBeforeExit?: number
+    traceId?: string
     encryption?: EncryptionSettings
     debug?: boolean
     metaData?: {

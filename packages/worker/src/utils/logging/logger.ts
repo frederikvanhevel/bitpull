@@ -1,18 +1,20 @@
 import os from 'os'
-import { User } from 'models/user'
 import { ErrorLog, Logs, InfoLog, LogType } from './typedefs'
 import { isErrorLog } from './helper'
-import { getTraceId } from './tracing'
 
 class Logger {
-    public static jsonOutput = true
+    private static jsonOutput = true
+    private static traceId: string
 
-    public static info(message: string, user?: User) {
+    public static setTraceId(traceId: string) {
+        this.traceId = traceId
+    }
+
+    public static info(message: string) {
         const data: InfoLog = {
             type: LogType.INFO,
             timestamp: new Date(),
-            traceId: getTraceId(),
-            userId: user?._id.toHexString(),
+            traceId: Logger.traceId,
             message
         }
 
@@ -23,23 +25,22 @@ class Logger {
         const data: InfoLog = {
             type: LogType.WARN,
             timestamp: new Date(),
-            traceId: getTraceId(),
+            traceId: Logger.traceId,
             message
         }
 
         this.executeLog(data)
     }
 
-    public static error(error: Error, relatedError?: Error, user?: User) {
+    public static error(error: Error, relatedError?: Error) {
         const data: ErrorLog = {
             type: LogType.ERROR,
             timestamp: new Date(),
-            traceId: getTraceId(),
+            traceId: Logger.traceId,
             error,
             message: error.stack,
             relatedError,
-            stack: relatedError ? relatedError.stack : error.stack,
-            userId: user?.id || user?._id.toHexString()
+            stack: relatedError ? relatedError.stack : error.stack
         }
 
         this.executeLog(data)
@@ -47,10 +48,9 @@ class Logger {
 
     public static throw(
         error: Error,
-        relatedError?: Error,
-        user?: User
+        relatedError?: Error
     ): never {
-        this.error(error, relatedError, user)
+        this.error(error, relatedError)
         throw error
     }
 
@@ -66,7 +66,7 @@ class Logger {
         } else {
             logFunction(
                 JSON.stringify({
-                    serviceContext: { service: 'backend' },
+                    serviceContext: { service: 'worker' },
                     hostname: os.hostname(),
                     ...log
                 })
@@ -77,9 +77,6 @@ class Logger {
     private static formatLog(log: Logs): string {
         let prefix = `[${log.type}][${log.timestamp.toISOString()}]`
 
-        if (log.userId) {
-            prefix += `[${log.userId}]`
-        }
 
         if (isErrorLog(log)) {
             return `${prefix} ${log.error.message}`

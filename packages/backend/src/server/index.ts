@@ -15,6 +15,7 @@ import apiRouter from 'controllers/rest/routes'
 import webhookRouter from 'controllers/webhooks'
 import JobController from 'controllers/jobs'
 import Segment from 'components/segment'
+import { tracingMiddleware } from 'utils/logging/tracing'
 
 export const startServer = async () => {
     await Database.connect()
@@ -49,6 +50,7 @@ export const startServer = async () => {
     const app = express()
 
     app.set('trust proxy', true)
+    app.use(tracingMiddleware)
     app.use(helmet())
     app.use(
         cors({

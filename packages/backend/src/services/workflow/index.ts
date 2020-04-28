@@ -15,6 +15,7 @@ import { User } from 'models/user'
 import Segment, { TrackingEvent } from 'components/segment'
 import { ResourceType } from 'models/storage'
 import { NodeEventHandler } from './typedefs'
+import { getTraceId } from 'utils/logging/tracing'
 
 const WORKFLOW_LIMIT = 50
 
@@ -163,7 +164,8 @@ const run = async (
         metaData: {
             isJob: resourceType === ResourceType.JOB,
             name
-        }
+        },
+        traceId: getTraceId()
     }
 
     const workerArgs: WorkerArgs = {

@@ -91,7 +91,7 @@ exports.ErrorMessages = {
     // Wait error
     [errors_15.WaitError.DELAY_MISSING]: 'No time to wait specified',
     // Click error
-    [errors_18.ClickError.COULD_NOT_CLICK]: 'Could not click element',
+    [errors_18.ClickError.COULD_NOT_CLICK]: 'Could not click element, perhaps it is not visble',
     // CSV error
     [errors_2.CsvError.COULD_NOT_CREATE_CSV]: 'Could not write csv file',
     // Eccel error

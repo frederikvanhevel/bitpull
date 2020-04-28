@@ -1,6 +1,7 @@
 import Traverser from '@bitpull/worker'
 import { WorkerArgs, WorkerEvent } from '../typedefs'
 import { stripScriptTags } from '@bitpull/worker/src/utils/scripts'
+import Logger from 'utils/logging/logger'
 
 let traverser: Traverser
 
@@ -31,7 +32,7 @@ process.on('message', async (args: WorkerArgs) => {
 
         await traverser.cleanup()
     } catch (error) {
-        console.log(error)
+        Logger.error(new Error('Error happened in single node worker'), error)
         await traverser.cleanup()
         process.exit(1)
     }

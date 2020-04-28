@@ -82,7 +82,7 @@ describe('Collect node helper', () => {
 
         const merged = mergeData(oldData, newData)
 
-        expect(merged).toEqual([{ two: 'prop2' }])
+        expect(merged).toEqual({ two: 'prop2' })
     })
 
     it('should merge an empty array and an object properly other way around', () => {
@@ -93,6 +93,6 @@ describe('Collect node helper', () => {
 
         const merged = mergeData(newData, oldData)
 
-        expect(merged).toEqual([{ two: 'prop2' }])
+        expect(merged).toEqual({ two: 'prop2' })
     })
 })

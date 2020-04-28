@@ -11,6 +11,7 @@ import { Settings } from '../typedefs/common'
 import { isTestEnv } from '../utils/common'
 import { stripScriptTags, removeAttribute } from '../utils/scripts'
 import { PageCallback, MockHandler } from './typedefs'
+import Logger from '../utils/logging/logger'
 
 const DEFAULT_OPTIONS: ConnectOptions | LaunchOptions = {
     defaultViewport: {
@@ -71,7 +72,7 @@ class CustomBrowser {
             if (!page) page = await this.newPage(settings)
             await func(page)
         } catch (error) {
-            console.log(error)
+            Logger.error(new Error('Browser error'), error)
         } finally {
             // if (page) await page.close()
         }

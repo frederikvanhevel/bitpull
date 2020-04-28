@@ -5,6 +5,9 @@ import { HttpLink } from 'apollo-link-http'
 import { getMainDefinition } from 'apollo-utilities'
 import { InMemoryCache } from 'apollo-boost'
 import { setContext } from 'apollo-link-context'
+import { v4 as uuidv4 } from 'uuid'
+
+const TRACING_HEADER = 'x-trace-id'
 
 // Create an http link:
 const httpLink = new HttpLink({
@@ -18,7 +21,8 @@ const authLink = setContext((_, { headers }) => {
     return {
         headers: {
             ...headers,
-            authorization: token ? `Bearer ${token}` : ''
+            authorization: token ? `Bearer ${token}` : '',
+            [TRACING_HEADER]: uuidv4()
         }
     }
 })

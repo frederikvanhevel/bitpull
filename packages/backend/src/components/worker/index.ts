@@ -39,9 +39,6 @@ const spawn = (
             ])
 
             forked.on('message', message => {
-                // @ts-ignore
-                if (message.data?.error) console.log(message.data?.error)
-
                 if ((message as any).event === WorkerEvent.FINISHED) {
                     Logger.info('Worker finished, stopping.')
                     clearTimeout(timeout)
@@ -57,7 +54,7 @@ const spawn = (
 
             forked.on('exit', code => {
                 Logger.info(`Worker exited with exit code ${code}`)
-                code === 0 ? resolve() : reject()
+                code === 1 ? reject() : resolve()
                 kill(forked)
             })
 

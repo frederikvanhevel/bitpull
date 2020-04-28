@@ -22,6 +22,7 @@ import { EmailError } from '../nodes/notification/email/errors'
 import { GithubError } from '../nodes/export/github/errors'
 import { ClickError } from '../nodes/processing/click/errors'
 import { ScrollError } from '../nodes/processing/scroll/errors'
+import Logger from './logging/logger'
 
 export const ErrorMessages: Record<string, string> = {
     // Node error
@@ -135,7 +136,8 @@ export class FlowError extends Error {
     constructor(code: string, relatedError?: Error) {
         if (!ErrorMessages[code]) {
             super(ErrorMessages[NodeError.UNKNOWN_ERROR])
-            console.warn(`Missing error message for ${code}`, this.stack)
+            Logger.warn(`Missing error message for ${code}`)
+            Logger.error(new Error('Node error'), relatedError)
             this.code = NodeError.UNKNOWN_ERROR
             return
         }
@@ -143,6 +145,8 @@ export class FlowError extends Error {
         super(ErrorMessages[code])
         this.code = code
 
-        if (relatedError) console.error(relatedError.stack)
+        if (relatedError) {
+            Logger.error(new Error('Node error'), relatedError)
+        }
     }
 }

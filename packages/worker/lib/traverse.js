@@ -12,6 +12,7 @@ const errors_1 = require("./nodes/common/errors");
 const errors_2 = require("./utils/errors");
 const errors_3 = require("./nodes/processing/collect/errors");
 const common_2 = require("./utils/common");
+const logger_1 = __importDefault(require("./utils/logging/logger"));
 const DEFAULT_OPTIONS = {
     integrations: [],
     settings: {
@@ -31,6 +32,9 @@ class Traverser {
             traverser: this,
             browser: browser || new browser_1.default()
         };
+        if (options.settings.traceId) {
+            logger_1.default.setTraceId(options.settings.traceId);
+        }
     }
     async getNodeResult(input) {
         const { node, paginationCallback } = input;
@@ -84,8 +88,11 @@ class Traverser {
                 Array.isArray(passedData)) {
                 assert_1.default(node.children.length === 1, new errors_2.FlowError(errors_1.NodeError.TOO_MANY_CHILDREN));
                 assert_1.default(node.fields.length > 0, new errors_2.FlowError(errors_3.CollectError.FIELDS_MISSING));
+                const iteratedResult = node.limit
+                    ? passedData.slice(0, node.limit)
+                    : passedData;
                 const newPage = await browser.newPage();
-                const result = await common_2.sequentialPromise(passedData, async (data) => {
+                const result = await common_2.sequentialPromise(iteratedResult, async (data) => {
                     return this.parseNode(Object.assign(Object.assign({}, input), { node: node.children[0], parent: node, parentResult: data, passedData: data, rootAncestor: isPrimaryNode
                             ? currentNode
                             : rootAncestor, page: newPage })).catch(error => {
@@ -150,7 +157,7 @@ class Traverser {
                 message: error.message,
                 code: error.code
             });
-            console.error(error.stack);
+            logger_1.default.error(new Error('Error happend duringnode run'), error);
             originalErrorFn && originalErrorFn(node, error);
         };
         this.options.onLog = (node, message, type = common_1.LogType.INFO) => {
@@ -179,7 +186,7 @@ class Traverser {
             }
         }
         catch (error) {
-            console.error(error.stack);
+            logger_1.default.error(new Error('Fatal error during run'), error);
             status = common_1.Status.ERROR;
         }
         finally {
