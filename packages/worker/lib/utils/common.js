@@ -41,9 +41,10 @@ exports.isTestEnv = () => process.env.NODE_ENV === 'test';
 exports.clamp = (number, min, max) => {
     return Math.min(Math.max(number, min), max);
 };
-exports.sequentialPromise = async (data, executor) => {
+async function sequentialPromise(data, executor) {
     return data.reduce((p, next, i) => {
         return p.then(async () => await executor(next, i));
     }, Promise.resolve());
-};
+}
+exports.sequentialPromise = sequentialPromise;
 //# sourceMappingURL=common.js.map

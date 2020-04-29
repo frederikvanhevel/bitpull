@@ -71,9 +71,7 @@ const loopNextButton = async (
 
         const currentContent = await page.content()
 
-        if (currentContent === lastContent) {
-            break
-        }
+        if (currentContent === lastContent) break
 
         lastContent = currentContent
 
@@ -137,7 +135,7 @@ const pagination: NodeParser<PaginationNode, PaginationParseResult> = async (
         ...input,
         node: childNode!,
         parent: node,
-        paginationCallback: (data: any) => {
+        branchCallback: (data: any) => {
             if (onWatch && node.id === watchedNodeId) onWatch(data)
             allResults.push(data)
         }
@@ -148,7 +146,7 @@ const pagination: NodeParser<PaginationNode, PaginationParseResult> = async (
             ...input,
             node: childNode!,
             parent: node,
-            paginationCallback: (data: any) => allResults.push(data)
+            branchCallback: data => allResults.push(data)
         })
     }
 

@@ -16,6 +16,27 @@ const NodeMap = {
         export: [],
         notification: []
     },
+    [node_1.NodeType.HTML_MULTIPLE]: {
+        processing: [
+            node_1.NodeType.COLLECT,
+            node_1.NodeType.PAGINATION,
+            node_1.NodeType.CLICK,
+            node_1.NodeType.LOGIN,
+            node_1.NodeType.SCROLL,
+            node_1.NodeType.SCREENSHOT,
+            node_1.NodeType.PDF,
+            node_1.NodeType.WAIT
+        ],
+        export: [
+            node_1.NodeType.STORAGE,
+            node_1.NodeType.WEBHOOK,
+            node_1.NodeType.DROPBOX,
+            node_1.NodeType.GOOGLE_DRIVE,
+            node_1.NodeType.ONEDRIVE,
+            node_1.NodeType.GITHUB
+        ],
+        notification: []
+    },
     [node_1.NodeType.COLLECT]: {
         processing: [node_1.NodeType.HTML],
         export: [node_1.NodeType.EXCEL, node_1.NodeType.JSON, node_1.NodeType.CSV, node_1.NodeType.WEBHOOK],

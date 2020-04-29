@@ -22,11 +22,13 @@ const EXPORT_NODES = [
     node_1.NodeType.DROPBOX,
     node_1.NodeType.GOOGLE_DRIVE,
     node_1.NodeType.ONEDRIVE,
-    node_1.NodeType.GITHUB
+    node_1.NodeType.GITHUB,
+    node_1.NodeType.FUNCTION
 ];
 exports.IMPORT_PATHS = {
     [node_1.NodeType.COLLECT]: '../nodes/processing/collect',
     [node_1.NodeType.HTML]: '../nodes/processing/html',
+    [node_1.NodeType.HTML_MULTIPLE]: '../nodes/processing/html/multiple',
     [node_1.NodeType.PAGINATION]: '../nodes/processing/pagination',
     [node_1.NodeType.CLICK]: '../nodes/processing/click',
     [node_1.NodeType.LOGIN]: '../nodes/processing/login',

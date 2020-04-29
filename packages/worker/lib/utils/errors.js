@@ -1,4 +1,7 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const errors_1 = require("../nodes/common/errors");
 const errors_2 = require("../nodes/processing/csv/errors");
@@ -19,6 +22,7 @@ const errors_16 = require("../nodes/notification/email/errors");
 const errors_17 = require("../nodes/export/github/errors");
 const errors_18 = require("../nodes/processing/click/errors");
 const errors_19 = require("../nodes/processing/scroll/errors");
+const logger_1 = __importDefault(require("./logging/logger"));
 exports.ErrorMessages = {
     // Node error
     [errors_1.NodeError.NEEDS_ROOT_ANCESTOR]: 'Needs to have html or xml as previous step',
@@ -103,14 +107,16 @@ class FlowError extends Error {
     constructor(code, relatedError) {
         if (!exports.ErrorMessages[code]) {
             super(exports.ErrorMessages[errors_1.NodeError.UNKNOWN_ERROR]);
-            console.warn(`Missing error message for ${code}`, this.stack);
+            logger_1.default.warn(`Missing error message for ${code}`);
+            logger_1.default.error(new Error('Node error'), relatedError);
             this.code = errors_1.NodeError.UNKNOWN_ERROR;
             return;
         }
         super(exports.ErrorMessages[code]);
         this.code = code;
-        if (relatedError)
-            console.error(relatedError.stack);
+        if (relatedError) {
+            logger_1.default.error(new Error('Node error'), relatedError);
+        }
     }
 }
 exports.FlowError = FlowError;

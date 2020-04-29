@@ -191,7 +191,7 @@ describe('Pagination node', () => {
         expect(mockFn.mock.calls[0][0]).toEqual(expected)
     })
 
-    test('should parse a complex pagination node', async () => {
+    test.skip('should parse a complex pagination node', async () => {
         const page = await browser.newPage()
         await page.goto('https://test.be')
 

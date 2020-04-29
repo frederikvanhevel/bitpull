@@ -17,6 +17,7 @@ export default {
         {
             id: '2',
             type: NodeType.COLLECT,
+            // @ts-ignore
             fields: [
                 {
                     label: 'url',

@@ -1,4 +1,4 @@
-import { mocked } from 'ts-jest'
+import { mocked } from 'ts-jest/utils'
 import parseNodeMock from '../__mocks__/traverse.mock'
 import errorsNodeMock from '../__mocks__/errors.mock'
 import brikMock from '../__mocks__/brik.mock'
@@ -41,7 +41,8 @@ describe('Traverser', () => {
             {
                 settings: {
                     exitOnError: true
-                }
+                },
+                onError: (a, e) => console.log(e)
             },
             browser
         )

@@ -8,6 +8,7 @@ const start = async () => {
     const traverser = new Traverser({
         onLog: (node: FlowNode, message: string) =>
             console.log(node.type, '-', message),
+        onError: (node: FlowNode, error: any) => console.error(error),
         settings: {
             encryption: {
                 version: 'v1',
@@ -206,52 +207,84 @@ const start = async () => {
     // }
 
     // @ts-ignore
+    // const node = {
+    // id: 'b8f00f63-a81c-40b5-9490-507dc111a8bb',
+    // type: 'HTML',
+    // link: 'https://www.linkedin.com/login'
+    // children: [
+    //     {
+    //         id: 'b91976d9-1b5c-4f29-90f6-445ec01227f7',
+    //         type: 'COLLECT',
+    //         limit: 1,
+    //         fields: [
+    //             {
+    //                 id: '17e8dc38-c8eb-47ab-8ab0-705021cd2b0c',
+    //                 label: 'hotel',
+    //                 selector: {
+    //                     value: '.sr-hotel__name',
+    //                     attribute: 'text'
+    //                 }
+    //             },
+    //             {
+    //                 id: '0f9ec05a-096c-4823-a916-d85d9f54de41',
+    //                 label: 'link',
+    //                 selector: {
+    //                     value: '.sr-hotel__name',
+    //                     attribute: 'href'
+    //                 }
+    //             }
+    //         ],
+    //         children: [
+    //             {
+    //                 id: 'a201e1a9-3912-420f-b862-09c24fcf7776',
+    //                 type: 'HTML',
+    //                 linkedField: 'link'
+    //             }
+    //         ]
+    //     }
+    // ]
+    // }
+
     const node = {
         id: 'b8f00f63-a81c-40b5-9490-507dc111a8bb',
-        type: 'HTML',
-        link: 'https://www.linkedin.com/login'
-        // children: [
-        //     {
-        //         id: 'b91976d9-1b5c-4f29-90f6-445ec01227f7',
-        //         type: 'COLLECT',
-        //         limit: 1,
-        //         fields: [
-        //             {
-        //                 id: '17e8dc38-c8eb-47ab-8ab0-705021cd2b0c',
-        //                 label: 'hotel',
-        //                 selector: {
-        //                     value: '.sr-hotel__name',
-        //                     attribute: 'text'
-        //                 }
-        //             },
-        //             {
-        //                 id: '0f9ec05a-096c-4823-a916-d85d9f54de41',
-        //                 label: 'link',
-        //                 selector: {
-        //                     value: '.sr-hotel__name',
-        //                     attribute: 'href'
-        //                 }
-        //             }
-        //         ],
-        //         children: [
-        //             {
-        //                 id: 'a201e1a9-3912-420f-b862-09c24fcf7776',
-        //                 type: 'HTML',
-        //                 linkedField: 'link'
-        //             }
-        //         ]
-        //     }
-        // ]
+        type: 'HTML_MULTIPLE',
+        links: [
+            'https://www.nytimes.com/',
+            'https://www.nytimes.com/',
+            'https://www.nytimes.com/'
+            // 'https://www.nytimes.com/2020/04/28/us/coronavirus-updates.html'
+        ],
+        goToPerPage: '183675a1-a29e-478a-afaa-2cfadbbab278',
+        gotoOnEnd: '0d653518-f677-4ed7-a327-96789d775b9d',
+        children: [
+            {
+                id: '183675a1-a29e-478a-afaa-2cfadbbab278',
+                type: 'COLLECT',
+                fields: [
+                    {
+                        id: 'b0971d9b-ceda-406f-8cc0-087146e83acc',
+                        label: 'headline',
+                        selector: {
+                            value: '.balancedHeadline',
+                            attribute: 'text'
+                        }
+                    }
+                ]
+            },
+            {
+                id: '0d653518-f677-4ed7-a327-96789d775b9d',
+                type: 'FUNCTION',
+                function: (data: any) => console.log('RESULT', data)
+            }
+        ]
     }
-
-    // console.log(JSON.stringify(node))
 
     // @ts-ignore
     // const result = await traverser.run(node)
 
     const result = await traverser.parseNode({ node })
 
-    console.log(result)
+    // console.log(result)
 
     // const result = await traverser.parseNode({ node })
 

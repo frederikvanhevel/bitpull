@@ -11,6 +11,7 @@ export enum NodeType {
     COLLECT = 'COLLECT',
     PAGINATION = 'PAGINATION',
     HTML = 'HTML',
+    HTML_MULTIPLE = 'HTML_MULTIPLE',
     CLICK = 'CLICK',
     LOGIN = 'LOGIN',
     FUNCTION = 'FUNCTION',
@@ -47,7 +48,7 @@ export interface NodeInput<T, S = any, P = any> {
     passedData?: S
     rootAncestor?: RootNode
     page?: Page
-    paginationCallback?: (data: any) => void
+    branchCallback?: (data: object | object[]) => void
 }
 
 export interface TraverseOptions {
@@ -82,4 +83,9 @@ export interface UploadedFile {
 export interface Context {
     traverser: Traverser
     browser: CustomBrowser
+}
+
+export interface BranchNode extends FlowNode {
+    goToPerPage: NodeId
+    gotoOnEnd: NodeId
 }

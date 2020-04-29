@@ -1,4 +1,4 @@
-import { FlowNode, NodeId, NodeType } from '../../../typedefs/node'
+import { NodeId, NodeType, BranchNode } from '../../../typedefs/node'
 import { HTMLSelector } from '../selectors'
 
 export interface NextLinkPagination {
@@ -19,7 +19,7 @@ export type PaginationTypes =
     | PageRangePagination
     | LinkListPagination
 
-export type PaginationNode = FlowNode & {
+export interface PaginationNode extends BranchNode {
     type: NodeType.PAGINATION
     goToPerPage: NodeId
     gotoOnEnd: NodeId

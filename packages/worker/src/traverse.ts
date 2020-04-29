@@ -5,7 +5,8 @@ import {
     TraverseOptions,
     FlowNode,
     RootNode,
-    Context
+    Context,
+    BranchNode
 } from './typedefs/node'
 import { PaginationNode } from './nodes/processing/pagination/typedefs'
 import { isRootNode, getModule } from './utils/helper'
@@ -66,7 +67,7 @@ class Traverser {
     private async getNodeResult(
         input: NodeInput<FlowNode>
     ): Promise<NodeInput<FlowNode>> {
-        const { node, paginationCallback } = input
+        const { node, branchCallback } = input
         const { onStart, onComplete, onLog } = this.options
 
         onStart && onStart(node)
@@ -74,15 +75,14 @@ class Traverser {
         let nodeResult: NodeInput<FlowNode>
         const module = await getModule(node.type)
 
-        if (node.type === NodeType.PAGINATION) {
-            const paginationNode = node as PaginationNode
-            const paginationResult = await module(
-                input,
-                this.options,
-                this.context
-            )
+        if (
+            node.type === NodeType.PAGINATION ||
+            node.type === NodeType.HTML_MULTIPLE
+        ) {
+            const branchNode = node as BranchNode
+            const branchResult = await module(input, this.options, this.context)
             const endNode = node.children!.find(
-                childNode => childNode.id === paginationNode.gotoOnEnd
+                childNode => childNode.id === branchNode.gotoOnEnd
             )
 
             if (endNode) {
@@ -91,10 +91,10 @@ class Traverser {
                 nodeResult = await this.getNodeResult({
                     ...input,
                     node: endNode,
-                    passedData: [].concat(...paginationResult.passedData)
+                    passedData: [].concat(...branchResult.passedData)
                 })
             } else {
-                nodeResult = paginationResult
+                nodeResult = branchResult
             }
         } else {
             nodeResult = await module(input, this.options, this.context)
@@ -102,7 +102,7 @@ class Traverser {
 
         if (!node.children || !node.children.length) {
             // if we are at the end of a pagination tree return the data to it
-            if (paginationCallback) paginationCallback(nodeResult!.passedData)
+            if (branchCallback) branchCallback(nodeResult!.passedData)
         }
 
         onComplete && onComplete(node)

@@ -17,12 +17,14 @@ const EXPORT_NODES = [
     NodeType.DROPBOX,
     NodeType.GOOGLE_DRIVE,
     NodeType.ONEDRIVE,
-    NodeType.GITHUB
+    NodeType.GITHUB,
+    NodeType.FUNCTION
 ]
 
 export const IMPORT_PATHS: Record<NodeType, string> = {
     [NodeType.COLLECT]: '../nodes/processing/collect',
     [NodeType.HTML]: '../nodes/processing/html',
+    [NodeType.HTML_MULTIPLE]: '../nodes/processing/html/multiple',
     [NodeType.PAGINATION]: '../nodes/processing/pagination',
     [NodeType.CLICK]: '../nodes/processing/click',
     [NodeType.LOGIN]: '../nodes/processing/login',
@@ -45,7 +47,7 @@ export const IMPORT_PATHS: Record<NodeType, string> = {
 }
 
 export const isRootNode = (node: FlowNode): boolean => {
-    const linkNode = node as HtmlNode | XmlNode
+    const linkNode = node as HtmlNode
     return linkNode.type === NodeType.HTML && !!linkNode.link
 }
 

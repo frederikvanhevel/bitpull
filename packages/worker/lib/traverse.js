@@ -37,21 +37,22 @@ class Traverser {
         }
     }
     async getNodeResult(input) {
-        const { node, paginationCallback } = input;
+        const { node, branchCallback } = input;
         const { onStart, onComplete, onLog } = this.options;
         onStart && onStart(node);
         let nodeResult;
         const module = await helper_1.getModule(node.type);
-        if (node.type === node_1.NodeType.PAGINATION) {
-            const paginationNode = node;
-            const paginationResult = await module(input, this.options, this.context);
-            const endNode = node.children.find(childNode => childNode.id === paginationNode.gotoOnEnd);
+        if (node.type === node_1.NodeType.PAGINATION ||
+            node.type === node_1.NodeType.HTML_MULTIPLE) {
+            const branchNode = node;
+            const branchResult = await module(input, this.options, this.context);
+            const endNode = node.children.find(childNode => childNode.id === branchNode.gotoOnEnd);
             if (endNode) {
                 onLog && onLog(node, 'Pagination finished');
-                nodeResult = await this.getNodeResult(Object.assign(Object.assign({}, input), { node: endNode, passedData: [].concat(...paginationResult.passedData) }));
+                nodeResult = await this.getNodeResult(Object.assign(Object.assign({}, input), { node: endNode, passedData: [].concat(...branchResult.passedData) }));
             }
             else {
-                nodeResult = paginationResult;
+                nodeResult = branchResult;
             }
         }
         else {
@@ -59,8 +60,8 @@ class Traverser {
         }
         if (!node.children || !node.children.length) {
             // if we are at the end of a pagination tree return the data to it
-            if (paginationCallback)
-                paginationCallback(nodeResult.passedData);
+            if (branchCallback)
+                branchCallback(nodeResult.passedData);
         }
         onComplete && onComplete(node);
         return nodeResult;
@@ -157,7 +158,7 @@ class Traverser {
                 message: error.message,
                 code: error.code
             });
-            logger_1.default.error(new Error('Error happend duringnode run'), error);
+            logger_1.default.error(new Error('Error happend during node run'), error);
             originalErrorFn && originalErrorFn(node, error);
         };
         this.options.onLog = (node, message, type = common_1.LogType.INFO) => {
