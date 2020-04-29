@@ -1,29 +1,31 @@
-import Traverser from '../../traverse'
 import { NodeType } from '../../typedefs/node'
 import { CollectNode } from '../../nodes/processing/collect/typedefs'
 import { HtmlNode } from '../../nodes/processing/html/typedefs'
-import { setup, cleanup, initializePage } from './../test-helper'
+import { TestEnvironment } from '../test-helper'
 import { createNode, createInput } from './../factory'
 
 describe('Collect node', () => {
-    let traverser: Traverser
+    const watchFn = jest.fn()
+    const environment = new TestEnvironment()
 
     beforeAll(async () => {
-        traverser = await setup({
+        await environment.setup({
             settings: {
                 exitOnError: true
-            }
+            },
+            watchedNodeId: 'watch-id',
+            onWatch: watchFn
         })
     })
 
     afterAll(async () => {
-        await cleanup()
+        await environment.cleanup()
     })
 
     it('should throw when fields is not defined', async () => {
         const node = createNode(NodeType.COLLECT)
 
-        const promise = traverser.parseNode({ node })
+        const promise = environment.parseNode({ node })
         await expect(promise).rejects.toThrow()
     })
 
@@ -36,7 +38,7 @@ describe('Collect node', () => {
             ]
         })
 
-        const promise = traverser.parseNode({ node })
+        const promise = environment.parseNode({ node })
         await expect(promise).rejects.toThrow()
     })
 
@@ -62,9 +64,9 @@ describe('Collect node', () => {
             '<a class="link" href="https://test.be">This is a link</a>'
 
         const input = createInput(node, undefined, root)
-        input.page = await initializePage(content)
+        input.page = await environment.initializePage(content)
 
-        await traverser.parseNode(input)
+        await environment.parseNode(input)
 
         expect(callback).toHaveBeenCalledWith({
             url: 'https://test.be'
@@ -94,12 +96,39 @@ describe('Collect node', () => {
             '<a class="link" href="https://test.be">This is a link</a>'
 
         const input = createInput(node, { previous: 'something' }, root)
-        input.page = await initializePage(content)
+        input.page = await environment.initializePage(content)
 
-        await traverser.parseNode(input)
+        await environment.parseNode(input)
 
         expect(callback).toHaveBeenCalledWith({
             previous: 'something',
+            url: 'https://test.be'
+        })
+    })
+
+    it('should call onWatch when running watched node', async () => {
+        const root = createNode<HtmlNode>(NodeType.HTML)
+        const node = createNode<CollectNode>(NodeType.COLLECT, {
+            id: 'watch-id',
+            fields: [
+                {
+                    label: 'url',
+                    selector: {
+                        value: '.link',
+                        attribute: 'href'
+                    }
+                }
+            ]
+        })
+        const content =
+            '<a class="link" href="https://test.be">This is a link</a>'
+
+        const input = createInput(node, undefined, root)
+        input.page = await environment.initializePage(content)
+
+        await environment.parseNode(input)
+
+        expect(watchFn).toHaveBeenCalledWith({
             url: 'https://test.be'
         })
     })

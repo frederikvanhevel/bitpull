@@ -9,8 +9,8 @@ interface PageMock {
     content: string
 }
 
-let traverser: Traverser | undefined
-let browser: CustomBrowser | undefined
+// let traverser: Traverser | undefined
+// let browser: CustomBrowser | undefined
 
 const getMockedHtml = (content: string) => {
     return `
@@ -29,43 +29,64 @@ const defaultMockHandler: MockHandler = () => {
     }
 }
 
-export const setup = async (
-    options: TraverseOptions = { settings: {} },
-    mockHandler?: MockHandler
-) => {
-    browser = new CustomBrowser()
+export class TestEnvironment {
+    private traverser: Traverser | undefined
+    private browser: CustomBrowser | undefined
 
-    browser.setMockHandler(mockHandler || defaultMockHandler)
+    async setup(
+        options: TraverseOptions = { settings: {} },
+        mockHandler?: MockHandler
+    ) {
+        this.browser = new CustomBrowser()
 
-    await browser.initialize(options.settings)
+        this.browser.setMockHandler(mockHandler || defaultMockHandler)
 
-    traverser = new Traverser(options, browser)
-    return traverser
-}
+        await this.browser.initialize(options.settings)
 
-export const mockPage = (mock: PageMock) => {
-    if (!browser) throw new Error('Test browser was not initialized')
+        this.traverser = new Traverser(options, this.browser)
+    }
 
-    browser.setMockHandler((url: string) => {
-        if (mock.url === url) return { body: getMockedHtml(mock.content) }
-        return { body: getMockedHtml(mock.content) }
-    })
-}
+    mockPage(mock: PageMock) {
+        if (!this.browser) throw new Error('Test browser was not initialized')
 
-export const mockPages = (mocks: PageMock[]) => {
-    if (!browser) throw new Error('Test browser was not initialized')
+        this.browser.setMockHandler((url: string) => {
+            if (mock.url === url) return { body: getMockedHtml(mock.content) }
+            return { body: getMockedHtml(mock.content) }
+        })
+    }
 
-    browser.setMockHandler((url: string) => {
-        const mocked = mocks.find(i => i.url === url)
-        if (mocked) return { body: getMockedHtml(mocked.content) }
-        return { body: DEFAULT_MOCKED_HTML }
-    })
-}
+    mockPages(mocks: PageMock[]) {
+        if (!this.browser) throw new Error('Test browser was not initialized')
 
-export const cleanup = async () => {
-    if (traverser) await traverser.cleanup()
-    traverser = undefined
-    browser = undefined
+        this.browser.setMockHandler((url: string) => {
+            const mocked = mocks.find(i => i.url === url)
+            if (mocked) return { body: getMockedHtml(mocked.content) }
+            return { body: DEFAULT_MOCKED_HTML }
+        })
+    }
+
+    async cleanup() {
+        if (this.traverser) await this.traverser.cleanup()
+        this.traverser = undefined
+        this.browser = undefined
+    }
+
+    async initializePage(content?: string): Promise<Page> {
+        if (!this.browser) throw new Error('Test browser was not initialized')
+
+        const page = await this.browser.newPage({})
+        await page.setContent(getMockedHtml(content || DEFAULT_MOCKED_HTML))
+
+        return page
+    }
+
+    async parseNode(input: NodeInput<FlowNode>) {
+        return this.traverser!.parseNode(input)
+    }
+
+    async run(node: FlowNode) {
+        return this.traverser!.run(node)
+    }
 }
 
 export const hasDefaultResult = async (
@@ -83,13 +104,4 @@ export const hasResult = async (
     if (!input.page) throw new Error("Test result didn't have page")
     const content = await input.page.content()
     return content === getMockedHtml(result)
-}
-
-export const initializePage = async (content?: string): Promise<Page> => {
-    if (!browser) throw new Error('Test browser was not initialized')
-
-    const page = await browser.newPage({})
-    await page.setContent(getMockedHtml(content || DEFAULT_MOCKED_HTML))
-
-    return page
 }

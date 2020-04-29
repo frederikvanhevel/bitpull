@@ -1,21 +1,14 @@
-import Traverser from '../../traverse'
 import { NodeType } from '../../typedefs/node'
 import { HtmlNode } from '../../nodes/processing/html/typedefs'
 import { FunctionNode } from '../../nodes/export/function/typedefs'
-import {
-    setup,
-    cleanup,
-    hasDefaultResult,
-    mockPage,
-    hasResult
-} from './../test-helper'
+import { hasDefaultResult, hasResult, TestEnvironment } from './../test-helper'
 import { createNode, createInput } from './../factory'
 
 describe('Html node', () => {
-    let traverser: Traverser
+    const environment = new TestEnvironment()
 
     beforeAll(async () => {
-        traverser = await setup({
+        await environment.setup({
             settings: {
                 exitOnError: true
             }
@@ -23,14 +16,14 @@ describe('Html node', () => {
     })
 
     afterAll(async () => {
-        await cleanup()
+        await environment.cleanup()
     })
 
     describe('Single', () => {
         it('should throw when link is not defined', async () => {
             const node = createNode(NodeType.HTML)
 
-            const promise = traverser.parseNode({ node })
+            const promise = environment.parseNode({ node })
             await expect(promise).rejects.toThrow()
         })
 
@@ -39,7 +32,7 @@ describe('Html node', () => {
                 link: 'https://test.be'
             })
 
-            const result = await traverser.parseNode({ node })
+            const result = await environment.parseNode({ node })
             expect(hasDefaultResult(result)).toBeTruthy()
         })
 
@@ -53,7 +46,7 @@ describe('Html node', () => {
             const passedData = {}
 
             const input = createInput(node, passedData, root)
-            const promise = traverser.parseNode(input)
+            const promise = environment.parseNode(input)
             await expect(promise).rejects.toThrow()
         })
 
@@ -68,13 +61,13 @@ describe('Html node', () => {
                 url: 'https://second.be'
             }
 
-            mockPage({
+            environment.mockPage({
                 url: 'https://second.be',
                 content: 'Second'
             })
 
             const input = createInput(node, passedData, root)
-            const result = await traverser.parseNode(input)
+            const result = await environment.parseNode(input)
             expect(hasResult(result, 'Second')).toBeTruthy()
         })
     })
@@ -83,7 +76,7 @@ describe('Html node', () => {
         it('should throw when links are not defined', async () => {
             const node = createNode(NodeType.HTML_MULTIPLE)
 
-            const promise = traverser.parseNode({ node })
+            const promise = environment.parseNode({ node })
             await expect(promise).rejects.toThrow()
         })
 
@@ -92,7 +85,7 @@ describe('Html node', () => {
                 links: ['https://test.be']
             })
 
-            const promise = traverser.parseNode({ node })
+            const promise = environment.parseNode({ node })
             await expect(promise).rejects.toThrow()
         })
 
@@ -109,7 +102,7 @@ describe('Html node', () => {
                 ]
             })
 
-            await traverser.parseNode({ node })
+            await environment.parseNode({ node })
             expect(fn).toHaveBeenCalled()
         })
 
@@ -131,7 +124,7 @@ describe('Html node', () => {
                 ]
             })
 
-            await traverser.parseNode({ node })
+            await environment.parseNode({ node })
             expect(fn).toHaveBeenCalled()
         })
     })
