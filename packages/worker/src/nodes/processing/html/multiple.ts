@@ -23,10 +23,11 @@ const multipleHtml: NodeParser<MultipleHtmlNode> = async (
 
     assert(childNode, PaginationError.GOTOPERPAGE_NODE_MISSING)
 
+    const allowedLinks = node.links.slice(0, node.limit)
     const allResults: object[] = []
 
-    await sequentialPromise<string>(node.links, async link => {
-        const { page, parsedLink } = await parseLink(
+    await sequentialPromise<string>(allowedLinks, async link => {
+        const page = await parseLink(
             input,
             options,
             context,
@@ -40,8 +41,10 @@ const multipleHtml: NodeParser<MultipleHtmlNode> = async (
 
         const root = {
             ...node,
-            parsedLink
+            parsedLink: link
         }
+
+        console.log('RUN')
 
         await traverser.parseNode({
             ...input,

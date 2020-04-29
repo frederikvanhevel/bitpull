@@ -15,7 +15,7 @@ export default {
                 }
             },
             goToPerPage: '2',
-            gotoOnEnd: '3'
+            goToOnEnd: '3'
         },
         {
             id: '2',
@@ -27,7 +27,7 @@ export default {
                 }
             },
             goToPerPage: '2',
-            gotoOnEnd: '3'
+            goToOnEnd: '3'
         },
         {
             id: '3',
@@ -39,7 +39,7 @@ export default {
                 }
             },
             goToPerPage: '2',
-            gotoOnEnd: '3'
+            goToOnEnd: '3'
         },
         {
             id: '4',
@@ -51,7 +51,7 @@ export default {
                 }
             },
             goToPerPage: '2',
-            gotoOnEnd: '3'
+            goToOnEnd: '3'
         }
     ]
 }

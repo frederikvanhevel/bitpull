@@ -67,8 +67,19 @@ exports.isFileNode = (type) => {
 exports.isExportNode = (type) => {
     return EXPORT_NODES.includes(type);
 };
-exports.hasChildExportNodes = (node) => {
+exports.hasChildOfTypes = (node, types) => {
     var _a;
-    return (_a = node.children) === null || _a === void 0 ? void 0 : _a.find(child => EXPORT_NODES.includes(child.type));
+    return (_a = node.children) === null || _a === void 0 ? void 0 : _a.find(child => types.includes(child.type));
+};
+exports.hasChildExportNodes = (node) => {
+    return exports.hasChildOfTypes(node, EXPORT_NODES);
+};
+exports.isBranchCollectNode = (node) => {
+    return (node.type === node_1.NodeType.COLLECT &&
+        exports.hasChildOfTypes(node, [node_1.NodeType.HTML]) &&
+        !!node.children[0].linkedField);
+};
+exports.isBranchNode = (node) => {
+    return !!node.goToPerPage || exports.isBranchCollectNode(node);
 };
 //# sourceMappingURL=helper.js.map

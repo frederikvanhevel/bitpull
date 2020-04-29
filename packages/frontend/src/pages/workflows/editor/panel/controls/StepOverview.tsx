@@ -4,8 +4,9 @@ import {
     getIcon,
     isCollectNode,
     isPaginationNode,
-    isRootNode,
-    getTitle
+    getTitle,
+    isHtmlNode,
+    isMultipleHtmlNode
 } from '../helper'
 import {
     ListSubheader,
@@ -33,7 +34,9 @@ const getNodeLabel = (node: Node) => {
     const label = getTitle(node)
 
     if (isCollectNode(node)) {
-        return node.fields?.length ? `${label}: ${node.fields.length} field(s)` : label
+        return node.fields?.length
+            ? `${label}: ${node.fields.length} field(s)`
+            : label
     } else if (isPaginationNode(node)) {
         let links
         if (isNextLinkPagination(node.pagination)) {
@@ -45,8 +48,12 @@ const getNodeLabel = (node: Node) => {
         return `${label} to ${links}`
     } else if (node.type === NodeType.WAIT) {
         return `Wait ${(node as WaitNode).delay} seconds`
-    } else if (isRootNode(node)) {
-        return `${label} of ${node.link ? truncate(node.link) : node.linkedField}`
+    } else if (isHtmlNode(node)) {
+        return `${label} of ${
+            node.link ? truncate(node.link) : node.linkedField
+        }`
+    } else if (isMultipleHtmlNode(node)) {
+        return `${node.links?.length || 0} links`
     }
 
     return label

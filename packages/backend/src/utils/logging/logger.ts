@@ -5,7 +5,7 @@ import { isErrorLog } from './helper'
 import { getTraceId } from './tracing'
 
 class Logger {
-    public static jsonOutput = true
+    public static jsonOutput = process.env.NODE_ENV === 'production'
 
     public static info(message: string, user?: User) {
         const data: InfoLog = {

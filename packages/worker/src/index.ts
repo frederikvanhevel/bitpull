@@ -25,7 +25,7 @@ import {
 } from './typedefs/common'
 import { HTMLSelector } from './nodes/processing/selectors'
 import { CollectNode, CollectField } from './nodes/processing/collect/typedefs'
-import { HtmlNode } from './nodes/processing/html/typedefs'
+import { HtmlNode, MultipleHtmlNode } from './nodes/processing/html/typedefs'
 import { XmlNode } from './nodes/processing/xml/typedefs'
 import { PaginationNode } from './nodes/processing/pagination/typedefs'
 import { ClickNode } from './nodes/processing/click/typedefs'
@@ -71,6 +71,7 @@ export type {
     CollectField,
     HTMLSelector,
     HtmlNode,
+    MultipleHtmlNode,
     XmlNode,
     PaginationNode,
     ClickNode,

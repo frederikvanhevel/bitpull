@@ -10,8 +10,6 @@ const common_1 = require("./typedefs/common");
 const browser_1 = __importDefault(require("./browser"));
 const errors_1 = require("./nodes/common/errors");
 const errors_2 = require("./utils/errors");
-const errors_3 = require("./nodes/processing/collect/errors");
-const common_2 = require("./utils/common");
 const logger_1 = __importDefault(require("./utils/logging/logger"));
 const DEFAULT_OPTIONS = {
     integrations: [],
@@ -46,7 +44,7 @@ class Traverser {
             node.type === node_1.NodeType.HTML_MULTIPLE) {
             const branchNode = node;
             const branchResult = await module(input, this.options, this.context);
-            const endNode = node.children.find(childNode => childNode.id === branchNode.gotoOnEnd);
+            const endNode = node.children.find(childNode => childNode.id === branchNode.goToOnEnd);
             if (endNode) {
                 onLog && onLog(node, 'Pagination finished');
                 nodeResult = await this.getNodeResult(Object.assign(Object.assign({}, input), { node: endNode, passedData: [].concat(...branchResult.passedData) }));
@@ -67,7 +65,7 @@ class Traverser {
         return nodeResult;
     }
     async parseNode(input) {
-        const browser = this.context.browser;
+        var _a;
         const { node: currentNode, rootAncestor } = input;
         const { onError, onLog, settings } = this.options;
         if (this.canceled) {
@@ -79,39 +77,8 @@ class Traverser {
             const isPrimaryNode = helper_1.isRootNode(currentNode);
             const nodeResult = await this.getNodeResult(Object.assign({}, input));
             assert_1.default(nodeResult, errors_1.NodeError.NO_RESULT);
-            const { node, passedData } = nodeResult;
-            if (node.type === node_1.NodeType.COLLECT &&
-                node.fields.length &&
-                node.children &&
-                node.children.length &&
-                node.children[0].type === node_1.NodeType.HTML &&
-                !!node.children[0].linkedField &&
-                Array.isArray(passedData)) {
-                assert_1.default(node.children.length === 1, new errors_2.FlowError(errors_1.NodeError.TOO_MANY_CHILDREN));
-                assert_1.default(node.fields.length > 0, new errors_2.FlowError(errors_3.CollectError.FIELDS_MISSING));
-                const iteratedResult = node.limit
-                    ? passedData.slice(0, node.limit)
-                    : passedData;
-                const newPage = await browser.newPage();
-                const result = await common_2.sequentialPromise(iteratedResult, async (data) => {
-                    return this.parseNode(Object.assign(Object.assign({}, input), { node: node.children[0], parent: node, parentResult: data, passedData: data, rootAncestor: isPrimaryNode
-                            ? currentNode
-                            : rootAncestor, page: newPage })).catch(error => {
-                        if (settings.exitOnError) {
-                            throw error;
-                        }
-                        else if (onError) {
-                            onError(node.children[0], error);
-                        }
-                    });
-                }).finally(async () => {
-                    await newPage.close();
-                });
-                // @ts-ignore
-                return result;
-            }
-            else if (node.children && node.children.length) {
-                // const newPage = await browser.forkPage(page!)
+            const { node } = nodeResult;
+            if (!helper_1.isBranchNode(node) && ((_a = node.children) === null || _a === void 0 ? void 0 : _a.length)) {
                 const result = await Promise.all(node.children.map(async (child) => this.parseNode(Object.assign(Object.assign(Object.assign({}, input), nodeResult), { node: child, parent: node, rootAncestor: isPrimaryNode
                         ? currentNode
                         : rootAncestor })).catch(error => {

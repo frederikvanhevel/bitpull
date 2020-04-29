@@ -6,10 +6,13 @@ import {
     InputLabel,
     Select,
     MenuItem,
-    TextField
+    TextField,
+    Button,
+    FormControlLabel,
+    Switch
 } from '@material-ui/core'
 import { Link, LowPriority } from '@material-ui/icons'
-import { HtmlNode } from '@bitpull/worker/lib/typedefs'
+import { HtmlNode, FlowNode, NodeType } from '@bitpull/worker/lib/typedefs'
 import { Node } from 'typedefs/common'
 import { CollectNode, CollectField } from '@bitpull/worker/lib/typedefs'
 import { URL_REGEX } from './common/validation'
@@ -20,6 +23,7 @@ import TestRunWarning from './common/TestRunWarning'
 interface Props {
     node: HtmlNode & Node
     onUpdate: (key: string, value: any) => void
+    onReplace: (node: FlowNode) => void
 }
 
 const useStyles = makeStyles(theme => ({
@@ -38,26 +42,19 @@ const useStyles = makeStyles(theme => ({
         '& > div:nth-child(1)': {
             flexGrow: 1
         }
-        // '& > div:first-child': {
-        //     flexBasis: '30%',
-        //     marginRight: theme.spacing(2)
-        // },
-        // '& > div:last-child': {
-        //     flexBasis: '4%'
-        // }
     },
     expand: {
         padding: `0 ${theme.spacing(2)}px`
     }
 }))
 
-const EditUrl: React.FC<Props> = ({ node, onUpdate }) => {
+const EditUrl: React.FC<Props> = ({ node, onUpdate, onReplace }) => {
     const classes = useStyles()
     const { register, errors, reset } = useForm<HtmlNode & Node>({
         defaultValues: node,
         mode: 'onChange'
     })
-    const menuOption =
+    const menuOptions = [
         node.link || node.link === ''
             ? {
                   label: 'Convert to linked field',
@@ -72,6 +69,7 @@ const EditUrl: React.FC<Props> = ({ node, onUpdate }) => {
                   },
                   icon: <Link />
               }
+    ]
     const parent = node.parent as CollectNode
     const parentFields = pathOr<CollectField[]>([], ['fields'], parent).filter(
         field => !!field.label
@@ -83,59 +81,88 @@ const EditUrl: React.FC<Props> = ({ node, onUpdate }) => {
 
     return (
         <>
-        <div className={classes.wrapper}>
-            <div className={classes.link}>
-                {node.link || node.link === '' || !parentFields.length ? (
-                    <TextField
-                        error={!!errors.link}
-                        label="Website url"
-                        placeholder="http://example.com"
-                        name="link"
-                        autoFocus
-                        inputRef={register({
-                            required: true,
-                            pattern: URL_REGEX
-                        })}
-                        onChange={e => onUpdate('link', e.target.value)}
-                    />
-                ) : (
-                    <FormControl>
-                        <InputLabel>Link from previous step</InputLabel>
-                        <Select
-                            value={node.linkedField}
-                            placeholder="select "
-                            name="linkedField"
-                            onChange={e =>
-                                onUpdate('linkedField', e.target.value)
+            <div className={classes.wrapper}>
+                <FormControlLabel
+                    control={
+                        <Switch
+                            checked={false}
+                            onChange={() =>
+                                onReplace({
+                                    type: NodeType.HTML_MULTIPLE,
+                                    // @ts-ignore
+                                    links: [node.link]
+                                })
                             }
-                        >
-                            {!parentFields.length ? (
-                                <MenuItem value="none" disabled>
-                                    No fields available
-                                </MenuItem>
-                            ) : null}
+                            color="primary"
+                        />
+                    }
+                    label="Multiple"
+                />
 
-                            {parentFields.map(field => {
-                                return (
-                                    <MenuItem
-                                        key={field.label}
-                                        value={field.label}
-                                    >
-                                        {field.label}
-                                    </MenuItem>
-                                )
+                <div className={classes.link}>
+                    {node.link || node.link === '' || !parentFields.length ? (
+                        <TextField
+                            error={!!errors.link}
+                            label="Website url"
+                            placeholder="http://example.com"
+                            name="link"
+                            autoFocus
+                            inputRef={register({
+                                required: true,
+                                pattern: URL_REGEX
                             })}
-                        </Select>
-                    </FormControl>
-                )}
+                            onChange={e => onUpdate('link', e.target.value)}
+                        />
+                    ) : (
+                        <FormControl>
+                            <InputLabel>Link from previous step</InputLabel>
+                            <Select
+                                value={node.linkedField}
+                                placeholder="select "
+                                name="linkedField"
+                                onChange={e =>
+                                    onUpdate('linkedField', e.target.value)
+                                }
+                            >
+                                {!parentFields.length ? (
+                                    <MenuItem value="none" disabled>
+                                        No fields available
+                                    </MenuItem>
+                                ) : null}
 
-                {node.parent && !!parentFields.length && (
-                    <MoreMenu options={[menuOption]} />
-                )}
+                                {parentFields.map(field => {
+                                    return (
+                                        <MenuItem
+                                            key={field.label}
+                                            value={field.label}
+                                        >
+                                            {field.label}
+                                        </MenuItem>
+                                    )
+                                })}
+                            </Select>
+                        </FormControl>
+                    )}
+
+                    {node.parent && !!parentFields.length && (
+                        <MoreMenu options={menuOptions} />
+                    )}
+                </div>
+
+                <Button
+                    onClick={() => {
+                        onReplace({
+                            type: NodeType.HTML_MULTIPLE,
+                            // @ts-ignore
+                            links: []
+                        })
+                    }}
+                >
+                    Multiple
+                </Button>
             </div>
-        </div>
 
-        {!!node.linkedField && <TestRunWarning />}
+            {!!node.linkedField && <TestRunWarning />}
         </>
     )
 }

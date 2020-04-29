@@ -44,18 +44,33 @@ export const hasNodeOfType = (node: Node, type: NodeType) => {
 
 interface NodeUpdateOptions {
     nodeToUpdate: Node
+    nodeToReplace?: NodeId
     updatedNode?: Node
     nodeIdsToDelete?: NodeId[]
 }
 
 export const updateNodesObject = (options: NodeUpdateOptions) => {
-    const { updatedNode, nodeToUpdate, nodeIdsToDelete = [] } = options
+    const {
+        updatedNode,
+        nodeToUpdate,
+        nodeIdsToDelete = [],
+        nodeToReplace
+    } = options
     const toDelete = new Set<NodeId>(nodeIdsToDelete)
 
     const updateNode = (node: Node, parent?: Node) => {
         // merge with updated node
         if (updatedNode && node.id === updatedNode.id) {
             node = Object.assign({}, node, updatedNode)
+        }
+
+        if (nodeToReplace && node.id === nodeToReplace) {
+            node = Object.assign({}, { children: node.children }, updatedNode)
+            if (node.children?.length) {
+                node.children.forEach(child => {
+                    ;(child as Node).parent = node
+                })
+            }
         }
 
         // update parent reference
@@ -134,6 +149,7 @@ export const findUrlAncestor = (node: Node): Node<RootNode> | undefined => {
 export const traverseAncestors = (node: Node) => {
     const traversableTypes = [
         NodeType.HTML,
+        NodeType.HTML_MULTIPLE,
         NodeType.LOGIN,
         NodeType.WAIT,
         NodeType.CLICK,

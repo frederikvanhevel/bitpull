@@ -39,6 +39,8 @@ import Csv from '../modules/Csv'
 import CsvIcon from 'components/ui/icons/csv-icon'
 import Scroll from '../modules/Scroll'
 import ScrollIcon from 'components/ui/icons/scroll-icon'
+import MultipleHtml from '../modules/MultipleHtml'
+import HtmlModule from '../modules/html'
 
 export interface NodeProperty {
     icon: ElementType
@@ -52,7 +54,13 @@ export const NODE_PROPERTIES: Record<NodeType, NodeProperty> = {
         icon: UrlIcon,
         label: 'Get HTML content',
         shortLabel: 'Get HTML',
-        editor: EditUrl
+        editor: HtmlModule
+    },
+    [NodeType.HTML_MULTIPLE]: {
+        icon: UrlIcon,
+        label: 'Get HTML content',
+        shortLabel: 'Get HTML',
+        editor: HtmlModule
     },
     [NodeType.COLLECT]: {
         icon: CollectIcon,

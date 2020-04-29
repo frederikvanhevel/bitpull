@@ -10,13 +10,15 @@ import {
     deleteNode,
     setSelectedNodeId,
     setWatchedNodeId,
-    toggleWatcherSelect
+    toggleWatcherSelect,
+    replaceNode
 } from 'actions/workflow'
 import BottomControls from './controls/BottomControls'
 import { AppState } from 'redux/store'
 import { Prompt } from 'react-router-dom'
 import { WorkflowState } from 'reducers/workflow'
 import PageTitle from 'components/navigation/PageTitle'
+import { uuid } from 'uuidv4'
 
 const Editor: React.FC = () => {
     const dispatch = useDispatch()
@@ -53,6 +55,16 @@ const Editor: React.FC = () => {
         setSelectedNode(node)
         dispatch(setSelectedNodeId(node.id))
     }
+    const onReplaceNode = (node: Node) => {
+        if (!selectedNode) return
+
+        const newNode = {
+            id: selectedNode.id,
+            ...node
+        }
+        dispatch(replaceNode(selectedNode.id, newNode))
+        setSelectedNode(newNode)
+    }
 
     useEffect(() => {
         watchSelectRef.current = isSelectingWatcher
@@ -82,6 +94,7 @@ const Editor: React.FC = () => {
                         }}
                         onDeleteNode={onDeleteNode}
                         onUpdateNode={onUpdateNode}
+                        onReplaceNode={onReplaceNode}
                         onSelectNode={onSelectNode}
                         onAddNode={onAddNode}
                     />

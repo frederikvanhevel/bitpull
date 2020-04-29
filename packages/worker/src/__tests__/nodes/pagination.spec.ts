@@ -5,6 +5,8 @@ import { PaginationNode } from '../../nodes/processing/pagination/typedefs'
 import { TestEnvironment } from '../utils/environment'
 import { createNode, createInput } from '../utils/factory'
 
+jest.setTimeout(10000)
+
 describe('Pagination node', () => {
     const watchFn = jest.fn()
     const environment = new TestEnvironment()
@@ -46,7 +48,9 @@ describe('Pagination node', () => {
         const root = createNode<HtmlNode>(NodeType.HTML)
         const node = createNode<PaginationNode>(NodeType.PAGINATION, {
             pagination: {
-                nextLink: '.link'
+                nextLink: {
+                    value: 'a.link'
+                }
             },
             goToPerPage: '1',
             children: [
@@ -63,7 +67,7 @@ describe('Pagination node', () => {
         environment.mockPages([
             {
                 url: 'https://test.be/two',
-                content: 'Hello world'
+                content: 'Hello world two'
             }
         ])
 

@@ -9,7 +9,7 @@ export const parseLink = async (
     options: TraverseOptions,
     context: Context,
     link: string
-): Promise<LinkParseResult> => {
+): Promise<Page> => {
     const { onLog, settings } = options
     const { browser } = context
     const { node, page } = input
@@ -26,11 +26,5 @@ export const parseLink = async (
 
     onLog && onLog(node, `Got content of ${link}`)
 
-    // // set the parsed link on the node so we can retrieve it later
-    // node.parsedLink = link
-
-    return {
-        page: currentPage,
-        parsedLink: link
-    }
+    return currentPage
 }

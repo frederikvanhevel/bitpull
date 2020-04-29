@@ -3,6 +3,9 @@ import { CollectNode } from '../../nodes/processing/collect/typedefs'
 import { HtmlNode } from '../../nodes/processing/html/typedefs'
 import { TestEnvironment } from '../utils/environment'
 import { createNode, createInput } from '../utils/factory'
+import { FunctionNode } from 'nodes/export/function/typedefs'
+
+jest.setTimeout(10000)
 
 describe('Collect node', () => {
     const watchFn = jest.fn()
@@ -129,6 +132,40 @@ describe('Collect node', () => {
         await environment.parseNode(input)
 
         expect(watchFn).toHaveBeenCalledWith({
+            url: 'https://test.be'
+        })
+    })
+
+    it.only('should traverse child html nodes', async () => {
+        const fn = jest.fn()
+        const root = createNode<HtmlNode>(NodeType.HTML)
+        const node = createNode<CollectNode>(NodeType.COLLECT, {
+            fields: [
+                {
+                    label: 'url',
+                    selector: {
+                        value: '.link',
+                        attribute: 'href'
+                    }
+                }
+            ],
+            children: [createNode(NodeType.HTML, {
+                link: 'https://test.be',
+                children: [createNode<FunctionNode>(NodeType.FUNCTION, {
+                    id: '1',
+                    function: fn
+                })]
+            })]
+        })
+        const content =
+            '<a class="link" href="https://test.be">This is a link</a>'
+
+        const input = createInput(node, undefined, root)
+        input.page = await environment.initializePage(content)
+
+        await environment.parseNode(input)
+
+        expect(fn).toHaveBeenCalledWith({
             url: 'https://test.be'
         })
     })

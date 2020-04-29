@@ -4,9 +4,10 @@ import {
     DELETE_NODE,
     SAVE_WORKFLOW,
     SAVE_WORKFLOW_COMPLETED,
-    SET_WORKFLOW_ID
+    SET_WORKFLOW_ID,
+    REPLACE_NODE
 } from 'redux/constants/workflow'
-import { UpdateNode, setCurrentWorkflow } from 'actions/workflow'
+import { UpdateNode, setCurrentWorkflow, ReplaceNode } from 'actions/workflow'
 import { updateNodesObject } from 'components/node'
 import { AppState } from 'redux/store'
 import { Workflow } from 'queries/workflow'
@@ -65,6 +66,27 @@ function* updateNode(action: UpdateNode) {
     )
 }
 
+function* replaceNode(action: ReplaceNode) {
+    const currentWorkflow = yield select(
+        (state: AppState) => state.workflow.currentWorkflow
+    )
+
+    if (!currentWorkflow) return
+
+    const newNodeObject = updateNodesObject({
+        nodeToUpdate: currentWorkflow.node,
+        nodeToReplace: action.nodeId,
+        updatedNode: action.payload
+    })
+
+    yield put(
+        setCurrentWorkflow({
+            ...currentWorkflow,
+            node: newNodeObject
+        })
+    )
+}
+
 function* deleteNode(action: UpdateNode) {
     const currentWorkflow = yield select(
         (state: AppState) => state.workflow.currentWorkflow
@@ -88,5 +110,6 @@ function* deleteNode(action: UpdateNode) {
 export default [
     takeLatest(SAVE_WORKFLOW, saveCurrentWorkflow),
     takeLatest(UPDATE_NODE, updateNode),
+    takeLatest(REPLACE_NODE, replaceNode),
     takeLatest(DELETE_NODE, deleteNode)
 ]

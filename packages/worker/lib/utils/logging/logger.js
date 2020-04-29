@@ -74,6 +74,6 @@ class Logger {
         return console.info;
     }
 }
-Logger.jsonOutput = true;
+Logger.jsonOutput = process.env.NODE_ENV === 'production';
 exports.default = Logger;
 //# sourceMappingURL=logger.js.map

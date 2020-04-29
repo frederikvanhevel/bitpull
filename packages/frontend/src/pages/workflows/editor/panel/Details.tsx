@@ -28,6 +28,7 @@ interface Props {
     onClose: () => void
     onDeleteNode: (node: Node) => void
     onUpdateNode: (node: Node) => void
+    onReplaceNode: (node: Node) => void
     onSelectNode: (node?: Node) => void
     onAddNode: (node: Node, extraProps?: object) => void
 }
@@ -72,6 +73,7 @@ const Details: React.FC<Props> = ({
     onClose,
     onDeleteNode,
     onUpdateNode,
+    onReplaceNode,
     onSelectNode,
     onAddNode
 }) => {
@@ -109,6 +111,7 @@ const Details: React.FC<Props> = ({
                 <EditorComponent
                     node={node}
                     onUpdate={onUpdate}
+                    onReplace={onReplaceNode}
                     onAdd={onAddNode}
                 />
 

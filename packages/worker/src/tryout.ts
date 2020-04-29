@@ -50,7 +50,7 @@ const start = async () => {
     //                 }
     //             },
     //             goToPerPage: '2',
-    //             gotoOnEnd: '3',
+    //             goToOnEnd: '3',
     //             children: [
     //                 {
     //                     id: '2',
@@ -157,7 +157,7 @@ const start = async () => {
     //                     ]
     //                 }
     //             ],
-    //             gotoOnEnd: '8c2e16ce-beac-450f-b4f7-0a8608d7b079',
+    //             goToOnEnd: '8c2e16ce-beac-450f-b4f7-0a8608d7b079',
     //             linkLimit: 1
     //         }
     //     ]
@@ -255,7 +255,7 @@ const start = async () => {
             // 'https://www.nytimes.com/2020/04/28/us/coronavirus-updates.html'
         ],
         goToPerPage: '183675a1-a29e-478a-afaa-2cfadbbab278',
-        gotoOnEnd: '0d653518-f677-4ed7-a327-96789d775b9d',
+        goToOnEnd: '0d653518-f677-4ed7-a327-96789d775b9d',
         children: [
             {
                 id: '183675a1-a29e-478a-afaa-2cfadbbab278',

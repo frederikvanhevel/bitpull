@@ -26,7 +26,7 @@ const html: NodeParser<HtmlNode, undefined, HtmlParseResult> = async (
 
         link = absolutifyUrl(
             passedData[node.linkedField],
-            getUriOrigin(rootAncestor.link!)
+            getUriOrigin(rootAncestor.parsedLink!)
         )
     } else {
         link = node.link
@@ -36,11 +36,11 @@ const html: NodeParser<HtmlNode, undefined, HtmlParseResult> = async (
 
     node.parsedLink = link
 
-    const parseResult = await parseLink(input, options, context, link)
+    const page = await parseLink(input, options, context, link)
 
     return {
         ...input,
-        page: parseResult.page
+        page
     }
 }
 

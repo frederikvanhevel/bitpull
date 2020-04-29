@@ -12,7 +12,7 @@ process.on('message', async (args: WorkerArgs) => {
 
     try {
         const result = await traverser.parseNode({ node: args.node })
-
+            console.log(result)
         let page
         if (Array.isArray(result)) {
             page = result.flat(Infinity)[0]?.page

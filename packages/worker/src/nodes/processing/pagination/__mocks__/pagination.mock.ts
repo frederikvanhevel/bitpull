@@ -11,7 +11,7 @@ export default {
         }
     },
     goToPerPage: '2',
-    gotoOnEnd: '3',
+    goToOnEnd: '3',
     children: [
         {
             id: '2',

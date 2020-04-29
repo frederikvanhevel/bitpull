@@ -12,6 +12,7 @@ export type HtmlNode = FlowNode & {
 export interface MultipleHtmlNode extends BranchNode {
     type: NodeType.HTML
     links?: string[]
+    limit?: number
 }
 
 export interface HtmlParseResult {

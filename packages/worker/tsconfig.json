@@ -12,20 +12,6 @@
       "./typings",
       "./node_modules/@types"
     ],
-    "paths": {
-      "browser/*": [
-        "browser/*"
-      ],
-      "nodes/*": [
-        "nodes/*"
-      ],
-      "typedefs/*": [
-        "typedefs/*"
-      ],
-      "utils/*": [
-        "utils/*"
-      ]
-    },
     "baseUrl": "src",
     "types": [
       "node",

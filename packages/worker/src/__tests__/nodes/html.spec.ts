@@ -11,6 +11,8 @@ import {
 } from '../utils/environment'
 import { createNode, createInput } from '../utils/factory'
 
+jest.setTimeout(10000)
+
 describe('Html node', () => {
     const environment = new TestEnvironment()
 
@@ -59,7 +61,8 @@ describe('Html node', () => {
 
         it('should get the content of a linked field', async () => {
             const root = createNode<HtmlNode>(NodeType.HTML, {
-                link: 'https://test.be'
+                link: 'https://test.be',
+                parsedLink: 'https://test.be'
             })
             const node = createNode<HtmlNode>(NodeType.HTML, {
                 linkedField: 'url'
@@ -99,7 +102,7 @@ describe('Html node', () => {
         it('should go to each link', async () => {
             const fn = jest.fn()
             const node = createNode<MultipleHtmlNode>(NodeType.HTML_MULTIPLE, {
-                links: ['https://test.be'],
+                links: ['https://test.be', 'https://test.be'],
                 goToPerPage: '1',
                 children: [
                     createNode<FunctionNode>(NodeType.FUNCTION, {
@@ -110,29 +113,31 @@ describe('Html node', () => {
             })
 
             await environment.parseNode({ node })
-            expect(fn).toHaveBeenCalled()
+            expect(fn).toHaveBeenCalledTimes(2)
         })
 
         it('should go to a node on end of all links', async () => {
-            const fn = jest.fn()
+            const goToPerPageFn = jest.fn()
+            const goToOnEndFn = jest.fn()
             const node = createNode<MultipleHtmlNode>(NodeType.HTML_MULTIPLE, {
                 links: ['https://test.be'],
                 goToPerPage: '1',
-                gotToOnEnd: '2',
+                goToOnEnd: '2',
                 children: [
                     createNode<FunctionNode>(NodeType.FUNCTION, {
                         id: '1',
-                        function: jest.fn()
+                        function: goToPerPageFn
                     }),
                     createNode<FunctionNode>(NodeType.FUNCTION, {
                         id: '2',
-                        function: fn
+                        function: goToOnEndFn
                     })
                 ]
             })
 
             await environment.parseNode({ node })
-            expect(fn).toHaveBeenCalled()
+            expect(goToPerPageFn).toHaveBeenCalledTimes(1)
+            expect(goToOnEndFn).toHaveBeenCalledTimes(1)
         })
     })
 })

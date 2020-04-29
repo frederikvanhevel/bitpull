@@ -1,5 +1,10 @@
 import { ReactNode } from 'react'
-import { NodeType, NodeId, HtmlNode } from '@bitpull/worker/lib/typedefs'
+import {
+    NodeType,
+    NodeId,
+    HtmlNode,
+    MultipleHtmlNode
+} from '@bitpull/worker/lib/typedefs'
 import { Node } from 'typedefs/common'
 import {
     watchIcon,
@@ -46,6 +51,7 @@ export interface ChartClasses {
 
 const NODE_LABELS: Record<NodeType, string> = {
     [NodeType.HTML]: 'html',
+    [NodeType.HTML_MULTIPLE]: 'html',
     [NodeType.COLLECT]: 'collect',
     [NodeType.PAGINATION]: 'pagination',
     [NodeType.WEBHOOK]: 'webhook',
@@ -70,6 +76,7 @@ const NODE_LABELS: Record<NodeType, string> = {
 
 const NODE_ICONS: Record<NodeType, ReactNode> = {
     [NodeType.HTML]: urlIcon,
+    [NodeType.HTML_MULTIPLE]: urlIcon,
     [NodeType.COLLECT]: collectIcon,
     [NodeType.PAGINATION]: paginateIcon,
     [NodeType.WEBHOOK]: webhookIcon,
@@ -120,6 +127,12 @@ export const getNodeText = (node: Node): string => {
             ? `{{${htmlNode.linkedField}}}`
             : getHostname(htmlNode.link!)
         return !!link && link !== '' ? link : 'Enter a url'
+    } else if (node.type === NodeType.HTML_MULTIPLE) {
+        const htmlNode = node as MultipleHtmlNode
+        const links = htmlNode.links
+        return links?.length
+            ? `${links.length} ${links.length === 1 ? 'link' : 'links'}`
+            : 'Enter urls'
     }
 
     return NODE_LABELS[node!.type as NodeType]
@@ -133,5 +146,9 @@ export const isLinkDotted = (link: any) => {
 }
 
 export const isRootNode = (node: Node) => {
-    return node.type === NodeType.HTML && (node as HtmlNode).link !== undefined
+    return (
+        (node.type === NodeType.HTML &&
+            (node as HtmlNode).link !== undefined) ||
+        node.type === NodeType.HTML_MULTIPLE
+    )
 }

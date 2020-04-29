@@ -3,7 +3,7 @@ import { ErrorLog, Logs, InfoLog, LogType } from './typedefs'
 import { isErrorLog } from './helper'
 
 class Logger {
-    private static jsonOutput = true
+    private static jsonOutput = process.env.NODE_ENV === 'production'
     private static traceId: string
 
     public static setTraceId(traceId: string) {

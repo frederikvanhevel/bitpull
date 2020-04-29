@@ -14,7 +14,7 @@ export declare type PaginationTypes = NextLinkPagination | PageRangePagination |
 export interface PaginationNode extends BranchNode {
     type: NodeType.PAGINATION;
     goToPerPage: NodeId;
-    gotoOnEnd: NodeId;
+    goToOnEnd: NodeId;
     pagination: PaginationTypes;
     linkLimit?: number;
 }

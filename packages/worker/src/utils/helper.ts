@@ -1,4 +1,4 @@
-import { NodeType, FlowNode, NodeParser } from '../typedefs/node'
+import { NodeType, FlowNode, NodeParser, BranchNode } from '../typedefs/node'
 import { HtmlNode } from '../nodes/processing/html/typedefs'
 import { XmlNode } from '../nodes/processing/xml/typedefs'
 import { FlowError } from './errors'
@@ -72,6 +72,22 @@ export const isExportNode = (type: NodeType) => {
     return EXPORT_NODES.includes(type)
 }
 
+export const hasChildOfTypes = (node: FlowNode, types: NodeType[]) => {
+    return node.children?.find(child => types.includes(child.type))
+}
+
 export const hasChildExportNodes = (node: FlowNode) => {
-    return node.children?.find(child => EXPORT_NODES.includes(child.type))
+    return hasChildOfTypes(node, EXPORT_NODES)
+}
+
+export const isBranchCollectNode = (node: FlowNode) => {
+    return (
+        node.type === NodeType.COLLECT &&
+        hasChildOfTypes(node, [NodeType.HTML]) &&
+        !!(node.children![0] as HtmlNode).linkedField
+    )
+}
+
+export const isBranchNode = (node: FlowNode) => {
+    return !!(node as BranchNode).goToPerPage || isBranchCollectNode(node)
 }

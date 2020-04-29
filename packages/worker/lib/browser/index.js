@@ -87,6 +87,8 @@ class CustomBrowser {
     }
     async newPage(settings = {}) {
         const { debug, puppeteer } = settings;
+        if (!this.browser)
+            throw new Error('Browser is not initialized');
         const page = await this.browser.newPage();
         if ((puppeteer === null || puppeteer === void 0 ? void 0 : puppeteer.proxy) && (puppeteer === null || puppeteer === void 0 ? void 0 : puppeteer.authorization)) {
             await page.setExtraHTTPHeaders({
@@ -138,6 +140,7 @@ class CustomBrowser {
         else {
             tree_kill_1.default(this.browser.process().pid, 'SIGKILL');
         }
+        delete this.browser;
     }
 }
 exports.default = CustomBrowser;

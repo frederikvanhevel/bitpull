@@ -5,6 +5,7 @@ import {
     SET_WORKFLOW_NAME,
     CHANGE_WORKFLOW_SETTINGS,
     UPDATE_NODE,
+    REPLACE_NODE,
     DELETE_NODE,
     SET_WORKFLOW_RESULT,
     SET_ACTIVE_NODE,
@@ -96,6 +97,21 @@ export const updateNode = (node: Node) => {
         payload: node
     }
 }
+
+export interface ReplaceNode {
+    type: typeof REPLACE_NODE
+    nodeId: NodeId
+    payload: Node
+}
+
+export const replaceNode = (id: NodeId, node: Node) => {
+    return {
+        type: REPLACE_NODE,
+        nodeId: id,
+        payload: node
+    }
+}
+
 
 export interface DeleteNode {
     type: typeof DELETE_NODE
@@ -242,6 +258,7 @@ export type Actions =
     | SetWorkflowName
     | ChangeWorkflowSettings
     | UpdateNode
+    | ReplaceNode
     | DeleteNode
     | SetWorkflowResult
     | SetActiveNode

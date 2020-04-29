@@ -1,7 +1,7 @@
 import { Page } from 'puppeteer';
 import CustomBrowser from '../browser';
 import { FlowError } from '../utils/errors';
-import { HtmlNode } from '../nodes/processing/html/typedefs';
+import { HtmlNode, MultipleHtmlNode } from '../nodes/processing/html/typedefs';
 import Traverser from '../traverse';
 import { LogType, StorageObject, Integration, Settings } from './common';
 export declare type NodeId = string;
@@ -35,7 +35,9 @@ export interface FlowNode {
     disabled?: boolean;
     children?: FlowNode[];
 }
-export declare type RootNode = HtmlNode;
+export declare type RootNode = HtmlNode | MultipleHtmlNode & {
+    parsedLink?: string;
+};
 export interface NodeInput<T, S = any, P = any> {
     node: T;
     parent?: FlowNode;
@@ -72,6 +74,6 @@ export interface Context {
 }
 export interface BranchNode extends FlowNode {
     goToPerPage: NodeId;
-    gotoOnEnd: NodeId;
+    goToOnEnd?: NodeId;
 }
 export {};

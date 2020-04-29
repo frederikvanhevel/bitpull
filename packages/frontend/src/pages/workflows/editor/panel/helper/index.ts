@@ -1,5 +1,10 @@
 import { Node } from 'typedefs/common'
-import { NodeType, RootNode } from '@bitpull/worker/lib/typedefs'
+import {
+    NodeType,
+    RootNode,
+    HtmlNode,
+    MultipleHtmlNode
+} from '@bitpull/worker/lib/typedefs'
 import { NODE_PROPERTIES } from './properties'
 import { uuid } from 'uuidv4'
 import { CollectNode, CollectField } from '@bitpull/worker/lib/typedefs'
@@ -105,8 +110,21 @@ export const isPaginationNode = (node: Node): node is PaginationNode => {
     return !!(node as PaginationNode).pagination
 }
 
-export const isRootNode = (node: Node): node is RootNode => {
-    return !!(node as RootNode).link
+export const isHtmlNode = (node: Node): node is HtmlNode => {
+    return (
+        !!(node as HtmlNode).link ||
+        (node as HtmlNode).link === '' ||
+        !!(node as HtmlNode).linkedField ||
+        (node as HtmlNode).linkedField === ''
+    )
+}
+
+export const isMultipleHtmlNode = (node: Node): node is MultipleHtmlNode => {
+    return !!(node as MultipleHtmlNode).links
+}
+
+export const isRoot = (node: Node) => {
+    return !node.parent
 }
 
 export const getNewCollectField = (): CollectField => ({

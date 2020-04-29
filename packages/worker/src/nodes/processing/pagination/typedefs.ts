@@ -22,7 +22,7 @@ export type PaginationTypes =
 export interface PaginationNode extends BranchNode {
     type: NodeType.PAGINATION
     goToPerPage: NodeId
-    gotoOnEnd: NodeId
+    goToOnEnd: NodeId
     pagination: PaginationTypes
     linkLimit?: number
 }

@@ -1,4 +1,5 @@
 export const URL_REGEX = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)$/
+export const MULTIPLE_URL_REGEX = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)$/gm
 export const FILE_PATH_REGEX = /^(\/[\w^ ]+)+\/$/
 
 export const validateUrl = (text: string) => {

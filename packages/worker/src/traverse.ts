@@ -8,7 +8,7 @@ import {
     Context,
     BranchNode
 } from './typedefs/node'
-import { isRootNode, getModule } from './utils/helper'
+import { isRootNode, getModule, isBranchNode } from './utils/helper'
 import {
     StorageProvider,
     LogType,
@@ -22,10 +22,6 @@ import {
 import CustomBrowser from './browser'
 import { NodeError } from './nodes/common/errors'
 import { FlowError } from './utils/errors'
-import { HtmlNode } from './nodes/processing/html/typedefs'
-import { CollectNode } from './nodes/processing/collect/typedefs'
-import { CollectError } from './nodes/processing/collect/errors'
-import { sequentialPromise } from './utils/common'
 import Logger from './utils/logging/logger'
 
 const DEFAULT_OPTIONS: TraverseOptions = {
@@ -81,7 +77,7 @@ class Traverser {
             const branchNode = node as BranchNode
             const branchResult = await module(input, this.options, this.context)
             const endNode = node.children!.find(
-                childNode => childNode.id === branchNode.gotoOnEnd
+                childNode => childNode.id === branchNode.goToOnEnd
             )
 
             if (endNode) {
@@ -112,7 +108,6 @@ class Traverser {
     public async parseNode(
         input: NodeInput<FlowNode>
     ): Promise<NodeInput<FlowNode>> {
-        const browser = this.context.browser
         const { node: currentNode, rootAncestor } = input
         const { onError, onLog, settings } = this.options
 
@@ -130,59 +125,9 @@ class Traverser {
 
             assert(nodeResult, NodeError.NO_RESULT)
 
-            const { node, passedData } = nodeResult
+            const { node } = nodeResult
 
-            if (
-                node.type === NodeType.COLLECT &&
-                (node as CollectNode).fields.length &&
-                node.children &&
-                node.children.length &&
-                node.children[0].type === NodeType.HTML &&
-                !!(node.children[0] as HtmlNode).linkedField &&
-                Array.isArray(passedData)
-            ) {
-                assert(
-                    node.children.length === 1,
-                    new FlowError(NodeError.TOO_MANY_CHILDREN)
-                )
-                assert(
-                    (node as CollectNode).fields.length > 0,
-                    new FlowError(CollectError.FIELDS_MISSING)
-                )
-
-                const iteratedResult = (node as CollectNode).limit
-                    ? passedData.slice(0, (node as CollectNode).limit)
-                    : passedData
-                const newPage = await browser.newPage()
-                const result = await sequentialPromise(
-                    iteratedResult,
-                    async data => {
-                        return this.parseNode({
-                            ...input,
-                            node: node.children![0],
-                            parent: node,
-                            parentResult: data,
-                            passedData: data,
-                            rootAncestor: isPrimaryNode
-                                ? (currentNode as RootNode)
-                                : rootAncestor,
-                            page: newPage
-                        }).catch(error => {
-                            if (settings.exitOnError) {
-                                throw error
-                            } else if (onError) {
-                                onError(node.children![0], error)
-                            }
-                        })
-                    }
-                ).finally(async () => {
-                    await newPage.close()
-                })
-
-                // @ts-ignore
-                return result
-            } else if (node.children && node.children.length) {
-                // const newPage = await browser.forkPage(page!)
+            if (!isBranchNode(node) && node.children?.length) {
                 const result = await Promise.all(
                     node.children.map(async child =>
                         this.parseNode({
