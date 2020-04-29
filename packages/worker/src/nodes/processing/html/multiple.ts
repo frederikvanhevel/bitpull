@@ -14,7 +14,7 @@ const multipleHtml: NodeParser<MultipleHtmlNode> = async (
     const { node } = input
     const { traverser } = context
 
-    assert(node.links, HtmlError.LINKS_MISSING)
+    assert(node.links && node.links.length, HtmlError.LINKS_MISSING)
     assert(node.children && node.children.length, NodeError.CHILD_NODE_MISSING)
 
     const childNode = node.children!.find(

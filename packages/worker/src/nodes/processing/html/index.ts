@@ -1,3 +1,4 @@
+import { FlowError } from '../../../utils/errors'
 import { NodeError, ParseError } from '../../common/errors'
 import { assert, getUriOrigin } from '../../../utils/common'
 import { absolutifyUrl } from '../../../utils/absolutify'
@@ -20,7 +21,7 @@ const html: NodeParser<HtmlNode, undefined, HtmlParseResult> = async (
         assert(rootAncestor, NodeError.NEEDS_ROOT_ANCESTOR)
 
         if (!passedData[node.linkedField]) {
-            return Promise.resolve(input)
+            throw new FlowError(ParseError.LINK_MISSING)
         }
 
         link = absolutifyUrl(

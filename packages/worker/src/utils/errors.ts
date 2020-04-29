@@ -99,6 +99,7 @@ export const ErrorMessages: Record<string, string> = {
 
     // Html error
     [HtmlError.LINKED_FIELD_MISSING]: 'Linked field is not defined',
+    [HtmlError.LINKS_MISSING]: 'No links are defined',
 
     // Pagination error
     [PaginationError.GOTOPERPAGE_NODE_MISSING]: 'No per page step specified',
