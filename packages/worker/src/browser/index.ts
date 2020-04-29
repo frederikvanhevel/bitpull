@@ -114,7 +114,10 @@ class CustomBrowser {
 
     async newPage(settings: Settings = {}) {
         const { debug, puppeteer } = settings
-        const page = await this.browser!.newPage()
+
+        if (!this.browser) throw new Error('Browser is not initialized')
+
+        const page = await this.browser.newPage()
 
         if (puppeteer?.proxy && puppeteer?.authorization) {
             await page.setExtraHTTPHeaders({

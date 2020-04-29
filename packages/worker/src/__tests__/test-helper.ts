@@ -1,11 +1,11 @@
+import { Page } from 'puppeteer'
 import Traverser from '../traverse'
 import CustomBrowser from '../browser'
 import { TraverseOptions, NodeInput, FlowNode } from '../typedefs/node'
 import { MockHandler } from '../browser/typedefs'
-import { HtmlNode } from '../nodes/processing/html/typedefs'
 
 interface PageMock {
-    url: string
+    url?: string
     content: string
 }
 
@@ -37,6 +37,8 @@ export const setup = async (
 
     browser.setMockHandler(mockHandler || defaultMockHandler)
 
+    await browser.initialize(options.settings)
+
     traverser = new Traverser(options, browser)
     return traverser
 }
@@ -46,7 +48,7 @@ export const mockPage = (mock: PageMock) => {
 
     browser.setMockHandler((url: string) => {
         if (mock.url === url) return { body: getMockedHtml(mock.content) }
-        return { body: DEFAULT_MOCKED_HTML }
+        return { body: getMockedHtml(mock.content) }
     })
 }
 
@@ -83,14 +85,11 @@ export const hasResult = async (
     return content === getMockedHtml(result)
 }
 
-export function createInput<T>(
-    node: FlowNode,
-    passedData?: any,
-    rootAncestor?: HtmlNode
-): NodeInput<FlowNode, any, any> {
-    return {
-        node,
-        passedData,
-        rootAncestor
-    }
+export const initializePage = async (content?: string): Promise<Page> => {
+    if (!browser) throw new Error('Test browser was not initialized')
+
+    const page = await browser.newPage({})
+    await page.setContent(getMockedHtml(content || DEFAULT_MOCKED_HTML))
+
+    return page
 }

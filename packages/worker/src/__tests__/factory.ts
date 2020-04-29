@@ -1,12 +1,41 @@
-import { FlowNode, NodeType } from '../typedefs/node'
+import { FlowNode, NodeType, NodeInput } from '../typedefs/node'
+import { HtmlNode } from '../nodes/processing/html/typedefs'
 
 export function createNode<T = FlowNode>(
     type: NodeType,
-    extra: object = {}
+    extra: object = {},
+    callback?: Function
 ): T {
-    // @ts-ignore
-    return {
+    const node = {
         type,
         ...extra
+    }
+
+    if (callback) {
+        // @ts-ignore
+        return {
+            ...node,
+            children: [
+                {
+                    type: NodeType.FUNCTION,
+                    function: callback
+                }
+            ]
+        }
+    }
+
+    // @ts-ignore
+    return node
+}
+
+export function createInput<T>(
+    node: FlowNode,
+    passedData?: any,
+    rootAncestor?: HtmlNode
+): NodeInput<FlowNode, any, any> {
+    return {
+        node,
+        passedData,
+        rootAncestor
     }
 }

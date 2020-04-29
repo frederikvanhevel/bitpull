@@ -1,16 +1,15 @@
-import Traverser from '../traverse'
-import { NodeType } from '../typedefs/node'
-import { HtmlNode } from '../nodes/processing/html/typedefs'
-import { FunctionNode } from '../nodes/export/function/typedefs'
+import Traverser from '../../traverse'
+import { NodeType } from '../../typedefs/node'
+import { HtmlNode } from '../../nodes/processing/html/typedefs'
+import { FunctionNode } from '../../nodes/export/function/typedefs'
 import {
     setup,
     cleanup,
     hasDefaultResult,
-    createInput,
     mockPage,
     hasResult
-} from './test-helper'
-import { createNode } from './factory'
+} from './../test-helper'
+import { createNode, createInput } from './../factory'
 
 describe('Html node', () => {
     let traverser: Traverser
