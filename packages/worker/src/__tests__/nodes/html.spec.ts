@@ -1,8 +1,15 @@
 import { NodeType } from '../../typedefs/node'
-import { HtmlNode } from '../../nodes/processing/html/typedefs'
+import {
+    HtmlNode,
+    MultipleHtmlNode
+} from '../../nodes/processing/html/typedefs'
 import { FunctionNode } from '../../nodes/export/function/typedefs'
-import { hasDefaultResult, hasResult, TestEnvironment } from './../test-helper'
-import { createNode, createInput } from './../factory'
+import {
+    hasDefaultResult,
+    hasResult,
+    TestEnvironment
+} from '../utils/environment'
+import { createNode, createInput } from '../utils/factory'
 
 describe('Html node', () => {
     const environment = new TestEnvironment()
@@ -91,7 +98,7 @@ describe('Html node', () => {
 
         it('should go to each link', async () => {
             const fn = jest.fn()
-            const node = createNode<HtmlNode>(NodeType.HTML_MULTIPLE, {
+            const node = createNode<MultipleHtmlNode>(NodeType.HTML_MULTIPLE, {
                 links: ['https://test.be'],
                 goToPerPage: '1',
                 children: [
@@ -108,7 +115,7 @@ describe('Html node', () => {
 
         it('should go to a node on end of all links', async () => {
             const fn = jest.fn()
-            const node = createNode<HtmlNode>(NodeType.HTML_MULTIPLE, {
+            const node = createNode<MultipleHtmlNode>(NodeType.HTML_MULTIPLE, {
                 links: ['https://test.be'],
                 goToPerPage: '1',
                 gotToOnEnd: '2',

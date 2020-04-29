@@ -1,16 +1,13 @@
 import { Page } from 'puppeteer'
-import Traverser from '../traverse'
-import CustomBrowser from '../browser'
-import { TraverseOptions, NodeInput, FlowNode } from '../typedefs/node'
-import { MockHandler } from '../browser/typedefs'
+import Traverser from '../../traverse'
+import CustomBrowser from '../../browser'
+import { TraverseOptions, NodeInput, FlowNode } from '../../typedefs/node'
+import { MockHandler } from '../../browser/typedefs'
 
 interface PageMock {
     url?: string
     content: string
 }
-
-// let traverser: Traverser | undefined
-// let browser: CustomBrowser | undefined
 
 const getMockedHtml = (content: string) => {
     return `

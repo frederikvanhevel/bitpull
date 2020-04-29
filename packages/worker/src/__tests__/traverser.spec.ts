@@ -1,6 +1,6 @@
 import { NodeType } from '../typedefs/node'
-import { TestEnvironment } from './test-helper'
-import { createNode } from './factory'
+import { TestEnvironment } from './utils/environment'
+import { createNode } from './utils/factory'
 
 describe('Traverser', () => {
     it('should get a result object', async () => {

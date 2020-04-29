@@ -2,8 +2,8 @@ import { HtmlNode } from '../../nodes/processing/html/typedefs'
 import { NodeType } from '../../typedefs/node'
 import { FunctionNode } from '../../nodes/export/function/typedefs'
 import { PaginationNode } from '../../nodes/processing/pagination/typedefs'
-import { TestEnvironment } from './../test-helper'
-import { createNode, createInput } from './../factory'
+import { TestEnvironment } from '../utils/environment'
+import { createNode, createInput } from '../utils/factory'
 
 describe('Pagination node', () => {
     const watchFn = jest.fn()

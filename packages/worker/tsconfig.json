@@ -2,38 +2,39 @@
   "compilerOptions": {
     "target": "es2017",
     "module": "commonjs",
-    "outDir": "lib",
-    "isolatedModules": true,
+    "outDir": "./lib",
+    "isolatedModules": false,
     "strict": true,
-    "skipLibCheck": true,
     "moduleResolution": "node",
+    "declaration": true,
+    "preserveSymlinks": true,
     "typeRoots": [
       "./typings",
       "./node_modules/@types"
     ],
     "paths": {
-      "*": [
-        "./typings/*"
+      "browser/*": [
+        "browser/*"
+      ],
+      "nodes/*": [
+        "nodes/*"
+      ],
+      "typedefs/*": [
+        "typedefs/*"
+      ],
+      "utils/*": [
+        "utils/*"
       ]
     },
-    "baseUrl": ".",
+    "baseUrl": "src",
     "types": [
       "node",
       "@types/jest"
     ],
     "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "sourceMap": false,
-    "declaration": false
+    "resolveJsonModule": true
   },
   "exclude": [
-    "**/lib/*",
-    // "src/tryout.ts",
-    // "src/**/*.spec.ts",
-    // "src/**/*.mock.ts",
-    "node_modules"
-  ],
-  "include": [
-    "src/**/*"
+    "**/lib/*"
   ]
 }

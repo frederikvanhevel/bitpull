@@ -1,5 +1,5 @@
-import { FlowNode, NodeType, NodeInput } from '../typedefs/node'
-import { HtmlNode } from '../nodes/processing/html/typedefs'
+import { FlowNode, NodeType, NodeInput } from '../../typedefs/node'
+import { HtmlNode } from '../../nodes/processing/html/typedefs'
 
 export function createNode<T = FlowNode>(
     type: NodeType,

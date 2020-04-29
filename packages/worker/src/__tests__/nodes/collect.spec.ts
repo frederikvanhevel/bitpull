@@ -1,8 +1,8 @@
 import { NodeType } from '../../typedefs/node'
 import { CollectNode } from '../../nodes/processing/collect/typedefs'
 import { HtmlNode } from '../../nodes/processing/html/typedefs'
-import { TestEnvironment } from '../test-helper'
-import { createNode, createInput } from './../factory'
+import { TestEnvironment } from '../utils/environment'
+import { createNode, createInput } from '../utils/factory'
 
 describe('Collect node', () => {
     const watchFn = jest.fn()
