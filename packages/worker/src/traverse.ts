@@ -8,7 +8,6 @@ import {
     Context,
     BranchNode
 } from './typedefs/node'
-import { PaginationNode } from './nodes/processing/pagination/typedefs'
 import { isRootNode, getModule } from './utils/helper'
 import {
     StorageProvider,

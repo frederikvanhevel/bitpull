@@ -12,9 +12,9 @@ const html: NodeParser<HtmlNode, undefined, HtmlParseResult> = async (
 ) => {
     const { node, passedData, rootAncestor } = input
 
-    assert(node.link, ParseError.LINK_MISSING)
+    assert(node.link || node.linkedField, ParseError.LINK_MISSING)
 
-    let link: string = node.link
+    let link: string | undefined
 
     if (node.linkedField) {
         assert(rootAncestor, NodeError.NEEDS_ROOT_ANCESTOR)
@@ -27,7 +27,11 @@ const html: NodeParser<HtmlNode, undefined, HtmlParseResult> = async (
             passedData[node.linkedField],
             getUriOrigin(rootAncestor.link!)
         )
+    } else {
+        link = node.link
     }
+
+    assert(link, ParseError.LINK_MISSING)
 
     node.parsedLink = link
 

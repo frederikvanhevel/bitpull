@@ -10,8 +10,8 @@ import treekill from 'tree-kill'
 import { Settings } from '../typedefs/common'
 import { isTestEnv } from '../utils/common'
 import { stripScriptTags, removeAttribute } from '../utils/scripts'
-import { PageCallback, MockHandler } from './typedefs'
 import Logger from '../utils/logging/logger'
+import { PageCallback, MockHandler } from './typedefs'
 
 const DEFAULT_OPTIONS: ConnectOptions | LaunchOptions = {
     defaultViewport: {
@@ -175,6 +175,8 @@ class CustomBrowser {
         } else {
             treekill(this.browser.process().pid, 'SIGKILL')
         }
+
+        delete this.browser
     }
 }
 

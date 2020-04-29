@@ -87,5 +87,5 @@ export interface Context {
 
 export interface BranchNode extends FlowNode {
     goToPerPage: NodeId
-    gotoOnEnd: NodeId
+    gotoOnEnd?: NodeId
 }
