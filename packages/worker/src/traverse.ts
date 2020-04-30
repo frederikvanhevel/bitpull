@@ -1,4 +1,5 @@
 import assert from 'assert'
+import merge from 'deepmerge'
 import {
     NodeType,
     NodeInput,
@@ -45,10 +46,7 @@ class Traverser {
         options: Partial<TraverseOptions> = DEFAULT_OPTIONS,
         browser?: CustomBrowser
     ) {
-        this.options = {
-            ...DEFAULT_OPTIONS,
-            ...options
-        }
+        this.options = merge(DEFAULT_OPTIONS, options)
         this.context = {
             traverser: this,
             browser: browser || new CustomBrowser()
@@ -71,12 +69,13 @@ class Traverser {
         const module = await getModule(node.type)
 
         if (
-            node.type === NodeType.PAGINATION ||
-            node.type === NodeType.HTML_MULTIPLE
+            node.children?.length &&
+            (node.type === NodeType.PAGINATION ||
+                node.type === NodeType.HTML_MULTIPLE)
         ) {
             const branchNode = node as BranchNode
             const branchResult = await module(input, this.options, this.context)
-            const endNode = node.children!.find(
+            const endNode = node.children.find(
                 childNode => childNode.id === branchNode.goToOnEnd
             )
 

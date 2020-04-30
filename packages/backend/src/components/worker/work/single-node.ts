@@ -1,7 +1,7 @@
 import Traverser from '@bitpull/worker'
-import { WorkerArgs, WorkerEvent } from '../typedefs'
 import { stripScriptTags } from '@bitpull/worker/src/utils/scripts'
 import Logger from 'utils/logging/logger'
+import { WorkerArgs, WorkerEvent } from '../typedefs'
 
 let traverser: Traverser
 
@@ -12,7 +12,7 @@ process.on('message', async (args: WorkerArgs) => {
 
     try {
         const result = await traverser.parseNode({ node: args.node })
-            console.log(result)
+
         let page
         if (Array.isArray(result)) {
             page = result.flat(Infinity)[0]?.page

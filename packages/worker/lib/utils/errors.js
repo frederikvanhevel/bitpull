@@ -48,7 +48,7 @@ exports.ErrorMessages = {
     [errors_1.ParseError.ERROR_RENDERING_HTML]: 'Could not get website content',
     [errors_1.ParseError.NO_SELECTOR_PARSER_FOUND]: 'No suitable selecor parser found',
     [errors_1.ParseError.HTML_MISSING]: 'Could not get website content',
-    [errors_1.ParseError.PAGE_MISSING]: 'Could not open website',
+    [errors_1.ParseError.PAGE_MISSING]: 'Could not get website content',
     [errors_1.ParseError.NO_DATA]: 'No data to export',
     // Integration error
     [errors_1.IntegrationError.INTEGRATION_MISSING]: 'Integration is not set up',

@@ -82,6 +82,8 @@ exports.isBranchCollectNode = (node) => {
         exports.hasChildOfTypes(node, [node_1.NodeType.HTML, node_1.NodeType.HTML_LINKED]));
 };
 exports.isBranchNode = (node) => {
-    return !!node.goToPerPage || exports.isBranchCollectNode(node);
+    return (!!node.goToPerPage ||
+        exports.isBranchCollectNode(node) ||
+        node.type === node_1.NodeType.HTML_MULTIPLE);
 };
 //# sourceMappingURL=helper.js.map

@@ -91,5 +91,9 @@ export const isBranchCollectNode = (node: FlowNode) => {
 }
 
 export const isBranchNode = (node: FlowNode) => {
-    return !!(node as BranchNode).goToPerPage || isBranchCollectNode(node)
+    return (
+        !!(node as BranchNode).goToPerPage ||
+        isBranchCollectNode(node) ||
+        node.type === NodeType.HTML_MULTIPLE
+    )
 }

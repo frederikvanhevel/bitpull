@@ -52,7 +52,7 @@ export const ErrorMessages: Record<string, string> = {
     [ParseError.ERROR_RENDERING_HTML]: 'Could not get website content',
     [ParseError.NO_SELECTOR_PARSER_FOUND]: 'No suitable selecor parser found',
     [ParseError.HTML_MISSING]: 'Could not get website content',
-    [ParseError.PAGE_MISSING]: 'Could not open website',
+    [ParseError.PAGE_MISSING]: 'Could not get website content',
     [ParseError.NO_DATA]: 'No data to export',
 
     // Integration error

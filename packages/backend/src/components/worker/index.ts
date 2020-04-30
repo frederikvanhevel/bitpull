@@ -47,7 +47,7 @@ const spawn = (
                 } else onEvent && onEvent(message)
             })
 
-            forked.on('error', error => {  
+            forked.on('error', error => {
                 clearTimeout(timeout)
                 throw error
             })

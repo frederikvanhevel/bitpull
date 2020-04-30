@@ -15,41 +15,50 @@ const multipleHtml: NodeParser<MultipleHtmlNode> = async (
     const { traverser } = context
 
     assert(node.links && node.links.length, HtmlError.LINKS_MISSING)
-    assert(node.children && node.children.length, NodeError.CHILD_NODE_MISSING)
 
-    const childNode = node.children!.find(
-        child => child.id === node.goToPerPage
-    )
+    if (node.children?.length) {
+        const childNode = node.goToPerPage
+            ? node.children.find(child => child.id === node.goToPerPage)
+            : node.children[0]
 
-    assert(childNode, PaginationError.GOTOPERPAGE_NODE_MISSING)
+        assert(childNode, PaginationError.GOTOPERPAGE_NODE_MISSING)
 
-    const allowedLinks = node.links.slice(0, node.limit)
-    const allResults: object[] = []
+        const allowedLinks = node.links.slice(0, node.limit)
+        const allResults: object[] = []
 
-    await sequentialPromise<string>(allowedLinks, async link => {
-        const page = await parseLink(input, options, context, link)
+        await sequentialPromise<string>(allowedLinks, async link => {
+            const page = await parseLink(input, options, context, link)
 
-        assert(
-            node.children && node.children.length,
-            NodeError.CHILD_NODE_MISSING
-        )
+            assert(
+                node.children && node.children.length,
+                NodeError.CHILD_NODE_MISSING
+            )
 
-        const root = {
-            ...node,
-            parsedLink: link
-        }
+            const root = {
+                ...node,
+                parsedLink: link
+            }
 
-        await traverser.parseNode({
-            ...input,
-            node: childNode,
-            parent: root,
-            rootAncestor: root,
-            page,
-            branchCallback: data => allResults.push(data)
+            await traverser.parseNode({
+                ...input,
+                node: childNode,
+                parent: root,
+                rootAncestor: root,
+                page,
+                branchCallback: data => allResults.push(data)
+            })
         })
-    })
 
-    return { ...input, passedData: allResults! }
+        return { ...input, passedData: allResults! }
+    }
+
+    node.parsedLink = node.links[0]
+
+    // in the case of a simple tree traverse
+    return {
+        ...input,
+        page: await parseLink(input, options, context, node.links[0])
+    }
 }
 
 export default multipleHtml

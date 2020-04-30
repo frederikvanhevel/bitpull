@@ -58,7 +58,7 @@ class Logger {
         }
     }
     static formatLog(log) {
-        let prefix = `[${log.type}][${log.timestamp.toISOString()}]`;
+        const prefix = `[${log.type}][${log.timestamp.toISOString()}]`;
         if (helper_1.isErrorLog(log)) {
             return `${prefix} ${log.error.message}`;
         }

@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const assert_1 = __importDefault(require("assert"));
+const deepmerge_1 = __importDefault(require("deepmerge"));
 const node_1 = require("./typedefs/node");
 const helper_1 = require("./utils/helper");
 const common_1 = require("./typedefs/common");
@@ -23,25 +24,28 @@ const DEFAULT_OPTIONS = {
 };
 class Traverser {
     constructor(options = DEFAULT_OPTIONS, browser) {
+        var _a;
         this.canceled = false;
         this.errorCount = 0;
-        this.options = Object.assign(Object.assign({}, DEFAULT_OPTIONS), options);
+        this.options = deepmerge_1.default(DEFAULT_OPTIONS, options);
         this.context = {
             traverser: this,
             browser: browser || new browser_1.default()
         };
-        if (options.settings.traceId) {
+        if ((_a = options.settings) === null || _a === void 0 ? void 0 : _a.traceId) {
             logger_1.default.setTraceId(options.settings.traceId);
         }
     }
     async getNodeResult(input) {
+        var _a;
         const { node, branchCallback } = input;
         const { onStart, onComplete, onLog } = this.options;
         onStart && onStart(node);
         let nodeResult;
         const module = await helper_1.getModule(node.type);
-        if (node.type === node_1.NodeType.PAGINATION ||
-            node.type === node_1.NodeType.HTML_MULTIPLE) {
+        if (((_a = node.children) === null || _a === void 0 ? void 0 : _a.length) &&
+            (node.type === node_1.NodeType.PAGINATION ||
+                node.type === node_1.NodeType.HTML_MULTIPLE)) {
             const branchNode = node;
             const branchResult = await module(input, this.options, this.context);
             const endNode = node.children.find(childNode => childNode.id === branchNode.goToOnEnd);
@@ -182,6 +186,9 @@ class Traverser {
             return;
         await browser.cleanup();
         delete this.context.browser;
+    }
+    setOptions(options) {
+        this.options = Object.assign(Object.assign({}, DEFAULT_OPTIONS), options);
     }
 }
 exports.default = Traverser;

@@ -21,6 +21,7 @@
     "cheerio": "^1.0.0-rc.3",
     "chrome-aws-lambda": "^2.1.1",
     "clone-deep": "^4.0.1",
+    "deepmerge": "^4.2.2",
     "json2csv": "^5.0.0",
     "p3x-json2xls-worker-thread": "^2020.4.144",
     "puppeteer-core": "^2.1.1",

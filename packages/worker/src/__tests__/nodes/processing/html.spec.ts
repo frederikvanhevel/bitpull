@@ -91,15 +91,6 @@ describe('Html node', () => {
             await expect(promise).rejects.toThrow()
         })
 
-        it('should throw when next step is not defined', async () => {
-            const node = createNode(NodeType.HTML_MULTIPLE, {
-                links: ['https://test.be']
-            })
-
-            const promise = environment.parseNode({ node })
-            await expect(promise).rejects.toThrow()
-        })
-
         it('should go to each link', async () => {
             const fn = jest.fn()
             const node = createNode<MultipleHtmlNode>(NodeType.HTML_MULTIPLE, {
@@ -138,6 +129,40 @@ describe('Html node', () => {
 
             await environment.parseNode({ node })
             expect(goToPerPageFn).toHaveBeenCalledTimes(1)
+            expect(goToOnEndFn).toHaveBeenCalledTimes(1)
+        })
+
+        it('should traverse a simple node', async () => {
+            const goToOnEndFn = jest.fn()
+            const node = createNode<MultipleHtmlNode>(NodeType.HTML_MULTIPLE, {
+                links: ['https://test.be'],
+                children: [
+                    createNode<FunctionNode>(NodeType.COLLECT, {
+                        id: '1',
+                        fields: [
+                            {
+                                label: 'one',
+                                selector: {
+                                    value: '.one'
+                                }
+                            }
+                        ],
+                        children: [
+                            createNode<FunctionNode>(NodeType.FUNCTION, {
+                                id: '2',
+                                function: goToOnEndFn
+                            })
+                        ]
+                    })
+                ]
+            })
+
+            environment.mockPage({
+                url: 'https://second.be',
+                content: '<div class="one">hello</div>'
+            })
+
+            await environment.parseNode({ node })
             expect(goToOnEndFn).toHaveBeenCalledTimes(1)
         })
     })

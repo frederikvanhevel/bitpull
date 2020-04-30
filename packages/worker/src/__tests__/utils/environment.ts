@@ -1,4 +1,5 @@
 import { Page } from 'puppeteer'
+import merge from 'deepmerge'
 import Traverser from '../../traverse'
 import CustomBrowser from '../../browser'
 import { TraverseOptions, NodeInput, FlowNode } from '../../typedefs/node'
@@ -38,7 +39,7 @@ export class TestEnvironment {
     private browser: CustomBrowser | undefined
 
     async setup(
-        options: Partial<TraverseOptions> = DEFAULT_TRAVERSER_OPTIONS,
+        options: Partial<TraverseOptions> = {},
         mockHandler?: MockHandler
     ) {
         this.browser = new CustomBrowser()
@@ -47,7 +48,8 @@ export class TestEnvironment {
 
         await this.browser.initialize(options.settings)
 
-        this.traverser = new Traverser(options, this.browser)
+        const mergedOptions = merge(DEFAULT_TRAVERSER_OPTIONS, options)
+        this.traverser = new Traverser(mergedOptions, this.browser)
     }
 
     mockDefault(mock: PageMock) {
@@ -109,10 +111,8 @@ export class TestEnvironment {
         if (!this.traverser)
             throw new Error('Test traverser was not initialized')
 
-        this.traverser.setOptions({
-            ...DEFAULT_TRAVERSER_OPTIONS,
-            ...options
-        })
+        const mergedOptions = merge(DEFAULT_TRAVERSER_OPTIONS, options)
+        this.traverser.setOptions(mergedOptions)
     }
 }
 
