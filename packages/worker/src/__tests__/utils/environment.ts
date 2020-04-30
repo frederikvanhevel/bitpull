@@ -27,12 +27,18 @@ const defaultMockHandler: MockHandler = () => {
     }
 }
 
+const DEFAULT_TRAVERSER_OPTIONS = {
+    settings: {
+        exitOnError: true
+    }
+}
+
 export class TestEnvironment {
     private traverser: Traverser | undefined
     private browser: CustomBrowser | undefined
 
     async setup(
-        options: TraverseOptions = { settings: {} },
+        options: Partial<TraverseOptions> = DEFAULT_TRAVERSER_OPTIONS,
         mockHandler?: MockHandler
     ) {
         this.browser = new CustomBrowser()
@@ -97,6 +103,16 @@ export class TestEnvironment {
 
     async run(node: FlowNode) {
         return this.traverser!.run(node)
+    }
+
+    setOptions(options: Partial<TraverseOptions>) {
+        if (!this.traverser)
+            throw new Error('Test traverser was not initialized')
+
+        this.traverser.setOptions({
+            ...DEFAULT_TRAVERSER_OPTIONS,
+            ...options
+        })
     }
 }
 

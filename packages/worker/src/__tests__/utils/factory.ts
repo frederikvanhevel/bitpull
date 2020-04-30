@@ -1,5 +1,6 @@
 import { FlowNode, NodeType, NodeInput } from '../../typedefs/node'
 import { HtmlNode } from '../../nodes/processing/html/typedefs'
+import { IntegrationType } from '../../typedefs/common'
 
 export function createNode<T = FlowNode>(
     type: NodeType,
@@ -37,5 +38,15 @@ export function createInput<T>(
         node,
         passedData,
         rootAncestor
+    }
+}
+
+export const createIntegration = (type: IntegrationType) => {
+    return {
+        type,
+        active: true,
+        settings: {
+            access_token: 'token'
+        }
     }
 }

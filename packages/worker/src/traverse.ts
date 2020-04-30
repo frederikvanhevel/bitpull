@@ -42,7 +42,7 @@ class Traverser {
     private errorCount: number = 0
 
     constructor(
-        options: TraverseOptions = DEFAULT_OPTIONS,
+        options: Partial<TraverseOptions> = DEFAULT_OPTIONS,
         browser?: CustomBrowser
     ) {
         this.options = {
@@ -54,7 +54,7 @@ class Traverser {
             browser: browser || new CustomBrowser()
         }
 
-        if (options.settings.traceId) {
+        if (options.settings?.traceId) {
             Logger.setTraceId(options.settings.traceId)
         }
     }
@@ -263,6 +263,13 @@ class Traverser {
         if (!browser) return
         await browser.cleanup()
         delete this.context.browser
+    }
+
+    public setOptions(options: Partial<TraverseOptions>) {
+        this.options = {
+            ...DEFAULT_OPTIONS,
+            ...options
+        }
     }
 }
 

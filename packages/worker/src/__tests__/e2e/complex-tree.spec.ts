@@ -77,11 +77,7 @@ describe('E2E single tree', () => {
     const environment = new TestEnvironment()
 
     beforeAll(async () => {
-        await environment.setup({
-            settings: {
-                exitOnError: true
-            }
-        })
+        await environment.setup()
     })
 
     afterAll(async () => {

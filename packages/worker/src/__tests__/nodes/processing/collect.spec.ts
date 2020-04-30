@@ -1,9 +1,9 @@
 import { FunctionNode } from 'nodes/export/function/typedefs'
-import { NodeType, NodeInput } from '../../typedefs/node'
-import { CollectNode } from '../../nodes/processing/collect/typedefs'
-import { HtmlNode } from '../../nodes/processing/html/typedefs'
-import { TestEnvironment, hasResult } from '../utils/environment'
-import { createNode, createInput } from '../utils/factory'
+import { NodeType, NodeInput } from '../../../typedefs/node'
+import { CollectNode } from '../../../nodes/processing/collect/typedefs'
+import { HtmlNode } from '../../../nodes/processing/html/typedefs'
+import { TestEnvironment, hasResult } from '../../utils/environment'
+import { createNode, createInput } from '../../utils/factory'
 
 jest.setTimeout(10000)
 
@@ -13,18 +13,10 @@ describe('Collect node', () => {
 
     beforeAll(async () => {
         await environment.setup({
-            settings: {
-                exitOnError: true
-            },
             watchedNodeId: 'watch-id',
             onWatch: watchFn
         })
     })
-
-    // afterEach(async () => {
-    //     const activePages = await environment.activePages()
-    //     expect(activePages).toEqual(0)
-    // })
 
     afterAll(async () => {
         await environment.cleanup()
@@ -149,7 +141,59 @@ describe('Collect node', () => {
         })
     })
 
-    it('should traverse child html nodes', async () => {
+    it('should traverse one child html node', async () => {
+        const fn = jest.fn()
+        let lastInput: NodeInput<HtmlNode>
+        const root = createNode<HtmlNode>(NodeType.HTML, {
+            parsedLink: 'https://test.be'
+        })
+        const node = createNode<CollectNode>(NodeType.COLLECT, {
+            fields: [
+                {
+                    label: 'url',
+                    selector: {
+                        value: '.link',
+                        attribute: 'href'
+                    }
+                }
+            ],
+            children: [
+                createNode(NodeType.HTML_LINKED, {
+                    linkedField: 'url',
+                    children: [
+                        createNode<FunctionNode>(NodeType.FUNCTION, {
+                            id: '1',
+                            function: (input: any) => {
+                                fn()
+                                lastInput = input
+                            }
+                        })
+                    ]
+                })
+            ]
+        })
+        const initialContent =
+            '<a class="link" href="https://test.be/one">Link 1</a>'
+
+        const input = createInput(node, undefined, root)
+        input.rootAncestor = root
+        input.page = await environment.initializePage(initialContent)
+
+        environment.mockPages([
+            {
+                url: 'https://test.be/one',
+                content: 'first page content'
+            }
+        ])
+
+        await environment.parseNode(input)
+
+        expect(lastInput!).toBeDefined()
+        expect(await hasResult(lastInput!, 'first page content')).toBeTruthy()
+        expect(fn).toHaveBeenCalledTimes(1)
+    })
+
+    it('should traverse multiple child html nodes', async () => {
         const fn = jest.fn()
         let lastInput: NodeInput<HtmlNode>
         const root = createNode<HtmlNode>(NodeType.HTML, {

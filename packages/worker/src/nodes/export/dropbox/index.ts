@@ -68,7 +68,7 @@ const dropbox: NodeParser<DropboxNode> = async (
 
     if (onLog) onLog(node, `File successfully uploaded to Dropbox: ${fileName}`)
 
-    if ((node.children && node.children.length) || onStorage) {
+    if (node.children?.length || onStorage) {
         // get shared link
         const result = await request({
             uri: DROPBOX_SHARED_LINK_URL,

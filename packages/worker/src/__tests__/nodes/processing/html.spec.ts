@@ -1,15 +1,15 @@
-import { NodeType } from '../../typedefs/node'
+import { NodeType } from '../../../typedefs/node'
 import {
     HtmlNode,
     MultipleHtmlNode
-} from '../../nodes/processing/html/typedefs'
-import { FunctionNode } from '../../nodes/export/function/typedefs'
+} from '../../../nodes/processing/html/typedefs'
+import { FunctionNode } from '../../../nodes/export/function/typedefs'
 import {
     hasDefaultResult,
     hasResult,
     TestEnvironment
-} from '../utils/environment'
-import { createNode, createInput } from '../utils/factory'
+} from '../../utils/environment'
+import { createNode, createInput } from '../../utils/factory'
 
 jest.setTimeout(10000)
 
@@ -17,11 +17,7 @@ describe('Html node', () => {
     const environment = new TestEnvironment()
 
     beforeAll(async () => {
-        await environment.setup({
-            settings: {
-                exitOnError: true
-            }
-        })
+        await environment.setup()
         environment.mockDefault({
             content: 'Hello world'
         })

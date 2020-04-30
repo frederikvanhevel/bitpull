@@ -1,9 +1,9 @@
-import { HtmlNode } from '../../nodes/processing/html/typedefs'
-import { NodeType, NodeInput } from '../../typedefs/node'
-import { FunctionNode } from '../../nodes/export/function/typedefs'
-import { PaginationNode } from '../../nodes/processing/pagination/typedefs'
-import { TestEnvironment, hasResult } from '../utils/environment'
-import { createNode, createInput } from '../utils/factory'
+import { HtmlNode } from '../../../nodes/processing/html/typedefs'
+import { NodeType, NodeInput } from '../../../typedefs/node'
+import { FunctionNode } from '../../../nodes/export/function/typedefs'
+import { PaginationNode } from '../../../nodes/processing/pagination/typedefs'
+import { TestEnvironment, hasResult } from '../../utils/environment'
+import { createNode, createInput } from '../../utils/factory'
 
 jest.setTimeout(10000)
 
@@ -13,9 +13,6 @@ describe('Pagination node', () => {
 
     beforeAll(async () => {
         await environment.setup({
-            settings: {
-                exitOnError: true
-            },
             watchedNodeId: 'watch-id',
             onWatch: watchFn
         })
