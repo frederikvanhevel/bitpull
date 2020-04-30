@@ -71,15 +71,6 @@ describe('Click node', () => {
             await expect(promise).rejects.toThrow()
         })
 
-        it('should throw when no child node is defined', async () => {
-            const node = createNode(NodeType.CLICK_MULTIPLE, {
-                selector: 'none'
-            })
-
-            const promise = environment.parseNode({ node })
-            await expect(promise).rejects.toThrow()
-        })
-
         it('should traverse nodes for each found element', async () => {
             const fn = jest.fn()
             const node = createNode<HtmlNode>(NodeType.HTML, {
@@ -99,8 +90,8 @@ describe('Click node', () => {
             environment.mockPage({
                 url: 'https://test.be/',
                 content: `
-                    <button onclick="myFunction("one");">Click me</button>
-                    <button onclick="myFunction("two");">Click me as well</button>
+                    <button onclick="myFunction('one');">Click me</button>
+                    <button onclick="myFunction('two');">Click me as well</button>
                     <script>
                         function myFunction(text) {
                             var element = document.createElement('div');
@@ -118,7 +109,7 @@ describe('Click node', () => {
             expect(fn).toHaveBeenCalledTimes(2)
         })
 
-        it('should traverse nodes for each found element', async () => {
+        it('should traverse nodes and gather data for each found element', async () => {
             const fn = jest.fn()
             const node = createNode<HtmlNode>(NodeType.HTML, {
                 link: 'https://test.be/',

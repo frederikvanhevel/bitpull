@@ -25,6 +25,7 @@ import PaymentDialog from 'components/payment/PaymentDialog'
 import { StripeProvider, Elements } from 'react-stripe-elements'
 import ErrorScreen from 'components/ui/ErrorScreen'
 import NotificationBar from 'components/ui/NotificationBar'
+import ConfirmDialog from 'components/ui/dialogs/ConfirmDialog'
 
 const useStyles = makeStyles((theme: Theme) => ({
     grid: {
@@ -116,6 +117,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const PaymentPlanTab: React.FC = () => {
     const classes = useStyles()
+    const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
     const [dialogOpen, setDialogOpen] = useState(false)
     const { enqueueSnackbar } = useSnackbar()
     const { data, loading, error } = useQuery<getPaymentDetails>(
@@ -309,7 +311,7 @@ const PaymentPlanTab: React.FC = () => {
                                                 loadingUpdate
                                             }
                                             onClick={() =>
-                                                changePaymentPlan(Plan.METERED)
+                                                setConfirmDialogOpen(true)
                                             }
                                         >
                                             {plan === Plan.METERED
@@ -465,6 +467,18 @@ const PaymentPlanTab: React.FC = () => {
                             />
                         </PaddingWrapper>
                     </PaddingWrapper>
+
+                    <ConfirmDialog
+                        title="Are you sure you want to change plan?"
+                        onClose={() => setConfirmDialogOpen(false)}
+                        onConfirm={() => {
+                            setConfirmDialogOpen(false)
+                            changePaymentPlan(Plan.METERED)
+                        }}
+                        open={confirmDialogOpen}
+                    >
+                        You will still be charged for this month.
+                    </ConfirmDialog>
                 </>
             </Elements>
         </StripeProvider>

@@ -13,6 +13,12 @@ const mockedWorkflowService = mocked(WorkflowService)
 
 describe('Catalog service', () => {
     it('should get catalog items', async () => {
+        mockedCatalogModel.find.mockReturnValueOnce({
+            // @ts-ignore
+            sort: () => jest.fn()
+        })
+
+
         await CatalogService.getItems()
         expect(mockedCatalogModel.find).toHaveBeenCalledWith({
             visible: true

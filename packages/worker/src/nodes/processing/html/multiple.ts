@@ -5,6 +5,7 @@ import { PaginationError } from '../pagination/errors'
 import { MultipleHtmlNode } from './typedefs'
 import { HtmlError } from './errors'
 import { parseLink } from './helper'
+import { findPerPageNode } from '../../../utils/helper'
 
 const multipleHtml: NodeParser<MultipleHtmlNode> = async (
     input,
@@ -17,9 +18,7 @@ const multipleHtml: NodeParser<MultipleHtmlNode> = async (
     assert(node.links && node.links.length, HtmlError.LINKS_MISSING)
 
     if (node.children?.length) {
-        const childNode = node.goToPerPage
-            ? node.children.find(child => child.id === node.goToPerPage)
-            : node.children[0]
+        const childNode = findPerPageNode(node)
 
         assert(childNode, PaginationError.GOTOPERPAGE_NODE_MISSING)
 

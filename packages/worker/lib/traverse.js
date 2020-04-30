@@ -130,7 +130,8 @@ class Traverser {
                 message: error.message,
                 code: error.code
             });
-            logger_1.default.error(new Error('Error happend during node run'), error);
+            if (!this.canceled)
+                logger_1.default.error(new Error('Error happend during node run'), error);
             originalErrorFn && originalErrorFn(node, error);
         };
         this.options.onLog = (node, message, type = common_1.LogType.INFO) => {
@@ -159,7 +160,8 @@ class Traverser {
             }
         }
         catch (error) {
-            logger_1.default.error(new Error('Fatal error during run'), error);
+            if (!this.canceled)
+                logger_1.default.error(new Error('Fatal error during run'), error);
             status = common_1.Status.ERROR;
         }
         finally {
@@ -184,6 +186,7 @@ class Traverser {
         throw new Error('Operation was cancelled');
     }
     async cleanup() {
+        this.canceled = true;
         const { browser } = this.context;
         if (!browser)
             return;

@@ -19,18 +19,18 @@ const click: NodeParser<ClickNode> = async (
 
     assert(selector, ParseError.SELECTOR_MISSING)
 
-    try {
-        await browser.with(
-            async (page: Page) => {
+    await browser.with(
+        async (page: Page) => {
+            try {
                 await page.click(selector)
-                await wait(page, delay, waitForNavigation)
-            },
-            settings,
-            page
-        )
-    } catch (error) {
-        throw new FlowError(ClickError.COULD_NOT_CLICK)
-    }
+            } catch (error) {
+                throw new FlowError(ClickError.COULD_NOT_CLICK)
+            }
+            await wait(page, delay, waitForNavigation)
+        },
+        settings,
+        page
+    )
 
     if (onLog) onLog(node, 'Clicked element')
 

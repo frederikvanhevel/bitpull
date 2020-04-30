@@ -99,3 +99,21 @@ export const isBranchNode = (node: FlowNode) => {
         node.type === NodeType.CLICK_MULTIPLE
     )
 }
+
+export const findPerPageNode = (node: BranchNode) => {
+    if (!node.children?.length) return undefined
+
+    let child
+    if (node.goToPerPage) {
+        child = node.children.find(child => child.id === node.goToPerPage)
+    }
+
+    if (!child) {
+        const filtered = node.goToOnEnd
+            ? node.children.filter(child => child.id !== node.goToOnEnd)
+            : node.children
+        child = filtered.length ? filtered[0] : undefined
+    }
+
+    return child
+}

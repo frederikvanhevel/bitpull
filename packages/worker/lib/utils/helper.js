@@ -88,4 +88,20 @@ exports.isBranchNode = (node) => {
         node.type === node_1.NodeType.HTML_MULTIPLE ||
         node.type === node_1.NodeType.CLICK_MULTIPLE);
 };
+exports.findPerPageNode = (node) => {
+    var _a;
+    if (!((_a = node.children) === null || _a === void 0 ? void 0 : _a.length))
+        return undefined;
+    let child;
+    if (node.goToPerPage) {
+        child = node.children.find(child => child.id === node.goToPerPage);
+    }
+    if (!child) {
+        const filtered = node.goToOnEnd
+            ? node.children.filter(child => child.id !== node.goToOnEnd)
+            : node.children;
+        child = filtered.length ? filtered[0] : undefined;
+    }
+    return child;
+};
 //# sourceMappingURL=helper.js.map

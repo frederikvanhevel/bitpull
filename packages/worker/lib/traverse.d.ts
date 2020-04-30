@@ -4,7 +4,7 @@ import CustomBrowser from './browser';
 declare class Traverser {
     private options;
     private context;
-    private canceled;
+    canceled: boolean;
     private errorCount;
     constructor(options?: Partial<TraverseOptions>, browser?: CustomBrowser);
     private getNodeResult;

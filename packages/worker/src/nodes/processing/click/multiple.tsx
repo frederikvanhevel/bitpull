@@ -1,9 +1,10 @@
 import { Page } from 'puppeteer-core'
 import { FlowError } from '../../../utils/errors'
-import { NodeError, ParseError } from '../../common/errors'
+import { ParseError } from '../../common/errors'
 import { NodeParser, NodeInput } from '../../../typedefs/node'
 import { assert, sequentialPromise } from '../../../utils/common'
 import { PaginationError } from '../pagination/errors'
+import { findPerPageNode } from '../../../utils/helper'
 import { MultipleClickNode } from './typedefs'
 import { ClickError } from './errors'
 import { wait } from './helper'
@@ -30,28 +31,25 @@ const clickMultiple: NodeParser<MultipleClickNode> = async (
             await sequentialPromise(allowed, async element => {
                 try {
                     await element.click()
-
-                    if (onLog) onLog(node, 'Clicked element')
-
-                    await wait(page, delay, waitForNavigation)
-
-                    if (node.children?.length) {
-                        const childNode = node.goToPerPage
-                            ? node.children.find(child => child.id === node.goToPerPage)
-                            : node.children[0]
-
-                        await traverser.parseNode({
-                            ...input,
-                            node: childNode!,
-                            parent: node,
-                            page,
-                            branchCallback: data => allResults.push(data)
-                        })
-                    }
-
-                    
                 } catch (error) {
                     throw new FlowError(ClickError.COULD_NOT_CLICK)
+                }
+
+                if (onLog) onLog(node, 'Clicked element')
+
+                await wait(page, delay, waitForNavigation)
+
+                if (node.children?.length) {
+                    const childNode = findPerPageNode(node)
+                    assert(childNode, PaginationError.GOTOPERPAGE_NODE_MISSING)
+
+                    await traverser.parseNode({
+                        ...input,
+                        node: childNode!,
+                        parent: node,
+                        page,
+                        branchCallback: data => allResults.push(data)
+                    })
                 }
             })
         },
