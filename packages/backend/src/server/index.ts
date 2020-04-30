@@ -98,7 +98,7 @@ export const startServer = async () => {
 
     Segment.initialize()
 
-    // migrate()
+    migrate()
 }
 
 // temporary workaround for workflow cancels
