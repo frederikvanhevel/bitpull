@@ -13,6 +13,7 @@ import {
 import { FileWriteResult, FileEncoding } from '../../../utils/file'
 import { StorageNode } from './typedefs'
 import { StorageError } from './errors'
+import { FlowError } from 'utils/errors'
 
 const usesStorage = (settings?: Settings) => {
     return (
@@ -57,22 +58,23 @@ const storage: NodeParser<StorageNode> = async (
     assert(passedData && passedData.path, FileError.INVALID_FILE_PATH)
     assert(passedData && passedData.fileName, FileError.INVALID_FILE_NAME)
 
-    const params: AWS.S3.PutObjectRequest = {
-        Bucket: storage.credentials.bucket,
-        Key: passedData.fileName,
-        Body: createReadStream(passedData.path, {
-            encoding:
-                passedData.encoding === FileEncoding.BINARY
-                    ? undefined // null?
-                    : passedData.encoding
-        })
-    }
+    let result
+    try {
+        const params: AWS.S3.PutObjectRequest = {
+            Bucket: storage.credentials.bucket,
+            Key: passedData.fileName,
+            Body: createReadStream(passedData.path)
+        }
 
-    const s3 = new AWS.S3({
-        accessKeyId: storage.credentials.accessKeyId,
-        secretAccessKey: storage.credentials.secretAccessKey
-    })
-    const result = await s3.upload(params).promise()
+        const s3 = new AWS.S3({
+            accessKeyId: storage.credentials.accessKeyId,
+            secretAccessKey: storage.credentials.secretAccessKey
+        })
+
+        result = await s3.upload(params).promise()
+    } catch (error) {
+        throw new FlowError(StorageError.STORAGE_FAILED, error)
+    }
 
     if (onLog) onLog(node, `File successfully stored: ${passedData.fileName}`)
     if (onStorage) {

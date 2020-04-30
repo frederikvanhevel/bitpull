@@ -70,6 +70,7 @@ export const ErrorMessages: Record<string, string> = {
     [StorageError.AWS_ACCESS_KEY_ID_MISSING]: 'AWS access key missing',
     [StorageError.AWS_SECRET_ACCESS_KEY_MISSING]: 'AWS secret missing',
     [StorageError.INVALID_PARENT_TYPE]: 'Previous step does not produce a file',
+    [StorageError.STORAGE_FAILED]: 'Could not store file',
 
     // Dropbox error
     [DropboxError.UPLOAD_FAILED]: 'Error uploading to Dropbox',

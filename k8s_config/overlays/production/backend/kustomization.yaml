@@ -20,4 +20,4 @@ configMapGenerator:
       - AWS_ACCESS_KEY_ID='AKIAIDDQ3OHTNYXAC6GA'
       - AWS_REGION='us-east-1'
       - AWS_S3_BUCKET='bitpull'
-      - TRIAL_CREDIT_AMOUNT=300
+      - TRIAL_CREDIT_AMOUNT=500
