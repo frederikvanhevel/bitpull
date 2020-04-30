@@ -158,8 +158,8 @@ class CustomBrowser {
         this.mockHandler = undefined
     }
 
-    async logPages() {
-        console.log((await this.browser?.pages())?.length)
+    async getActivePages() {
+        return (await this.browser?.pages())?.length || 0
     }
 
     async cleanup() {

@@ -1,9 +1,9 @@
-import { NodeType } from '../../typedefs/node'
+import { FunctionNode } from 'nodes/export/function/typedefs'
+import { NodeType, NodeInput } from '../../typedefs/node'
 import { CollectNode } from '../../nodes/processing/collect/typedefs'
 import { HtmlNode } from '../../nodes/processing/html/typedefs'
-import { TestEnvironment } from '../utils/environment'
+import { TestEnvironment, hasResult } from '../utils/environment'
 import { createNode, createInput } from '../utils/factory'
-import { FunctionNode } from 'nodes/export/function/typedefs'
 
 jest.setTimeout(10000)
 
@@ -20,6 +20,11 @@ describe('Collect node', () => {
             onWatch: watchFn
         })
     })
+
+    // afterEach(async () => {
+    //     const activePages = await environment.activePages()
+    //     expect(activePages).toEqual(0)
+    // })
 
     afterAll(async () => {
         await environment.cleanup()
@@ -71,9 +76,13 @@ describe('Collect node', () => {
 
         await environment.parseNode(input)
 
-        expect(callback).toHaveBeenCalledWith({
-            url: 'https://test.be'
-        })
+        expect(callback).toHaveBeenCalledWith(
+            expect.objectContaining({
+                passedData: {
+                    url: 'https://test.be'
+                }
+            })
+        )
     })
 
     it('should merge previous data', async () => {
@@ -103,10 +112,14 @@ describe('Collect node', () => {
 
         await environment.parseNode(input)
 
-        expect(callback).toHaveBeenCalledWith({
-            previous: 'something',
-            url: 'https://test.be'
-        })
+        expect(callback).toHaveBeenCalledWith(
+            expect.objectContaining({
+                passedData: {
+                    previous: 'something',
+                    url: 'https://test.be'
+                }
+            })
+        )
     })
 
     it('should call onWatch when running watched node', async () => {
@@ -136,9 +149,12 @@ describe('Collect node', () => {
         })
     })
 
-    it.only('should traverse child html nodes', async () => {
+    it('should traverse child html nodes', async () => {
         const fn = jest.fn()
-        const root = createNode<HtmlNode>(NodeType.HTML)
+        let lastInput: NodeInput<HtmlNode>
+        const root = createNode<HtmlNode>(NodeType.HTML, {
+            parsedLink: 'https://test.be'
+        })
         const node = createNode<CollectNode>(NodeType.COLLECT, {
             fields: [
                 {
@@ -149,24 +165,45 @@ describe('Collect node', () => {
                     }
                 }
             ],
-            children: [createNode(NodeType.HTML, {
-                link: 'https://test.be',
-                children: [createNode<FunctionNode>(NodeType.FUNCTION, {
-                    id: '1',
-                    function: fn
-                })]
-            })]
+            children: [
+                createNode(NodeType.HTML_LINKED, {
+                    linkedField: 'url',
+                    children: [
+                        createNode<FunctionNode>(NodeType.FUNCTION, {
+                            id: '1',
+                            function: (input: any) => {
+                                fn()
+                                lastInput = input
+                            }
+                        })
+                    ]
+                })
+            ]
         })
-        const content =
-            '<a class="link" href="https://test.be">This is a link</a>'
+        const initialContent = `
+            <a class="link" href="https://test.be/two">Link 2</a>
+            <a class="link" href="https://test.be/three">Link 3</a>
+        `
 
         const input = createInput(node, undefined, root)
-        input.page = await environment.initializePage(content)
+        input.rootAncestor = root
+        input.page = await environment.initializePage(initialContent)
+
+        environment.mockPages([
+            {
+                url: 'https://test.be/two',
+                content: 'second page content'
+            },
+            {
+                url: 'https://test.be/three',
+                content: 'third page content'
+            }
+        ])
 
         await environment.parseNode(input)
 
-        expect(fn).toHaveBeenCalledWith({
-            url: 'https://test.be'
-        })
+        expect(lastInput!).toBeDefined()
+        expect(await hasResult(lastInput!, 'third page content')).toBeTruthy()
+        expect(fn).toHaveBeenCalledTimes(2)
     })
 })

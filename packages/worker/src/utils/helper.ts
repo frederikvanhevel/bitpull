@@ -1,6 +1,5 @@
+import { CollectNode } from '../nodes/processing/collect/typedefs'
 import { NodeType, FlowNode, NodeParser, BranchNode } from '../typedefs/node'
-import { HtmlNode } from '../nodes/processing/html/typedefs'
-import { XmlNode } from '../nodes/processing/xml/typedefs'
 import { FlowError } from './errors'
 
 const FILE_NODES = [
@@ -24,6 +23,7 @@ const EXPORT_NODES = [
 export const IMPORT_PATHS: Record<NodeType, string> = {
     [NodeType.COLLECT]: '../nodes/processing/collect',
     [NodeType.HTML]: '../nodes/processing/html',
+    [NodeType.HTML_LINKED]: '../nodes/processing/html/linked',
     [NodeType.HTML_MULTIPLE]: '../nodes/processing/html/multiple',
     [NodeType.PAGINATION]: '../nodes/processing/pagination',
     [NodeType.CLICK]: '../nodes/processing/click',
@@ -47,8 +47,7 @@ export const IMPORT_PATHS: Record<NodeType, string> = {
 }
 
 export const isRootNode = (node: FlowNode): boolean => {
-    const linkNode = node as HtmlNode
-    return linkNode.type === NodeType.HTML && !!linkNode.link
+    return node.type === NodeType.HTML
 }
 
 export const getModule = async (
@@ -72,8 +71,12 @@ export const isExportNode = (type: NodeType) => {
     return EXPORT_NODES.includes(type)
 }
 
+export const isCollectNode = (node: FlowNode): node is CollectNode => {
+    return node.type === NodeType.COLLECT
+}
+
 export const hasChildOfTypes = (node: FlowNode, types: NodeType[]) => {
-    return node.children?.find(child => types.includes(child.type))
+    return !!node.children?.find(child => types.includes(child.type))
 }
 
 export const hasChildExportNodes = (node: FlowNode) => {
@@ -83,8 +86,7 @@ export const hasChildExportNodes = (node: FlowNode) => {
 export const isBranchCollectNode = (node: FlowNode) => {
     return (
         node.type === NodeType.COLLECT &&
-        hasChildOfTypes(node, [NodeType.HTML]) &&
-        !!(node.children![0] as HtmlNode).linkedField
+        hasChildOfTypes(node, [NodeType.HTML, NodeType.HTML_LINKED])
     )
 }
 

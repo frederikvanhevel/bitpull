@@ -1,42 +1,30 @@
 import { FlowError } from '../../../utils/errors'
-import { NodeError, ParseError } from '../../common/errors'
-import { assert, getUriOrigin } from '../../../utils/common'
-import { absolutifyUrl } from '../../../utils/absolutify'
+import { ParseError } from '../../common/errors'
+import { assert } from '../../../utils/common'
 import { NodeParser } from '../../../typedefs/node'
 import { HtmlNode, HtmlParseResult } from './typedefs'
 import { parseLink } from './helper'
+import { HtmlError } from './errors'
 
 const html: NodeParser<HtmlNode, undefined, HtmlParseResult> = async (
     input,
     options,
     context
 ) => {
-    const { node, passedData, rootAncestor } = input
+    const { node } = input
 
-    assert(node.link || node.linkedField, ParseError.LINK_MISSING)
+    assert(node.link, ParseError.LINK_MISSING)
 
-    let link: string | undefined
-
-    if (node.linkedField) {
-        assert(rootAncestor, NodeError.NEEDS_ROOT_ANCESTOR)
-
-        if (!passedData[node.linkedField]) {
-            throw new FlowError(ParseError.LINK_MISSING)
-        }
-
-        link = absolutifyUrl(
-            passedData[node.linkedField],
-            getUriOrigin(rootAncestor.parsedLink!)
-        )
-    } else {
-        link = node.link
+    try {
+        // eslint-disable-next-line no-new
+        new URL(node.link)
+    } catch (error) {
+        throw new FlowError(HtmlError.INVALID_URL)
     }
 
-    assert(link, ParseError.LINK_MISSING)
+    const page = await parseLink(input, options, context, node.link)
 
-    node.parsedLink = link
-
-    const page = await parseLink(input, options, context, link)
+    node.parsedLink = node.link
 
     return {
         ...input,

@@ -83,6 +83,7 @@ exports.ErrorMessages = {
     // Html error
     [errors_13.HtmlError.LINKED_FIELD_MISSING]: 'Linked field is not defined',
     [errors_13.HtmlError.LINKS_MISSING]: 'No links are defined',
+    [errors_13.HtmlError.INVALID_URL]: 'The given url is invalid',
     // Pagination error
     [errors_11.PaginationError.GOTOPERPAGE_NODE_MISSING]: 'No per page step specified',
     [errors_11.PaginationError.PAGINATION_METHOD_MISSING]: 'Pagination method missing',

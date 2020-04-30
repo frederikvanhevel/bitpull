@@ -60,6 +60,7 @@ const Editor: React.FC = () => {
 
         const newNode = {
             id: selectedNode.id,
+            parent: selectedNode.parent,
             ...node
         }
         dispatch(replaceNode(selectedNode.id, newNode))

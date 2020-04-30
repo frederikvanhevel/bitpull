@@ -1,10 +1,12 @@
+import { CollectNode } from '../nodes/processing/collect/typedefs';
 import { NodeType, FlowNode, NodeParser } from '../typedefs/node';
 export declare const IMPORT_PATHS: Record<NodeType, string>;
 export declare const isRootNode: (node: FlowNode) => boolean;
 export declare const getModule: (type: NodeType) => Promise<NodeParser<FlowNode, any, any>>;
 export declare const isFileNode: (type: NodeType) => boolean;
 export declare const isExportNode: (type: NodeType) => boolean;
-export declare const hasChildOfTypes: (node: FlowNode, types: NodeType[]) => FlowNode | undefined;
-export declare const hasChildExportNodes: (node: FlowNode) => FlowNode | undefined;
-export declare const isBranchCollectNode: (node: FlowNode) => boolean | undefined;
-export declare const isBranchNode: (node: FlowNode) => boolean | undefined;
+export declare const isCollectNode: (node: FlowNode) => node is CollectNode;
+export declare const hasChildOfTypes: (node: FlowNode, types: NodeType[]) => boolean;
+export declare const hasChildExportNodes: (node: FlowNode) => boolean;
+export declare const isBranchCollectNode: (node: FlowNode) => boolean;
+export declare const isBranchNode: (node: FlowNode) => boolean;

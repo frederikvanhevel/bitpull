@@ -2,7 +2,7 @@ import { NodeInput, TraverseOptions, FlowNode, NodeType, RootNode, NodeId } from
 import { LogType, StorageService, AmazonS3Credentials, StorageObject, IntegrationType, IntegrationSettings, Integration, StorageProvider, Settings, Status, ParseLog, ErrorLog, FileStorageObject, ParseResult } from './typedefs/common';
 import { HTMLSelector } from './nodes/processing/selectors';
 import { CollectNode, CollectField } from './nodes/processing/collect/typedefs';
-import { HtmlNode, MultipleHtmlNode } from './nodes/processing/html/typedefs';
+import { HtmlNode, LinkedHtmlNode, MultipleHtmlNode } from './nodes/processing/html/typedefs';
 import { XmlNode } from './nodes/processing/xml/typedefs';
 import { PaginationNode } from './nodes/processing/pagination/typedefs';
 import { ClickNode } from './nodes/processing/click/typedefs';
@@ -25,4 +25,4 @@ import { SlackNode } from './nodes/notification/slack/typedefs';
 import { EmailNode } from './nodes/notification/email/typedefs';
 import NodeMap from './nodes/common/node-map';
 export { NodeType, LogType, StorageService, IntegrationType, StorageProvider, Status, NodeMap, PdfFormat };
-export type { NodeInput, TraverseOptions, FlowNode, RootNode, NodeId, CollectNode, CollectField, HTMLSelector, HtmlNode, MultipleHtmlNode, XmlNode, PaginationNode, ClickNode, LoginNode, ExcelNode, CsvNode, JsonNode, ScreenshotNode, PdfNode, WaitNode, ScrollNode, FunctionNode, DropboxNode, GoogleDriveNode, OnedriveNode, GithubNode, StorageNode, WebhookNode, SlackNode, EmailNode, AmazonS3Credentials, StorageObject, IntegrationSettings, Integration, Settings, ParseLog, ErrorLog, FileStorageObject, ParseResult };
+export type { NodeInput, TraverseOptions, FlowNode, RootNode, NodeId, CollectNode, CollectField, HTMLSelector, HtmlNode, LinkedHtmlNode, MultipleHtmlNode, XmlNode, PaginationNode, ClickNode, LoginNode, ExcelNode, CsvNode, JsonNode, ScreenshotNode, PdfNode, WaitNode, ScrollNode, FunctionNode, DropboxNode, GoogleDriveNode, OnedriveNode, GithubNode, StorageNode, WebhookNode, SlackNode, EmailNode, AmazonS3Credentials, StorageObject, IntegrationSettings, Integration, Settings, ParseLog, ErrorLog, FileStorageObject, ParseResult };

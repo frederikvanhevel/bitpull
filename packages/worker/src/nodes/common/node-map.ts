@@ -21,6 +21,20 @@ const NodeMap: Record<NodeType, Map> = {
         export: [],
         notification: []
     },
+    [NodeType.HTML_LINKED]: {
+        processing: [
+            NodeType.COLLECT,
+            NodeType.PAGINATION,
+            NodeType.CLICK,
+            NodeType.LOGIN,
+            NodeType.SCROLL,
+            NodeType.SCREENSHOT,
+            NodeType.PDF,
+            NodeType.WAIT
+        ],
+        export: [],
+        notification: []
+    },
     [NodeType.HTML_MULTIPLE]: {
         processing: [
             NodeType.COLLECT,

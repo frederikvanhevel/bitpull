@@ -128,7 +128,7 @@ class Traverser {
             const { node } = nodeResult
 
             if (!isBranchNode(node) && node.children?.length) {
-                const result = await Promise.all(
+                await Promise.all(
                     node.children.map(async child =>
                         this.parseNode({
                             ...input,
@@ -147,9 +147,6 @@ class Traverser {
                         })
                     )
                 )
-
-                // @ts-ignore
-                return result
             }
 
             return {

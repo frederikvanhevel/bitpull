@@ -1,8 +1,8 @@
 import { HtmlNode } from '../../nodes/processing/html/typedefs'
-import { NodeType } from '../../typedefs/node'
+import { NodeType, NodeInput } from '../../typedefs/node'
 import { FunctionNode } from '../../nodes/export/function/typedefs'
 import { PaginationNode } from '../../nodes/processing/pagination/typedefs'
-import { TestEnvironment } from '../utils/environment'
+import { TestEnvironment, hasResult } from '../utils/environment'
 import { createNode, createInput } from '../utils/factory'
 
 jest.setTimeout(10000)
@@ -45,6 +45,7 @@ describe('Pagination node', () => {
 
     it('should go to each link', async () => {
         const fn = jest.fn()
+        let lastInput: NodeInput<HtmlNode>
         const root = createNode<HtmlNode>(NodeType.HTML)
         const node = createNode<PaginationNode>(NodeType.PAGINATION, {
             pagination: {
@@ -56,7 +57,10 @@ describe('Pagination node', () => {
             children: [
                 createNode<FunctionNode>(NodeType.FUNCTION, {
                     id: '1',
-                    function: fn
+                    function: (input: any) => {
+                        fn()
+                        lastInput = input
+                    }
                 })
             ]
         })
@@ -64,17 +68,17 @@ describe('Pagination node', () => {
         const content =
             '<a class="link" href="https://test.be/two">This is a link</a>'
 
-        environment.mockPages([
-            {
-                url: 'https://test.be/two',
-                content: 'Hello world two'
-            }
-        ])
+        environment.mockPage({
+            url: 'https://test.be/two',
+            content: 'Hello world two'
+        })
 
         const input = createInput(node, undefined, root)
         input.page = await environment.initializePage(content)
 
         await environment.parseNode(input)
+
+        expect(await hasResult(lastInput!, 'Hello world two')).toBeTruthy()
         expect(fn).toHaveBeenCalledTimes(2)
     })
 

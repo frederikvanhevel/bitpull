@@ -69,8 +69,7 @@ const UrlInputDialog: React.FC<Props> = ({
                 autoFocus
                 error={!!errors.links}
                 inputRef={register({
-                    required: true,
-                    pattern: MULTIPLE_URL_REGEX
+                    required: true
                 })}
             />
         </ConfirmDialog>

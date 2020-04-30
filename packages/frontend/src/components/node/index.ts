@@ -15,7 +15,7 @@ export const isNodeUnreachable = (node: Node): boolean => {
         (node.parent &&
             node.parent.type === NodeType.PAGINATION &&
             node.id !== (node.parent as PaginationNode).goToPerPage &&
-            node.id !== (node.parent as PaginationNode).gotoOnEnd) ||
+            node.id !== (node.parent as PaginationNode).goToOnEnd) ||
         (node.parent && node.parent.disabled) ||
         (node.parent && isNodeUnreachable(node.parent))
     )
@@ -149,6 +149,7 @@ export const findUrlAncestor = (node: Node): Node<RootNode> | undefined => {
 export const traverseAncestors = (node: Node) => {
     const traversableTypes = [
         NodeType.HTML,
+        NodeType.HTML_LINKED,
         NodeType.HTML_MULTIPLE,
         NodeType.LOGIN,
         NodeType.WAIT,

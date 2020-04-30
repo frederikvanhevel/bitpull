@@ -12,7 +12,7 @@ import { NODE_PROPERTIES } from '../../helper/properties'
 
 export enum PaginationStep {
     PER_PAGE = 'goToPerPage',
-    END = 'gotoOnEnd'
+    END = 'goToOnEnd'
 }
 
 export const ALLOWED_CHILD_NODES: Record<PaginationStep, NodeType[]> = {
@@ -76,11 +76,14 @@ export const getMenuItems = (
     onHighlightNode: (node?: Node) => void
 ) => {
     let menuItems: JSX.Element[] = []
-    const existingNodes = node.children?.filter(childNode =>
-        ALLOWED_CHILD_NODES[type].includes(childNode.type)
-    ) || []
+    const existingNodes =
+        node.children?.filter(childNode =>
+            ALLOWED_CHILD_NODES[type].includes(childNode.type)
+        ) || []
     const existingNodesTypes = existingNodes.map(item => item.type)
-    const newNodes = getMenuItemsByType(ALLOWED_CHILD_NODES[type]).filter(item => !existingNodesTypes.includes(item.type))
+    const newNodes = getMenuItemsByType(ALLOWED_CHILD_NODES[type]).filter(
+        item => !existingNodesTypes.includes(item.type)
+    )
 
     existingNodes.forEach(childNode => {
         const Icon = getIcon(childNode.type)

@@ -19,6 +19,7 @@ const getMockedHtml = (content: string) => {
 }
 
 const DEFAULT_MOCKED_HTML = getMockedHtml('Hello world')
+const NOT_FOUND_MOCK = { body: '404', status: 404 }
 
 const defaultMockHandler: MockHandler = () => {
     return {
@@ -43,12 +44,20 @@ export class TestEnvironment {
         this.traverser = new Traverser(options, this.browser)
     }
 
+    mockDefault(mock: PageMock) {
+        if (!this.browser) throw new Error('Test browser was not initialized')
+
+        this.browser.setMockHandler(() => {
+            return { body: getMockedHtml(mock.content) }
+        })
+    }
+
     mockPage(mock: PageMock) {
         if (!this.browser) throw new Error('Test browser was not initialized')
 
         this.browser.setMockHandler((url: string) => {
             if (mock.url === url) return { body: getMockedHtml(mock.content) }
-            return { body: getMockedHtml(mock.content) }
+            return NOT_FOUND_MOCK
         })
     }
 
@@ -58,7 +67,7 @@ export class TestEnvironment {
         this.browser.setMockHandler((url: string) => {
             const mocked = mocks.find(i => i.url === url)
             if (mocked) return { body: getMockedHtml(mocked.content) }
-            return { body: DEFAULT_MOCKED_HTML }
+            return NOT_FOUND_MOCK
         })
     }
 
@@ -66,6 +75,11 @@ export class TestEnvironment {
         if (this.traverser) await this.traverser.cleanup()
         this.traverser = undefined
         this.browser = undefined
+    }
+
+    async activePages() {
+        if (!this.browser) throw new Error('Test browser was not initialized')
+        return await this.browser.getActivePages()
     }
 
     async initializePage(content?: string): Promise<Page> {
@@ -91,7 +105,7 @@ export const hasDefaultResult = async (
 ) => {
     if (!input.page) throw new Error("Test result didn't have page")
     const content = await input.page.content()
-    return content === DEFAULT_MOCKED_HTML
+    return content.replace(/\s/g, '') === DEFAULT_MOCKED_HTML.replace(/\s/g, '')
 }
 
 export const hasResult = async (
@@ -100,5 +114,7 @@ export const hasResult = async (
 ) => {
     if (!input.page) throw new Error("Test result didn't have page")
     const content = await input.page.content()
-    return content === getMockedHtml(result)
+    return (
+        content.replace(/\s/g, '') === getMockedHtml(result).replace(/\s/g, '')
+    )
 }

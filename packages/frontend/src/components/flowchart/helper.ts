@@ -3,7 +3,8 @@ import {
     NodeType,
     NodeId,
     HtmlNode,
-    MultipleHtmlNode
+    MultipleHtmlNode,
+    LinkedHtmlNode
 } from '@bitpull/worker/lib/typedefs'
 import { Node } from 'typedefs/common'
 import {
@@ -51,6 +52,7 @@ export interface ChartClasses {
 
 const NODE_LABELS: Record<NodeType, string> = {
     [NodeType.HTML]: 'html',
+    [NodeType.HTML_LINKED]: 'html',
     [NodeType.HTML_MULTIPLE]: 'html',
     [NodeType.COLLECT]: 'collect',
     [NodeType.PAGINATION]: 'pagination',
@@ -76,6 +78,7 @@ const NODE_LABELS: Record<NodeType, string> = {
 
 const NODE_ICONS: Record<NodeType, ReactNode> = {
     [NodeType.HTML]: urlIcon,
+    [NodeType.HTML_LINKED]: urlIcon,
     [NodeType.HTML_MULTIPLE]: urlIcon,
     [NodeType.COLLECT]: collectIcon,
     [NodeType.PAGINATION]: paginateIcon,
@@ -123,10 +126,11 @@ const getHostname = (link: string) => {
 export const getNodeText = (node: Node): string => {
     if (node.type === NodeType.HTML) {
         const htmlNode = node as HtmlNode
-        const link = htmlNode.linkedField
-            ? `{{${htmlNode.linkedField}}}`
-            : getHostname(htmlNode.link!)
+        const link = getHostname(htmlNode.link!)
         return !!link && link !== '' ? link : 'Enter a url'
+    } else if (node.type === NodeType.HTML_LINKED) {
+        const htmlNode = node as LinkedHtmlNode
+        return !!htmlNode.linkedField ? `{{${htmlNode.linkedField}}}` : 'select field'
     } else if (node.type === NodeType.HTML_MULTIPLE) {
         const htmlNode = node as MultipleHtmlNode
         const links = htmlNode.links

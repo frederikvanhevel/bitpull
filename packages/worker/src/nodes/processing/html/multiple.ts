@@ -27,12 +27,7 @@ const multipleHtml: NodeParser<MultipleHtmlNode> = async (
     const allResults: object[] = []
 
     await sequentialPromise<string>(allowedLinks, async link => {
-        const page = await parseLink(
-            input,
-            options,
-            context,
-            link
-        )
+        const page = await parseLink(input, options, context, link)
 
         assert(
             node.children && node.children.length,
@@ -43,8 +38,6 @@ const multipleHtml: NodeParser<MultipleHtmlNode> = async (
             ...node,
             parsedLink: link
         }
-
-        console.log('RUN')
 
         await traverser.parseNode({
             ...input,

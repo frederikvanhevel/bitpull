@@ -5,8 +5,7 @@ import {
     TextField,
     FormControl,
     InputLabel,
-    Select,
-    FormHelperText
+    Select
 } from '@material-ui/core'
 import { PaginationNode } from '@bitpull/worker/lib/typedefs'
 import ExpandableOptionRow from 'components/ui/expandable/ExpandableOptionRow'
@@ -145,15 +144,15 @@ const Pagination: React.FC<Props> = ({ node, onUpdate, onAdd }) => {
                 </div>
 
                 <FormControl>
-                    <InputLabel>Afterwards do</InputLabel>
+                    <InputLabel>Afterwards do (optional)</InputLabel>
                     <Select
                         required
                         classes={{ select: classes.select }}
-                        value={node.gotoOnEnd || ''}
+                        value={node.goToOnEnd || ''}
                         onClose={() => onHighLightNode(undefined)}
                         onChange={e => {
                             onHighLightNode(undefined)
-                            selectNextNode('gotoOnEnd', e.target.value)
+                            selectNextNode('goToOnEnd', e.target.value)
                         }}
                     >
                         {getMenuItems(

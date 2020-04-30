@@ -4,16 +4,18 @@ import {
     HtmlNode,
     FlowNode,
     NodeType,
+    LinkedHtmlNode,
     MultipleHtmlNode
 } from '@bitpull/worker/lib/typedefs'
 import { Node } from 'typedefs/common'
 import SingleUrl from './SingleUrl'
 import MultipleUrl from './MultipleUrl'
-import { isMultipleHtmlNode, isHtmlNode, isRoot } from '../../helper'
+import { isMultipleHtmlNode, isHtmlNode, isRoot, isLinkedHtmlNode } from '../../helper'
 import TestRunWarning from '../common/TestRunWarning'
+import LinkedUrl from './LinkedUrl'
 
 interface Props {
-    node: Node<HtmlNode> | Node<MultipleHtmlNode>
+    node: Node<HtmlNode> | Node<LinkedHtmlNode> | Node<MultipleHtmlNode>
     onUpdate: (key: string, value: any) => void
     onReplace: (node: FlowNode) => void
 }
@@ -70,6 +72,7 @@ const HtmlModule: React.FC<Props> = props => {
                 )}
 
                 {isHtmlNode(node) && <SingleUrl {...props} />}
+                {isLinkedHtmlNode(node) && <LinkedUrl {...props} />}
                 {isMultipleHtmlNode(node) && <MultipleUrl {...props} />}
             </div>
 

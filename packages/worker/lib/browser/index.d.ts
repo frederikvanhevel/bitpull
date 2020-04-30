@@ -15,7 +15,7 @@ declare class CustomBrowser {
     forkPage(page: Page, settings?: Settings): Promise<puppeteer.Page>;
     setMockHandler(handler: MockHandler): void;
     resetMockHandler(): void;
-    logPages(): Promise<void>;
+    getActivePages(): Promise<number>;
     cleanup(): Promise<void>;
 }
 export default CustomBrowser;

@@ -5,6 +5,7 @@ var NodeType;
     NodeType["COLLECT"] = "COLLECT";
     NodeType["PAGINATION"] = "PAGINATION";
     NodeType["HTML"] = "HTML";
+    NodeType["HTML_LINKED"] = "HTML_LINKED";
     NodeType["HTML_MULTIPLE"] = "HTML_MULTIPLE";
     NodeType["CLICK"] = "CLICK";
     NodeType["LOGIN"] = "LOGIN";

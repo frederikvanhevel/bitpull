@@ -51,8 +51,7 @@ export const createNewWorkflow = () => {
         node: {
             id: uuid(),
             type: NodeType.HTML,
-            link: '',
-            parseJavascript: true
+            link: ''
         }
     }
 
@@ -111,7 +110,6 @@ export const replaceNode = (id: NodeId, node: Node) => {
         payload: node
     }
 }
-
 
 export interface DeleteNode {
     type: typeof DELETE_NODE

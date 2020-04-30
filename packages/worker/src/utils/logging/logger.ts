@@ -46,10 +46,7 @@ class Logger {
         this.executeLog(data)
     }
 
-    public static throw(
-        error: Error,
-        relatedError?: Error
-    ): never {
+    public static throw(error: Error, relatedError?: Error): never {
         this.error(error, relatedError)
         throw error
     }
@@ -75,8 +72,7 @@ class Logger {
     }
 
     private static formatLog(log: Logs): string {
-        let prefix = `[${log.type}][${log.timestamp.toISOString()}]`
-
+        const prefix = `[${log.type}][${log.timestamp.toISOString()}]`
 
         if (isErrorLog(log)) {
             return `${prefix} ${log.error.message}`

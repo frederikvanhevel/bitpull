@@ -4,11 +4,11 @@ import { FunctionNode } from './typedefs'
 import { FunctionError } from './errors'
 
 const functionNode: NodeParser<FunctionNode> = input => {
-    const { node, passedData } = input
+    const { node } = input
 
     assert(node.function, FunctionError.NO_FUNCTION_SPECIFIED)
 
-    node.function(passedData)
+    node.function(input)
 
     return Promise.resolve(input)
 }

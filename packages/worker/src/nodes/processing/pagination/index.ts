@@ -23,13 +23,12 @@ const clickNextButton = async (
     try {
         await page.click(selector)
     } catch (error) {
+        console.log(error)
         throw new FlowError(ClickError.COULD_NOT_CLICK)
     }
 
     // add random delay between requests
     await randomizedDelay()
-
-    // await page.waitForNavigation()
 }
 
 const loopNextButton = async (

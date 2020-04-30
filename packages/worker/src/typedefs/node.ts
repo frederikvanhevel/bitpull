@@ -11,6 +11,7 @@ export enum NodeType {
     COLLECT = 'COLLECT',
     PAGINATION = 'PAGINATION',
     HTML = 'HTML',
+    HTML_LINKED = 'HTML_LINKED',
     HTML_MULTIPLE = 'HTML_MULTIPLE',
     CLICK = 'CLICK',
     LOGIN = 'LOGIN',
@@ -39,9 +40,11 @@ export interface FlowNode {
     children?: FlowNode[]
 }
 
-export type RootNode = HtmlNode | MultipleHtmlNode & {
-    parsedLink?: string
-}
+export type RootNode =
+    | HtmlNode
+    | (MultipleHtmlNode & {
+          parsedLink?: string
+      })
 
 export interface NodeInput<T, S = any, P = any> {
     node: T

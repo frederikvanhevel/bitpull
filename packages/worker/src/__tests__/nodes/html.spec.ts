@@ -22,6 +22,9 @@ describe('Html node', () => {
                 exitOnError: true
             }
         })
+        environment.mockDefault({
+            content: 'Hello world'
+        })
     })
 
     afterAll(async () => {
@@ -44,12 +47,14 @@ describe('Html node', () => {
             const result = await environment.parseNode({ node })
             expect(hasDefaultResult(result)).toBeTruthy()
         })
+    })
 
+    describe('Linked', () => {
         it('should throw when linked field content is not found', async () => {
             const root = createNode<HtmlNode>(NodeType.HTML, {
                 link: 'https://test.be'
             })
-            const node = createNode(NodeType.HTML, {
+            const node = createNode(NodeType.HTML_LINKED, {
                 linkedField: 'url'
             })
             const passedData = {}
@@ -64,7 +69,7 @@ describe('Html node', () => {
                 link: 'https://test.be',
                 parsedLink: 'https://test.be'
             })
-            const node = createNode<HtmlNode>(NodeType.HTML, {
+            const node = createNode<HtmlNode>(NodeType.HTML_LINKED, {
                 linkedField: 'url'
             })
             const passedData = {

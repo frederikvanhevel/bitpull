@@ -1,3 +1,4 @@
+import { randomizedDelay } from '../../../utils/delay'
 import { NodeParser, NodeType } from '../../../typedefs/node'
 import { assert, sequentialPromise } from '../../../utils/common'
 import { getFieldsFromHtml } from '../selectors'
@@ -14,7 +15,7 @@ const collect: NodeParser<CollectNode, CollectParseResult> = async (
     context
 ) => {
     const { watchedNodeId, onWatch, onLog, onError, settings } = options
-    const { node } = input
+    const { node, passedData } = input
     const { traverser } = context
 
     assert(node.fields && node.fields.length, CollectError.FIELDS_MISSING)
@@ -28,8 +29,8 @@ const collect: NodeParser<CollectNode, CollectParseResult> = async (
     }
 
     const data =
-        node.append === true && !!input.passedData
-            ? mergeData(input.passedData, parsedFields)
+        node.append === true && !!passedData
+            ? mergeData(passedData, parsedFields)
             : parsedFields
 
     if (onWatch && node.id === watchedNodeId) onWatch(data)
@@ -38,16 +39,17 @@ const collect: NodeParser<CollectNode, CollectParseResult> = async (
         ? (node.children[0] as HtmlNode)
         : undefined
 
-    if (
-        (hasChildOfTypes(node, [NodeType.HTML]),
-        !!htmlChild?.linkedField && Array.isArray(data))
-    ) {
+    if (hasChildOfTypes(node, [NodeType.HTML, NodeType.HTML_LINKED])) {
         assert(node.children?.length === 1, NodeError.TOO_MANY_CHILDREN)
 
-        const iteratedResult = data.slice(0, node.limit)
+        const iteratedResult = Array.isArray(data)
+            ? data.slice(0, node.limit)
+            : [data]
 
         await sequentialPromise(iteratedResult, async item => {
-            return traverser
+            await randomizedDelay()
+
+            await traverser
                 .parseNode({
                     ...input,
                     node: htmlChild!,

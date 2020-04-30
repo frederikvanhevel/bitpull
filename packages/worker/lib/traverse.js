@@ -79,7 +79,7 @@ class Traverser {
             assert_1.default(nodeResult, errors_1.NodeError.NO_RESULT);
             const { node } = nodeResult;
             if (!helper_1.isBranchNode(node) && ((_a = node.children) === null || _a === void 0 ? void 0 : _a.length)) {
-                const result = await Promise.all(node.children.map(async (child) => this.parseNode(Object.assign(Object.assign(Object.assign({}, input), nodeResult), { node: child, parent: node, rootAncestor: isPrimaryNode
+                await Promise.all(node.children.map(async (child) => this.parseNode(Object.assign(Object.assign(Object.assign({}, input), nodeResult), { node: child, parent: node, rootAncestor: isPrimaryNode
                         ? currentNode
                         : rootAncestor })).catch(error => {
                     if (settings.exitOnError) {
@@ -89,8 +89,6 @@ class Traverser {
                         onError(child, error);
                     }
                 })));
-                // @ts-ignore
-                return result;
             }
             return Object.assign(Object.assign({}, input), nodeResult);
         }

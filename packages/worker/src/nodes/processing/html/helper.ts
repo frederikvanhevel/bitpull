@@ -2,10 +2,10 @@ import { Page } from 'puppeteer-core'
 import { ParseError } from '../../common/errors'
 import { assert } from '../../../utils/common'
 import { NodeInput, TraverseOptions, Context } from '../../../typedefs/node'
-import { HtmlNode, LinkParseResult } from './typedefs'
+import { HtmlNode, LinkedHtmlNode } from './typedefs'
 
 export const parseLink = async (
-    input: NodeInput<HtmlNode>,
+    input: NodeInput<HtmlNode | LinkedHtmlNode>,
     options: TraverseOptions,
     context: Context,
     link: string

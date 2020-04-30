@@ -15,7 +15,6 @@ import StorageIcon from 'components/ui/icons/storage-icon'
 import ExcelIcon from 'components/ui/icons/excel-icon'
 import JsonIcon from 'components/ui/icons/json-icon'
 import WebhookIcon from 'components/ui/icons/webhook-icon'
-import EditUrl from '../modules/EditUrl'
 import Collect from '../modules/Collect'
 import Pagination from '../modules/Pagination'
 import Webhook from '../modules/Webhook'
@@ -39,7 +38,6 @@ import Csv from '../modules/Csv'
 import CsvIcon from 'components/ui/icons/csv-icon'
 import Scroll from '../modules/Scroll'
 import ScrollIcon from 'components/ui/icons/scroll-icon'
-import MultipleHtml from '../modules/MultipleHtml'
 import HtmlModule from '../modules/html'
 
 export interface NodeProperty {
@@ -53,6 +51,12 @@ export const NODE_PROPERTIES: Record<NodeType, NodeProperty> = {
     [NodeType.HTML]: {
         icon: UrlIcon,
         label: 'Get HTML content',
+        shortLabel: 'Get HTML',
+        editor: HtmlModule
+    },
+    [NodeType.HTML_LINKED]: {
+        icon: UrlIcon,
+        label: 'Get linked HTML content',
         shortLabel: 'Get HTML',
         editor: HtmlModule
     },
@@ -180,6 +184,6 @@ export const NODE_PROPERTIES: Record<NodeType, NodeProperty> = {
         icon: UrlIcon,
         label: 'Function - DEV ONLY',
         shortLabel: 'Function',
-        editor: EditUrl
+        editor: HtmlModule
     }
 }

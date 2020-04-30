@@ -3,13 +3,15 @@ import {
     NodeType,
     RootNode,
     HtmlNode,
-    MultipleHtmlNode
+    MultipleHtmlNode,
+    LinkedHtmlNode
 } from '@bitpull/worker/lib/typedefs'
 import { NODE_PROPERTIES } from './properties'
 import { uuid } from 'uuidv4'
 import { CollectNode, CollectField } from '@bitpull/worker/lib/typedefs'
 import { PaginationNode } from '@bitpull/worker/lib/typedefs'
 import { Attributes } from '../modules/common/Selector'
+import { getDefaultProps } from './defaults'
 
 export interface NodeMenuItem {
     type: NodeType
@@ -85,6 +87,7 @@ export const isExportOnlyNode = (node: Node) => {
 export const isProcessingOnlyNode = (node: Node) => {
     return (
         node.type === NodeType.HTML ||
+        node.type === NodeType.HTML_MULTIPLE ||
         node.type === NodeType.CLICK ||
         node.type === NodeType.LOGIN ||
         node.type === NodeType.WAIT ||
@@ -111,19 +114,19 @@ export const isPaginationNode = (node: Node): node is PaginationNode => {
 }
 
 export const isHtmlNode = (node: Node): node is HtmlNode => {
-    return (
-        !!(node as HtmlNode).link ||
-        (node as HtmlNode).link === '' ||
-        !!(node as HtmlNode).linkedField ||
-        (node as HtmlNode).linkedField === ''
-    )
+    return node.type === NodeType.HTML
+}
+
+export const isLinkedHtmlNode = (node: Node): node is LinkedHtmlNode => {
+    return node.type === NodeType.HTML_LINKED
 }
 
 export const isMultipleHtmlNode = (node: Node): node is MultipleHtmlNode => {
-    return !!(node as MultipleHtmlNode).links
+    return node.type === NodeType.HTML_MULTIPLE
 }
 
 export const isRoot = (node: Node) => {
+    console.log(node)
     return !node.parent
 }
 
@@ -137,27 +140,22 @@ export const getNewCollectField = (): CollectField => ({
 })
 
 export const getNewNode = (type: NodeType, parent?: Node): Node => {
-    const newNode = { id: uuid(), type }
+    return { id: uuid(), type, ...getDefaultProps(type) }
 
-    if (type === NodeType.HTML) {
-        // TODO if parent is collect node, auto search for links
-        // and add them as linked field
+    // if (type === NodeType.HTML) {
+    //     // TODO if parent is collect node, auto search for links
+    //     // and add them as linked field
 
-        const props =
-            parent?.type === NodeType.COLLECT
-                ? { linkedField: '' }
-                : { link: '' }
+    //     const props =
+    //         parent?.type === NodeType.COLLECT
+    //             ? { linkedField: '' }
+    //             : { link: '' }
 
-        return {
-            ...newNode,
-            ...props
-        } as RootNode
-    } else if (type === NodeType.COLLECT) {
-        return {
-            ...newNode,
-            fields: [getNewCollectField()]
-        } as CollectNode
-    }
+    //     return {
+    //         ...newNode,
+    //         ...props
+    //     } as RootNode
+    // } else 
 
-    return newNode
+    // return newNode
 }

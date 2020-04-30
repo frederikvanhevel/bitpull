@@ -28,6 +28,7 @@ const EXPORT_NODES = [
 exports.IMPORT_PATHS = {
     [node_1.NodeType.COLLECT]: '../nodes/processing/collect',
     [node_1.NodeType.HTML]: '../nodes/processing/html',
+    [node_1.NodeType.HTML_LINKED]: '../nodes/processing/html/linked',
     [node_1.NodeType.HTML_MULTIPLE]: '../nodes/processing/html/multiple',
     [node_1.NodeType.PAGINATION]: '../nodes/processing/pagination',
     [node_1.NodeType.CLICK]: '../nodes/processing/click',
@@ -50,8 +51,7 @@ exports.IMPORT_PATHS = {
     [node_1.NodeType.EMAIL]: '../nodes/notification/email'
 };
 exports.isRootNode = (node) => {
-    const linkNode = node;
-    return linkNode.type === node_1.NodeType.HTML && !!linkNode.link;
+    return node.type === node_1.NodeType.HTML;
 };
 exports.getModule = async (type) => {
     if (!exports.IMPORT_PATHS[type]) {
@@ -67,17 +67,19 @@ exports.isFileNode = (type) => {
 exports.isExportNode = (type) => {
     return EXPORT_NODES.includes(type);
 };
+exports.isCollectNode = (node) => {
+    return node.type === node_1.NodeType.COLLECT;
+};
 exports.hasChildOfTypes = (node, types) => {
     var _a;
-    return (_a = node.children) === null || _a === void 0 ? void 0 : _a.find(child => types.includes(child.type));
+    return !!((_a = node.children) === null || _a === void 0 ? void 0 : _a.find(child => types.includes(child.type)));
 };
 exports.hasChildExportNodes = (node) => {
     return exports.hasChildOfTypes(node, EXPORT_NODES);
 };
 exports.isBranchCollectNode = (node) => {
     return (node.type === node_1.NodeType.COLLECT &&
-        exports.hasChildOfTypes(node, [node_1.NodeType.HTML]) &&
-        !!node.children[0].linkedField);
+        exports.hasChildOfTypes(node, [node_1.NodeType.HTML, node_1.NodeType.HTML_LINKED]));
 };
 exports.isBranchNode = (node) => {
     return !!node.goToPerPage || exports.isBranchCollectNode(node);

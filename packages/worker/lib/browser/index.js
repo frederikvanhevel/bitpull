@@ -121,9 +121,9 @@ class CustomBrowser {
     resetMockHandler() {
         this.mockHandler = undefined;
     }
-    async logPages() {
+    async getActivePages() {
         var _a, _b;
-        console.log((_b = (await ((_a = this.browser) === null || _a === void 0 ? void 0 : _a.pages()))) === null || _b === void 0 ? void 0 : _b.length);
+        return ((_b = (await ((_a = this.browser) === null || _a === void 0 ? void 0 : _a.pages()))) === null || _b === void 0 ? void 0 : _b.length) || 0;
     }
     async cleanup() {
         var _a;

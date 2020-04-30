@@ -1,6 +1,8 @@
-import { NodeType } from '../typedefs/node'
-import { TestEnvironment } from './utils/environment'
-import { createNode } from './utils/factory'
+import { NodeType } from '../../typedefs/node'
+import { TestEnvironment } from '../utils/environment'
+import { createNode } from '../utils/factory'
+
+jest.setTimeout(10000)
 
 describe('Traverser', () => {
     it('should get a result object', async () => {

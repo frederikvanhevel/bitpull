@@ -30,7 +30,7 @@ const htmlPageTwo = `
     </html>
 `
 
-describe.skip('Traverser', () => {
+describe('Traverser', () => {
     let traverser: Traverser
     let browser: CustomBrowser
 

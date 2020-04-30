@@ -57,7 +57,8 @@ const changePlan = async (payment: Payment, plan: PaymentPlan) => {
         // new recurring plan
         const result = await stripeHandler.subscriptionItems.create({
             subscription: payment.subscriptionId,
-            plan: PAYMENT_PLAN_MAP[plan]
+            plan: PAYMENT_PLAN_MAP[plan],
+            proration_behavior: 'none'
         })
 
         return result.id
