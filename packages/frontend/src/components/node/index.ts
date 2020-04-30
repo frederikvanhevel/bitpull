@@ -4,7 +4,8 @@ import {
     NodeId,
     RootNode,
     CollectNode,
-    MultipleHtmlNode
+    MultipleHtmlNode,
+    MultipleClickNode
 } from '@bitpull/worker/lib/typedefs'
 import { PaginationNode } from '@bitpull/worker/lib/typedefs'
 import { Node } from 'typedefs/common'
@@ -155,6 +156,7 @@ export const traverseAncestors = (node: Node) => {
         NodeType.LOGIN,
         NodeType.WAIT,
         NodeType.CLICK,
+        NodeType.CLICK_MULTIPLE,
         NodeType.SCROLL,
         NodeType.COLLECT
     ]
@@ -187,6 +189,8 @@ export const traverseAncestors = (node: Node) => {
             ;(child as CollectNode).limit = 1
         } else if (child.type === NodeType.HTML_MULTIPLE) {
             ;(child as MultipleHtmlNode).limit = 1
+        } else if (child.type === NodeType.CLICK_MULTIPLE) {
+            ;(child as MultipleClickNode).limit = 1
         }
 
         lastChild.children = [child]

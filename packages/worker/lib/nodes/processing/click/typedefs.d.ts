@@ -6,7 +6,7 @@ export declare type ClickNode = FlowNode & {
     waitForNavigation?: boolean;
 };
 export interface MultipleClickNode extends BranchNode {
-    type: NodeType.CLICK;
+    type: NodeType.CLICK_MULTIPLE;
     selector: string;
     limit?: number;
     delay?: number;

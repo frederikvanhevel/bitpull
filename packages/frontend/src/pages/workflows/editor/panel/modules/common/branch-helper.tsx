@@ -3,26 +3,21 @@ import { MenuItem, ListItemIcon } from '@material-ui/core'
 import { Node } from 'typedefs/common'
 import { NodeType } from '@bitpull/worker/lib/typedefs'
 import { getIcon, getMenuItemsByType, NodeMenuItem } from '../../helper'
-import {
-    PaginationTypes,
-    NextLinkPagination,
-    LinkListPagination
-} from '@bitpull/worker/lib/nodes/processing/pagination/typedefs'
 import { NODE_PROPERTIES } from '../../helper/properties'
 
-export enum PaginationStep {
+export enum BranchStep {
     PER_PAGE = 'goToPerPage',
     END = 'goToOnEnd'
 }
 
-export const ALLOWED_CHILD_NODES: Record<PaginationStep, NodeType[]> = {
-    [PaginationStep.PER_PAGE]: [
+export const ALLOWED_CHILD_NODES: Record<BranchStep, NodeType[]> = {
+    [BranchStep.PER_PAGE]: [
         NodeType.COLLECT,
         NodeType.SCROLL,
         NodeType.SCREENSHOT,
         NodeType.PDF
     ],
-    [PaginationStep.END]: [
+    [BranchStep.END]: [
         NodeType.WEBHOOK,
         NodeType.EXCEL,
         NodeType.CSV,
@@ -30,7 +25,7 @@ export const ALLOWED_CHILD_NODES: Record<PaginationStep, NodeType[]> = {
     ]
 }
 
-export const hasValidChildren = (node: Node, type: PaginationStep) => {
+export const hasValidChildren = (node: Node, type: BranchStep) => {
     return (
         !node.children ||
         !node.children.length ||
@@ -42,7 +37,7 @@ export const hasValidChildren = (node: Node, type: PaginationStep) => {
 
 export const getExistingNodes = (
     node: Node,
-    type: PaginationStep,
+    type: BranchStep,
     onHighlightNode: (node?: Node) => void
 ) => {
     return (
@@ -72,7 +67,7 @@ export const getExistingNodes = (
 
 export const getMenuItems = (
     node: Node,
-    type: PaginationStep,
+    type: BranchStep,
     onHighlightNode: (node?: Node) => void
 ) => {
     let menuItems: JSX.Element[] = []
@@ -116,16 +111,4 @@ export const getMenuItems = (
     })
 
     return menuItems
-}
-
-export const isNextLinkPagination = (
-    pagination: PaginationTypes
-): pagination is NextLinkPagination => {
-    return (pagination as NextLinkPagination).nextLink !== undefined
-}
-
-export const isLinkListPagination = (
-    pagination: PaginationTypes
-): pagination is LinkListPagination => {
-    return (pagination as LinkListPagination).linkList !== undefined
 }

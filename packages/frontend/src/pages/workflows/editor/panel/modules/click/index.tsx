@@ -1,14 +1,24 @@
 import React from 'react'
-import { makeStyles, TextField } from '@material-ui/core'
-import Selector from './common/Selector'
-import { HTMLSelector } from '@bitpull/worker/lib/typedefs'
+import { makeStyles } from '@material-ui/core'
+import Selector from '../common/Selector'
+import {
+    HTMLSelector,
+    FlowNode,
+    NodeType,
+    MultipleClickNode
+} from '@bitpull/worker/lib/typedefs'
 import { ClickNode } from '@bitpull/worker/lib/typedefs'
 import ExpandableOptionRow from 'components/ui/expandable/ExpandableOptionRow'
-import SelectorButton from './common/SelectorButton'
+import { Node } from 'typedefs/common'
+import MultipleClick from './MultipleClick'
+import { isMultipleClickNode } from '../../helper'
+import TestRunWarning from '../common/TestRunWarning'
 
 interface Props {
-    node: ClickNode
+    node: Node<ClickNode> | Node<MultipleClickNode>
+    onAdd: (node: Node, extraProps?: object) => void
     onUpdate: (key: string, value: any) => void
+    onReplace: (node: FlowNode) => void
 }
 
 const useStyles = makeStyles(theme => ({
@@ -33,7 +43,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const Click: React.FC<Props> = ({ node, onUpdate }) => {
+const ClickModule: React.FC<Props> = ({ node, onAdd, onUpdate, onReplace }) => {
     const classes = useStyles()
 
     return (
@@ -49,35 +59,31 @@ const Click: React.FC<Props> = ({ node, onUpdate }) => {
                     }
                 />
             </div>
+
             <ExpandableOptionRow
                 className={classes.expand}
-                title="Wait before continuing"
-                active={node.delay !== undefined}
-                onChange={e => {
-                    onUpdate('delay', e.target.checked ? 5 : undefined)
+                title="Perform multiple clicks"
+                active={node.type === NodeType.CLICK_MULTIPLE}
+                onChange={() => {
+                    onReplace({
+                        ...node,
+                        type:
+                            node.type === NodeType.CLICK_MULTIPLE
+                                ? NodeType.CLICK
+                                : NodeType.CLICK_MULTIPLE
+                    })
                 }}
             >
-                <div className={classes.inlineInput}>
-                    Wait{' '}
-                    <TextField
-                        value={node.delay || 5}
-                        variant="outlined"
-                        type="number"
-                        error={isNaN(Number(node.delay))} // eslint-disable-line
-                        onChange={e =>
-                            onUpdate(
-                                'delay',
-                                e.target.value
-                                    ? Math.abs(Number(e.target.value))
-                                    : e.target.value
-                            )
-                        }
-                    />{' '}
-                    seconds before proceeding
-                </div>
+                <MultipleClick
+                    node={node as MultipleClickNode}
+                    onAdd={onAdd}
+                    onUpdate={onUpdate}
+                />
             </ExpandableOptionRow>
+
+            {isMultipleClickNode(node) && <TestRunWarning unit="clicks" />}
         </>
     )
 }
 
-export default Click
+export default ClickModule

@@ -12,7 +12,7 @@ import ExpandableOptionRow from 'components/ui/expandable/ExpandableOptionRow'
 import Selector from './common/Selector'
 import { isNodeType, getNewNode } from '../helper'
 import { HTMLSelector } from '@bitpull/worker/lib/typedefs'
-import { getMenuItems, PaginationStep } from './common/pagination-helper'
+import { getMenuItems, BranchStep } from './common/branch-helper'
 import { setHighlightedNodeId } from 'actions/workflow'
 import { Node } from 'typedefs/common'
 import { useDispatch } from 'react-redux'
@@ -133,7 +133,7 @@ const Pagination: React.FC<Props> = ({ node, onUpdate, onAdd }) => {
                     >
                         {getMenuItems(
                             node,
-                            PaginationStep.PER_PAGE,
+                            BranchStep.PER_PAGE,
                             onHighLightNode
                         )}
                     </Select>
@@ -155,11 +155,7 @@ const Pagination: React.FC<Props> = ({ node, onUpdate, onAdd }) => {
                             selectNextNode('goToOnEnd', e.target.value)
                         }}
                     >
-                        {getMenuItems(
-                            node,
-                            PaginationStep.END,
-                            onHighLightNode
-                        )}
+                        {getMenuItems(node, BranchStep.END, onHighLightNode)}
                     </Select>
                 </FormControl>
             </div>

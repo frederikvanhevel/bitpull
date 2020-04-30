@@ -39,7 +39,7 @@ const DEFAULT_OPTIONS: TraverseOptions = {
 class Traverser {
     private options: TraverseOptions
     private context: Context
-    private canceled: boolean = false
+    public canceled: boolean = false
     private errorCount: number = 0
 
     constructor(
@@ -191,7 +191,7 @@ class Traverser {
                 code: error.code
             })
 
-            Logger.error(new Error('Error happend during node run'), error)
+            if (!this.canceled) Logger.error(new Error('Error happend during node run'), error)
 
             originalErrorFn && originalErrorFn(node, error)
         }
@@ -233,7 +233,7 @@ class Traverser {
                 status = errors.length ? Status.PARTIAL_SUCCESS : Status.SUCCESS
             }
         } catch (error) {
-            Logger.error(new Error('Fatal error during run'), error)
+            if (!this.canceled) Logger.error(new Error('Fatal error during run'), error)
             status = Status.ERROR
         } finally {
             this.options.onError = originalErrorFn
@@ -261,6 +261,7 @@ class Traverser {
     }
 
     public async cleanup(): Promise<void> {
+        this.canceled = true
         const { browser } = this.context
         if (!browser) return
         await browser.cleanup()

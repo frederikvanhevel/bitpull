@@ -1,11 +1,15 @@
 import React from 'react'
 import { makeStyles, FormHelperText, Link } from '@material-ui/core'
-import { Warning, Info } from '@material-ui/icons'
+import { Info } from '@material-ui/icons'
 import { Link as RouterLink } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { AppState } from 'redux/store'
 
-const useStyles = makeStyles((theme) => ({
+type Props = {
+    unit?: string
+}
+
+const useStyles = makeStyles(theme => ({
     wrapper: {
         display: 'flex',
         flexDirection: 'row',
@@ -25,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-const TestRunWarning: React.FC = () => {
+const TestRunWarning: React.FC<Props> = ({ unit = 'pages' }) => {
     const classes = useStyles()
     const workflowId = useSelector<AppState, string | undefined>(
         state => state.workflow.currentWorkflow?.id
@@ -36,7 +40,13 @@ const TestRunWarning: React.FC = () => {
     return (
         <FormHelperText className={classes.wrapper}>
             <Info className={classes.icon} />
-            <div className={classes.text}>Only maximum two pages will be followed during test runs. <Link component={RouterLink} to={link}>Schedule a job</Link> to scrape without limitations.</div>
+            <div className={classes.text}>
+                Only maximum two {unit} will be followed during test runs.{' '}
+                <Link component={RouterLink} to={link}>
+                    Schedule a job
+                </Link>{' '}
+                to scrape without limitations.
+            </div>
         </FormHelperText>
     )
 }

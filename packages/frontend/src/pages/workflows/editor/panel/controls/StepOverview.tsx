@@ -6,6 +6,7 @@ import {
     isPaginationNode,
     getTitle,
     isHtmlNode,
+    isLinkedHtmlNode,
     isMultipleHtmlNode
 } from '../helper'
 import {
@@ -15,15 +16,15 @@ import {
     ListItemIcon,
     ListItemText
 } from '@material-ui/core'
-import {
-    isNextLinkPagination,
-    isLinkListPagination
-} from '../modules/common/pagination-helper'
 import { useDispatch, useSelector } from 'react-redux'
 import { setHighlightedNodeId } from 'actions/workflow'
 import { AppState } from 'redux/store'
 import { NodeType, WaitNode } from '@bitpull/worker/lib/typedefs'
 import { truncate } from 'utils/text'
+import {
+    isNextLinkPagination,
+    isLinkListPagination
+} from '../modules/common/pagination'
 
 interface Props {
     node: Node
@@ -49,9 +50,9 @@ const getNodeLabel = (node: Node) => {
     } else if (node.type === NodeType.WAIT) {
         return `Wait ${(node as WaitNode).delay} seconds`
     } else if (isHtmlNode(node)) {
-        return `${label} of ${
-            node.link ? truncate(node.link) : node.linkedField
-        }`
+        return `${label} of ${truncate(node.link)}`
+    } else if (isLinkedHtmlNode(node)) {
+        return `${label} of ${node.linkedField}`
     } else if (isMultipleHtmlNode(node)) {
         return `${node.links?.length || 0} links`
     }

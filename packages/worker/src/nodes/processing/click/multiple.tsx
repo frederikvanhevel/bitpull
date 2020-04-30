@@ -19,13 +19,6 @@ const clickMultiple: NodeParser<MultipleClickNode> = async (
     const { selector, waitForNavigation, delay = 0 } = node
 
     assert(node.selector, ParseError.SELECTOR_MISSING)
-    assert(node.children?.length, NodeError.CHILD_NODE_MISSING)
-
-    const childNode = node.goToPerPage
-        ? node.children.find(child => child.id === node.goToPerPage)
-        : node.children[0]
-
-    assert(childNode, PaginationError.GOTOPERPAGE_NODE_MISSING)
 
     const allResults: object[] = []
 
@@ -42,13 +35,21 @@ const clickMultiple: NodeParser<MultipleClickNode> = async (
 
                     await wait(page, delay, waitForNavigation)
 
-                    await traverser.parseNode({
-                        ...input,
-                        node: childNode,
-                        parent: node,
-                        page,
-                        branchCallback: data => allResults.push(data)
-                    })
+                    if (node.children?.length) {
+                        const childNode = node.goToPerPage
+                            ? node.children.find(child => child.id === node.goToPerPage)
+                            : node.children[0]
+
+                        await traverser.parseNode({
+                            ...input,
+                            node: childNode!,
+                            parent: node,
+                            page,
+                            branchCallback: data => allResults.push(data)
+                        })
+                    }
+
+                    
                 } catch (error) {
                     throw new FlowError(ClickError.COULD_NOT_CLICK)
                 }

@@ -8,7 +8,7 @@ export type ClickNode = FlowNode & {
 }
 
 export interface MultipleClickNode extends BranchNode {
-    type: NodeType.CLICK
+    type: NodeType.CLICK_MULTIPLE
     selector: string
     limit?: number
     delay?: number

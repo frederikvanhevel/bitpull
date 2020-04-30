@@ -1,4 +1,4 @@
-import { NodeType, FlowNode, CollectNode, PaginationNode, MultipleHtmlNode } from "@bitpull/worker"
+import { NodeType, FlowNode, CollectNode, PaginationNode, MultipleHtmlNode, MultipleClickNode } from "@bitpull/worker"
 
 const ALLOWED_LINKS = 2
 
@@ -14,6 +14,10 @@ export const limitFollowedLinks = (node: FlowNode) => {
 
         if (innerNode.type === NodeType.PAGINATION) {
             (innerNode as PaginationNode).linkLimit = ALLOWED_LINKS
+        }
+
+        if (innerNode.type === NodeType.CLICK_MULTIPLE) {
+            (innerNode as MultipleClickNode).limit = ALLOWED_LINKS
         }
 
         if (innerNode.children) {

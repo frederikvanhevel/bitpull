@@ -14,7 +14,7 @@ export enum Work {
 
 const kill = (proc: ChildProcess) => {
     if (!proc) return
-    treekill(proc.pid)
+    treekill(proc.pid, 'SIGTERM')
 }
 
 const spawn = (

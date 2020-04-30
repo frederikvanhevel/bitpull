@@ -18,7 +18,7 @@ import WebhookIcon from 'components/ui/icons/webhook-icon'
 import Collect from '../modules/Collect'
 import Pagination from '../modules/Pagination'
 import Webhook from '../modules/Webhook'
-import Click from '../modules/Click'
+import Click from '../modules/click'
 import Slack from '../modules/Slack'
 import Dropbox from '../modules/Dropbox'
 import Storage from '../modules/Storage'
@@ -87,6 +87,12 @@ export const NODE_PROPERTIES: Record<NodeType, NodeProperty> = {
     [NodeType.CLICK]: {
         icon: ClickIcon,
         label: 'Click element',
+        shortLabel: 'Click',
+        editor: Click
+    },
+    [NodeType.CLICK_MULTIPLE]: {
+        icon: ClickIcon,
+        label: 'Click elements',
         shortLabel: 'Click',
         editor: Click
     },

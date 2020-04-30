@@ -10,7 +10,12 @@ import {
 import { Node } from 'typedefs/common'
 import SingleUrl from './SingleUrl'
 import MultipleUrl from './MultipleUrl'
-import { isMultipleHtmlNode, isHtmlNode, isRoot, isLinkedHtmlNode } from '../../helper'
+import {
+    isMultipleHtmlNode,
+    isHtmlNode,
+    isRoot,
+    isLinkedHtmlNode
+} from '../../helper'
 import TestRunWarning from '../common/TestRunWarning'
 import LinkedUrl from './LinkedUrl'
 
@@ -51,8 +56,6 @@ const HtmlModule: React.FC<Props> = props => {
             })
         }
     }
-
-    console.log(isMultipleHtmlNode(node))
 
     return (
         <>

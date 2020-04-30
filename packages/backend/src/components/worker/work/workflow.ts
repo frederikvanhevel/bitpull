@@ -63,7 +63,7 @@ process.on('message', async (args: WorkerArgs) => {
         await traverser.cleanup()
     } catch (error) {
         await traverser.cleanup()
-        throw error
+        if (!traverser.canceled) throw error
     }
 })
 
@@ -72,4 +72,5 @@ const cleanup = async () => {
 }
 
 process.on('SIGINT', cleanup)
+process.on('SIGTERM', cleanup)
 process.on('exit', cleanup)
