@@ -7,8 +7,6 @@ interface Props {
     onUpdate: (key: string, value: any) => void
 }
 
-const DEFAULT_DELAY = 5
-
 const useStyles = makeStyles(theme => ({
     wrapper: {
         padding: theme.spacing(3)
@@ -27,7 +25,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const Scroll: React.FC<Props> = ({ node, onUpdate }) => {
+const Scroll: React.FC<Props> = () => {
     const classes = useStyles()
 
     return (

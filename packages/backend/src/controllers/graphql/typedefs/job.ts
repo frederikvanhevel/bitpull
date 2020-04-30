@@ -42,6 +42,7 @@ export const Job = gql`
 
 export const JobInput = gql`
     enum ScheduleType {
+        IMMEDIATELY
         ONCE
         INTERVAL
         CRON
@@ -50,6 +51,6 @@ export const JobInput = gql`
         name: String!
         workflowId: String!
         type: ScheduleType!
-        schedule: String!
+        schedule: String
     }
 `

@@ -18,7 +18,6 @@ describe('Catalog service', () => {
             sort: () => jest.fn()
         })
 
-
         await CatalogService.getItems()
         expect(mockedCatalogModel.find).toHaveBeenCalledWith({
             visible: true

@@ -56,7 +56,7 @@ export const NODE_PROPERTIES: Record<NodeType, NodeProperty> = {
     },
     [NodeType.HTML_LINKED]: {
         icon: UrlIcon,
-        label: 'Get linked HTML content',
+        label: 'Get HTML content',
         shortLabel: 'Get HTML',
         editor: HtmlModule
     },

@@ -22,10 +22,10 @@ import {
     LimitReachedError
 } from 'utils/errors'
 import Worker from 'components/worker'
+import { limitFollowedLinks } from 'services/workflow/helper'
 import { AuthenticationContext } from '../directives/auth'
 import { pubsub } from '../schema'
 import { SubscriptionEvent } from '../typedefs/workflow'
-import { limitFollowedLinks } from 'services/workflow/helper'
 
 const TIMEOUT = Number(process.env.RUNNER_TIMEOUT || 900000)
 

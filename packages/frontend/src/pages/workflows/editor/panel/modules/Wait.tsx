@@ -38,7 +38,7 @@ const Wait: React.FC<Props> = ({ node, onUpdate }) => {
                     value={node.delay || DEFAULT_DELAY}
                     variant="outlined"
                     type="number"
-                    error={isNaN(Number(node.delay || DEFAULT_DELAY))} // eslint-disable-line
+                    error={isNaN(Number(node.delay || DEFAULT_DELAY))}
                     onChange={e =>
                         onUpdate(
                             'delay',

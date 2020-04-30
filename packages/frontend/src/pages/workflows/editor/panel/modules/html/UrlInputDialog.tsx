@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { TextField, makeStyles } from '@material-ui/core'
 import ConfirmDialog from 'components/ui/dialogs/ConfirmDialog'
 import { useForm } from 'react-hook-form'
-import { MULTIPLE_URL_REGEX, URL_REGEX } from '../common/validation'
+import { URL_REGEX } from '../common/validation'
 
 interface Props {
     links?: string[]

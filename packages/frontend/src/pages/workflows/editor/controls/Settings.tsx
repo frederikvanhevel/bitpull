@@ -1,25 +1,13 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/styles'
-import {
-    Theme,
-    IconButton,
-    Menu,
-    MenuItem,
-    FormControlLabel,
-    Switch,
-    Divider
-} from '@material-ui/core'
+import { Theme, IconButton, Menu, MenuItem } from '@material-ui/core'
 import VisibilityIcon from '@material-ui/icons/Visibility'
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
 import SettingsIcon from '@material-ui/icons/Settings'
 import DescriptionIcon from '@material-ui/icons/Description'
 import { useSelector, useDispatch } from 'react-redux'
 import { AppState } from 'redux/store'
-import {
-    setWatchedNodeId,
-    toggleWatcherSelect,
-    changeWorkflowSettings
-} from 'actions/workflow'
+import { setWatchedNodeId, toggleWatcherSelect } from 'actions/workflow'
 import { WorkflowState } from 'reducers/workflow'
 
 interface Props {
@@ -40,12 +28,7 @@ const Settings: React.FC<Props> = ({ running, onShowLogs }) => {
     const workflow = useSelector<AppState, WorkflowState>(
         state => state.workflow
     )
-    const {
-        result,
-        isSelectingWatcher,
-        watchedNodeId,
-        currentWorkflow
-    } = workflow
+    const { result, isSelectingWatcher, watchedNodeId } = workflow
 
     const toggleWatcherSelection = () => {
         dispatch(
@@ -56,9 +39,9 @@ const Settings: React.FC<Props> = ({ running, onShowLogs }) => {
         setAnchorEl(undefined)
         cb()
     }
-    const changeSettings = (newSettings: object) => {
-        dispatch(changeWorkflowSettings(newSettings))
-    }
+    // const changeSettings = (newSettings: object) => {
+    //     dispatch(changeWorkflowSettings(newSettings))
+    // }
 
     return (
         <>

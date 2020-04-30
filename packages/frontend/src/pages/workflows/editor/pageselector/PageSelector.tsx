@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Theme, Slide } from '@material-ui/core'
 import SelectorTopControls from './SelectorTopControls'
-import BrowserFrame, {SelectorPayload} from './BrowserFrame'
+import BrowserFrame, { SelectorPayload } from './BrowserFrame'
 import { Node } from 'typedefs/common'
 
 interface Props {

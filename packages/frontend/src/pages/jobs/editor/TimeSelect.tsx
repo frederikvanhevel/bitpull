@@ -13,18 +13,21 @@ export interface Time {
 }
 
 export enum ScheduleType {
+    IMMEDIATELY = 'IMMEDIATELY',
     ONCE = 'ONCE',
     INTERVAL = 'INTERVAL',
     CRON = 'CRON'
 }
 
 const ScheduleTypeLabels: Record<ScheduleType, string> = {
+    [ScheduleType.IMMEDIATELY]: 'Run immediately',
     [ScheduleType.ONCE]: 'Run once',
     [ScheduleType.INTERVAL]: 'Interval',
     [ScheduleType.CRON]: 'Cron'
 }
 
 const Defaults: Record<ScheduleType, any> = {
+    [ScheduleType.IMMEDIATELY]: undefined,
     [ScheduleType.ONCE]: new Date(),
     [ScheduleType.INTERVAL]: '30 minutes',
     [ScheduleType.CRON]: ''

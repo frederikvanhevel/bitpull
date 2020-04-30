@@ -1,10 +1,7 @@
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import {
-    makeStyles,
-    TextField
-} from '@material-ui/core'
-import { Link, LowPriority } from '@material-ui/icons'
+import { makeStyles, TextField } from '@material-ui/core'
+import { LowPriority } from '@material-ui/icons'
 import { HtmlNode, NodeType, FlowNode } from '@bitpull/worker/lib/typedefs'
 import { Node } from 'typedefs/common'
 import { CollectNode, CollectField } from '@bitpull/worker/lib/typedefs'
@@ -53,11 +50,11 @@ const SingleUrl: React.FC<Props> = ({ node, onUpdate, onReplace }) => {
         {
             label: 'Convert to linked field',
             onClick: () => {
-                  onReplace({
-                      type: NodeType.HTML_LINKED,
-                      // @ts-ignore
-                      linkedField: ''
-                  })
+                onReplace({
+                    type: NodeType.HTML_LINKED,
+                    // @ts-ignore
+                    linkedField: ''
+                })
             },
             icon: <LowPriority />
         }

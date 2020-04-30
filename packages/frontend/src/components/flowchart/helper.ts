@@ -132,7 +132,9 @@ export const getNodeText = (node: Node): string => {
         return !!link && link !== '' ? link : 'Enter a url'
     } else if (node.type === NodeType.HTML_LINKED) {
         const htmlNode = node as LinkedHtmlNode
-        return !!htmlNode.linkedField ? `{{${htmlNode.linkedField}}}` : 'select field'
+        return htmlNode.linkedField
+            ? `{{${htmlNode.linkedField}}}`
+            : 'select field'
     } else if (node.type === NodeType.HTML_MULTIPLE) {
         const htmlNode = node as MultipleHtmlNode
         const links = htmlNode.links

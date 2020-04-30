@@ -19,7 +19,10 @@ interface Props {
 }
 
 const OptionsMenu: React.FC<Props> = ({ job, showLog, removeJob }) => {
-    const { data } = useQuery<hasPaymentMethod>(HAS_PAYMENT_METHOD)
+    // TODO only load data when menu is open
+    const { data } = useQuery<hasPaymentMethod>(HAS_PAYMENT_METHOD, {
+        fetchPolicy: 'cache-and-network'
+    })
     const paymentReady = data && data.hasPaymentMethod === true
     const [resume] = useMutation<resumeJob>(RESUME_JOB, {
         variables: { id: job.id },

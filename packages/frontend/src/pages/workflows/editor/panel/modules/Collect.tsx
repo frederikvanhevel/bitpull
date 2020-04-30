@@ -3,7 +3,11 @@ import { useForm } from 'react-hook-form'
 import { makeStyles, TextField, Button, Typography } from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { Node } from 'typedefs/common'
-import { CollectNode, CollectField, NodeType } from '@bitpull/worker/lib/typedefs'
+import {
+    CollectNode,
+    CollectField,
+    NodeType
+} from '@bitpull/worker/lib/typedefs'
 import MoreMenu from 'components/ui/MoreMenu'
 import ExpandableOptionRow from 'components/ui/expandable/ExpandableOptionRow'
 import Selector from './common/Selector'
@@ -105,42 +109,40 @@ const Collect: React.FC<Props> = ({ node, onUpdate }) => {
                             className={classes.fieldWrapper}
                         >
                             <div className={classes.field}>
-                                
-
                                 {field.selector?.value !== '' ? (
                                     <>
-                                    <TextField
-                                    label="Your data field name"
-                                    placeholder="my-field-name"
-                                    error={
-                                        errors.fields &&
-                                        !!errors.fields[index]?.label
-                                    }
-                                    name={`${fieldName}.label`}
-                                    inputRef={register({
-                                        required: true
-                                    })}
-                                    autoFocus
-                                    onChange={e =>
-                                        onUpdateField(
-                                            field,
-                                            'label',
-                                            e.target.value
-                                        )
-                                    }
-                                />
-                                    <Selector
-                                        label="Selected element"
-                                        selector={field.selector}
-                                        node={node}
-                                        onUpdate={selector => {
-                                            onUpdateField(
-                                                field,
-                                                'selector',
-                                                selector
-                                            )
-                                        }}
-                                    />
+                                        <TextField
+                                            label="Your data field name"
+                                            placeholder="my-field-name"
+                                            error={
+                                                errors.fields &&
+                                                !!errors.fields[index]?.label
+                                            }
+                                            name={`${fieldName}.label`}
+                                            inputRef={register({
+                                                required: true
+                                            })}
+                                            autoFocus
+                                            onChange={e =>
+                                                onUpdateField(
+                                                    field,
+                                                    'label',
+                                                    e.target.value
+                                                )
+                                            }
+                                        />
+                                        <Selector
+                                            label="Selected element"
+                                            selector={field.selector}
+                                            node={node}
+                                            onUpdate={selector => {
+                                                onUpdateField(
+                                                    field,
+                                                    'selector',
+                                                    selector
+                                                )
+                                            }}
+                                        />
                                     </>
                                 ) : (
                                     <SelectorButton
@@ -156,33 +158,39 @@ const Collect: React.FC<Props> = ({ node, onUpdate }) => {
                                     />
                                 )}
                             </div>
-                            {fields.length > 1 && <MoreMenu options={getMenuOptions(field)} />}
+                            {fields.length > 1 && (
+                                <MoreMenu options={getMenuOptions(field)} />
+                            )}
                         </div>
                     )
                 })}
 
-            {hasValidField() && <div className={classes.addButton}>
-                <Button
-                    variant="outlined"
-                    size="small"
-                    color="primary"
-                    onClick={onAddField}
-                >
-                    Collect more data
-                </Button>
-            </div>}
+            {hasValidField() && (
+                <div className={classes.addButton}>
+                    <Button
+                        variant="outlined"
+                        size="small"
+                        color="primary"
+                        onClick={onAddField}
+                    >
+                        Collect more data
+                    </Button>
+                </div>
+            )}
 
-            {findParentOfType(node.parent!, [NodeType.COLLECT]) && <ExpandableOptionRow
-                className={classes.expand}
-                title="Merge with previous results"
-                active={node.append || false}
-                onChange={e => onUpdate('append', e.target.checked)}
-            >
-                <Typography variant="caption">
-                    The data collected will be merged with the previous
-                    collected data. For example from before pagination.
-                </Typography>
-            </ExpandableOptionRow>}
+            {findParentOfType(node.parent!, [NodeType.COLLECT]) && (
+                <ExpandableOptionRow
+                    className={classes.expand}
+                    title="Merge with previous results"
+                    active={node.append || false}
+                    onChange={e => onUpdate('append', e.target.checked)}
+                >
+                    <Typography variant="caption">
+                        The data collected will be merged with the previous
+                        collected data. For example from before pagination.
+                    </Typography>
+                </ExpandableOptionRow>
+            )}
         </div>
     )
 }

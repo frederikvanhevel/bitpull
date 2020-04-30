@@ -74,10 +74,10 @@ const SelectorTopControls: React.FC<Props> = ({
             <div className={classes.middle}>
                 {payload?.prediction && (
                     <>
-                    <Typography variant="body2">
-                        Selected items: <b>{payload.selectedItems}</b>
-                    </Typography>
-                    {/* <Typography variant="body2">
+                        <Typography variant="body2">
+                            Selected items: <b>{payload.selectedItems}</b>
+                        </Typography>
+                        {/* <Typography variant="body2">
                         Selector: <b>{payload.prediction}</b>
                     </Typography> */}
                     </>

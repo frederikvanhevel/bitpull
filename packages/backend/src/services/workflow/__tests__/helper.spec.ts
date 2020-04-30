@@ -6,40 +6,48 @@ describe('Workflow helper', () => {
         const input: FlowNode = {
             id: '1',
             type: NodeType.HTML,
-            children: [{
-                id: '2',
-                type: NodeType.COLLECT,
-                children: [{
-                    id: '3',
+            children: [
+                {
+                    id: '2',
+                    type: NodeType.COLLECT,
+                    children: [
+                        {
+                            id: '3',
+                            type: NodeType.PAGINATION
+                        }
+                    ]
+                },
+                {
+                    id: '4',
                     type: NodeType.PAGINATION
-                }]
-            },
-            {
-                id: '4',
-                type: NodeType.PAGINATION
-            }]
+                }
+            ]
         }
 
         const output: FlowNode = {
             id: '1',
             type: NodeType.HTML,
-            children: [{
-                id: '2',
-                type: NodeType.COLLECT,
-                limit: 2,
-                children: [{
-                    id: '3',
+            children: [
+                {
+                    id: '2',
+                    type: NodeType.COLLECT,
+                    limit: 2,
+                    children: [
+                        {
+                            id: '3',
+                            type: NodeType.PAGINATION,
+                            // @ts-ignore
+                            linkLimit: 2
+                        }
+                    ]
+                },
+                {
+                    id: '4',
                     type: NodeType.PAGINATION,
                     // @ts-ignore
                     linkLimit: 2
-                }]
-            },
-            {
-                id: '4',
-                type: NodeType.PAGINATION,
-                // @ts-ignore
-                linkLimit: 2
-            }]
+                }
+            ]
         }
 
         expect(limitFollowedLinks(input)).toEqual(output)

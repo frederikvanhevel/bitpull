@@ -34,6 +34,7 @@ process.on('message', async (args: WorkerArgs) => {
     } catch (error) {
         Logger.error(new Error('Error happened in single node worker'), error)
         await traverser.cleanup()
+        // eslint-disable-next-line no-process-exit
         process.exit(1)
     }
 })

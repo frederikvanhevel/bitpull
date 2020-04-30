@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import React from 'react'
 import {
     makeStyles,
     FormControl,
@@ -8,7 +7,11 @@ import {
     MenuItem
 } from '@material-ui/core'
 import { Link } from '@material-ui/icons'
-import { HtmlNode, NodeType, FlowNode, LinkedHtmlNode } from '@bitpull/worker/lib/typedefs'
+import {
+    NodeType,
+    FlowNode,
+    LinkedHtmlNode
+} from '@bitpull/worker/lib/typedefs'
 import { Node } from 'typedefs/common'
 import { CollectNode, CollectField } from '@bitpull/worker/lib/typedefs'
 import MoreMenu from 'components/ui/MoreMenu'
@@ -51,11 +54,11 @@ const LinkedUrl: React.FC<Props> = ({ node, onUpdate, onReplace }) => {
         {
             label: 'Convert to link',
             onClick: () => {
-              onReplace({
-                  type: NodeType.HTML,
-                  // @ts-ignore
-                  link: ''
-              })
+                onReplace({
+                    type: NodeType.HTML,
+                    // @ts-ignore
+                    link: ''
+                })
             },
             icon: <Link />
         }
@@ -70,9 +73,7 @@ const LinkedUrl: React.FC<Props> = ({ node, onUpdate, onReplace }) => {
                         value={node.linkedField}
                         placeholder="select "
                         name="linkedField"
-                        onChange={e =>
-                            onUpdate('linkedField', e.target.value)
-                        }
+                        onChange={e => onUpdate('linkedField', e.target.value)}
                     >
                         {!parentFields.length ? (
                             <MenuItem value="none" disabled>
@@ -82,10 +83,7 @@ const LinkedUrl: React.FC<Props> = ({ node, onUpdate, onReplace }) => {
 
                         {parentFields.map(field => {
                             return (
-                                <MenuItem
-                                    key={field.label}
-                                    value={field.label}
-                                >
+                                <MenuItem key={field.label} value={field.label}>
                                     {field.label}
                                 </MenuItem>
                             )

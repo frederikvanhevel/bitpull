@@ -18,7 +18,6 @@ import { AppState } from 'redux/store'
 import { Prompt } from 'react-router-dom'
 import { WorkflowState } from 'reducers/workflow'
 import PageTitle from 'components/navigation/PageTitle'
-import { uuid } from 'uuidv4'
 
 const Editor: React.FC = () => {
     const dispatch = useDispatch()

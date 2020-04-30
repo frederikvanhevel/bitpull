@@ -174,7 +174,7 @@ const Pagination: React.FC<Props> = ({ node, onUpdate, onAdd }) => {
                         value={node.linkLimit}
                         variant="outlined"
                         type="number"
-                        error={isNaN(Number(node.linkLimit))} // eslint-disable-line
+                        error={isNaN(Number(node.linkLimit))}
                         onChange={e =>
                             onUpdate(
                                 'linkLimit',

@@ -9,6 +9,7 @@ import MailService from 'services/mail'
 import { User } from 'models/user'
 import Segment, { TrackingEvent } from 'components/segment'
 import { ScheduleType, JobAttributes } from './typedefs'
+import { addSeconds } from 'date-fns'
 
 export const JOB_LIMIT = 50
 
@@ -37,7 +38,9 @@ const createJob = async (
         .unique({ 'data.processId': workflowId })
         .enable()
 
-    if (type !== ScheduleType.ONCE) {
+    if (type === ScheduleType.IMMEDIATELY) {
+        agendaJob.schedule(addSeconds(new Date(), 5))
+    } else if (type !== ScheduleType.ONCE) {
         agendaJob.repeatEvery(schedule, { skipImmediate: true })
     } else {
         agendaJob.schedule(new Date(schedule))

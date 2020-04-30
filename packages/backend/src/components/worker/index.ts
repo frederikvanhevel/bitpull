@@ -2,8 +2,8 @@ import { join } from 'path'
 import { fork, ChildProcess } from 'child_process'
 import treekill from 'tree-kill'
 import { RunnerTimeoutReachedError } from 'utils/errors'
-import { Handler, WorkerArgs, WorkerEvent } from './typedefs'
 import Logger from 'utils/logging/logger'
+import { Handler, WorkerArgs, WorkerEvent } from './typedefs'
 
 const TIMEOUT = Number(process.env.RUNNER_TIMEOUT || 900000)
 
