@@ -94,7 +94,7 @@ const Details: React.FC<Props> = ({
         })
     }
     const addNewNode = (type: NodeType) =>
-        onAddNode({ ...getNewNode(type, node), parent: node })
+        onAddNode({ ...getNewNode(type), parent: node })
 
     return (
         <Paper className={classes.wrapper} elevation={3}>

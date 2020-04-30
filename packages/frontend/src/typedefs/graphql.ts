@@ -50,6 +50,7 @@ export enum ResourceType {
 
 export enum ScheduleType {
   CRON = "CRON",
+  IMMEDIATELY = "IMMEDIATELY",
   INTERVAL = "INTERVAL",
   ONCE = "ONCE",
 }
@@ -80,7 +81,7 @@ export interface JobInput {
   name: string;
   workflowId: string;
   type: ScheduleType;
-  schedule: string;
+  schedule?: string | null;
 }
 
 export interface LoginUserInput {

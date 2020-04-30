@@ -74,9 +74,18 @@ const HtmlModule: React.FC<Props> = props => {
                     />
                 )}
 
-                {isHtmlNode(node) && <SingleUrl {...props} />}
-                {isLinkedHtmlNode(node) && <LinkedUrl {...props} />}
-                {isMultipleHtmlNode(node) && <MultipleUrl {...props} />}
+                {isHtmlNode(node) && (
+                    // @ts-ignore
+                    <SingleUrl {...props} />
+                )}
+                {isLinkedHtmlNode(node) && (
+                    // @ts-ignore
+                    <LinkedUrl {...props} />
+                )}
+                {isMultipleHtmlNode(node) && (
+                    // @ts-ignore
+                    <MultipleUrl {...props} />
+                )}
             </div>
 
             {isMultipleHtmlNode(node) && <TestRunWarning />}
