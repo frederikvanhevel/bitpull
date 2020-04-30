@@ -5,7 +5,6 @@
     "outDir": "./lib",
     "isolatedModules": false,
     "strict": true,
-    "moduleResolution": "node",
     "declaration": true,
     "preserveSymlinks": true,
     "typeRoots": [

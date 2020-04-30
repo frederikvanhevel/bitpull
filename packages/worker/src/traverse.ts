@@ -71,13 +71,16 @@ class Traverser {
         if (
             node.children?.length &&
             (node.type === NodeType.PAGINATION ||
-                node.type === NodeType.HTML_MULTIPLE)
+                node.type === NodeType.HTML_MULTIPLE ||
+                node.type === NodeType.CLICK_MULTIPLE)
         ) {
             const branchNode = node as BranchNode
             const branchResult = await module(input, this.options, this.context)
-            const endNode = node.children.find(
-                childNode => childNode.id === branchNode.goToOnEnd
-            )
+            const endNode = branchNode.goToOnEnd
+                ? node.children.find(
+                      childNode => childNode.id === branchNode.goToOnEnd
+                  )
+                : undefined
 
             if (endNode) {
                 onLog && onLog(node, 'Pagination finished')

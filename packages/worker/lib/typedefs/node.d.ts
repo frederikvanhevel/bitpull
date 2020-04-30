@@ -12,6 +12,7 @@ export declare enum NodeType {
     HTML_LINKED = "HTML_LINKED",
     HTML_MULTIPLE = "HTML_MULTIPLE",
     CLICK = "CLICK",
+    CLICK_MULTIPLE = "CLICK_MULTIPLE",
     LOGIN = "LOGIN",
     FUNCTION = "FUNCTION",
     EXCEL = "EXCEL",

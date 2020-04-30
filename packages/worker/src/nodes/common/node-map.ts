@@ -95,6 +95,20 @@ const NodeMap: Record<NodeType, Map> = {
         export: [],
         notification: []
     },
+    [NodeType.CLICK_MULTIPLE]: {
+        processing: [
+            NodeType.COLLECT,
+            NodeType.PAGINATION,
+            NodeType.CLICK,
+            NodeType.LOGIN,
+            NodeType.SCROLL,
+            NodeType.SCREENSHOT,
+            NodeType.PDF,
+            NodeType.WAIT
+        ],
+        export: [],
+        notification: []
+    },
     [NodeType.LOGIN]: {
         processing: [
             NodeType.HTML,

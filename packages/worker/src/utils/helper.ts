@@ -27,6 +27,7 @@ export const IMPORT_PATHS: Record<NodeType, string> = {
     [NodeType.HTML_MULTIPLE]: '../nodes/processing/html/multiple',
     [NodeType.PAGINATION]: '../nodes/processing/pagination',
     [NodeType.CLICK]: '../nodes/processing/click',
+    [NodeType.CLICK_MULTIPLE]: '../nodes/processing/click/multiple',
     [NodeType.LOGIN]: '../nodes/processing/login',
     [NodeType.EXCEL]: '../nodes/processing/excel',
     [NodeType.CSV]: '../nodes/processing/csv',
@@ -94,6 +95,7 @@ export const isBranchNode = (node: FlowNode) => {
     return (
         !!(node as BranchNode).goToPerPage ||
         isBranchCollectNode(node) ||
-        node.type === NodeType.HTML_MULTIPLE
+        node.type === NodeType.HTML_MULTIPLE ||
+        node.type === NodeType.CLICK_MULTIPLE
     )
 }

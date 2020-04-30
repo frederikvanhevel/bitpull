@@ -32,6 +32,7 @@ exports.IMPORT_PATHS = {
     [node_1.NodeType.HTML_MULTIPLE]: '../nodes/processing/html/multiple',
     [node_1.NodeType.PAGINATION]: '../nodes/processing/pagination',
     [node_1.NodeType.CLICK]: '../nodes/processing/click',
+    [node_1.NodeType.CLICK_MULTIPLE]: '../nodes/processing/click/multiple',
     [node_1.NodeType.LOGIN]: '../nodes/processing/login',
     [node_1.NodeType.EXCEL]: '../nodes/processing/excel',
     [node_1.NodeType.CSV]: '../nodes/processing/csv',
@@ -84,6 +85,7 @@ exports.isBranchCollectNode = (node) => {
 exports.isBranchNode = (node) => {
     return (!!node.goToPerPage ||
         exports.isBranchCollectNode(node) ||
-        node.type === node_1.NodeType.HTML_MULTIPLE);
+        node.type === node_1.NodeType.HTML_MULTIPLE ||
+        node.type === node_1.NodeType.CLICK_MULTIPLE);
 };
 //# sourceMappingURL=helper.js.map

@@ -45,10 +45,13 @@ class Traverser {
         const module = await helper_1.getModule(node.type);
         if (((_a = node.children) === null || _a === void 0 ? void 0 : _a.length) &&
             (node.type === node_1.NodeType.PAGINATION ||
-                node.type === node_1.NodeType.HTML_MULTIPLE)) {
+                node.type === node_1.NodeType.HTML_MULTIPLE ||
+                node.type === node_1.NodeType.CLICK_MULTIPLE)) {
             const branchNode = node;
             const branchResult = await module(input, this.options, this.context);
-            const endNode = node.children.find(childNode => childNode.id === branchNode.goToOnEnd);
+            const endNode = branchNode.goToOnEnd
+                ? node.children.find(childNode => childNode.id === branchNode.goToOnEnd)
+                : undefined;
             if (endNode) {
                 onLog && onLog(node, 'Pagination finished');
                 nodeResult = await this.getNodeResult(Object.assign(Object.assign({}, input), { node: endNode, passedData: [].concat(...branchResult.passedData) }));

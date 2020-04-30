@@ -32,7 +32,7 @@ import {
 } from './nodes/processing/html/typedefs'
 import { XmlNode } from './nodes/processing/xml/typedefs'
 import { PaginationNode } from './nodes/processing/pagination/typedefs'
-import { ClickNode } from './nodes/processing/click/typedefs'
+import { ClickNode, MultipleClickNode } from './nodes/processing/click/typedefs'
 import { LoginNode } from './nodes/processing/login/typedefs'
 import { ExcelNode } from './nodes/processing/excel/typedefs'
 import { CsvNode } from './nodes/processing/csv/typedefs'
@@ -80,6 +80,7 @@ export type {
     XmlNode,
     PaginationNode,
     ClickNode,
+    MultipleClickNode,
     LoginNode,
     ExcelNode,
     CsvNode,

@@ -56,9 +56,7 @@ class CustomBrowser {
         }
         catch (error) {
             logger_1.default.error(new Error('Browser error'), error);
-        }
-        finally {
-            // if (page) await page.close()
+            throw error;
         }
         return page;
     }

@@ -65,6 +65,7 @@ export class TestEnvironment {
 
         this.browser.setMockHandler((url: string) => {
             if (mock.url === url) return { body: getMockedHtml(mock.content) }
+            console.warn(`No mock found for ${url}`)
             return NOT_FOUND_MOCK
         })
     }
@@ -75,6 +76,7 @@ export class TestEnvironment {
         this.browser.setMockHandler((url: string) => {
             const mocked = mocks.find(i => i.url === url)
             if (mocked) return { body: getMockedHtml(mocked.content) }
+            console.warn(`No mock found for ${url}`)
             return NOT_FOUND_MOCK
         })
     }
@@ -133,4 +135,13 @@ export const hasResult = async (
     return (
         content.replace(/\s/g, '') === getMockedHtml(result).replace(/\s/g, '')
     )
+}
+
+export const containsResult = async (
+    input: NodeInput<FlowNode, any, any>,
+    result: string
+) => {
+    if (!input.page) throw new Error("Test result didn't have page")
+    const content = await input.page.content()
+    return content.replace(/\s/g, '').includes(result)
 }

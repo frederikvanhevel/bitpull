@@ -121,7 +121,7 @@ export const ErrorMessages: Record<string, string> = {
 
     // Click error
     [ClickError.COULD_NOT_CLICK]:
-        'Could not click element, perhaps it is not visble',
+        'Could not click element, perhaps it is not visible',
 
     // CSV error
     [CsvError.COULD_NOT_CREATE_CSV]: 'Could not write csv file',

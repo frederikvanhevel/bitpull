@@ -8,6 +8,7 @@ var NodeType;
     NodeType["HTML_LINKED"] = "HTML_LINKED";
     NodeType["HTML_MULTIPLE"] = "HTML_MULTIPLE";
     NodeType["CLICK"] = "CLICK";
+    NodeType["CLICK_MULTIPLE"] = "CLICK_MULTIPLE";
     NodeType["LOGIN"] = "LOGIN";
     NodeType["FUNCTION"] = "FUNCTION";
     NodeType["EXCEL"] = "EXCEL";

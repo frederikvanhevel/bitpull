@@ -90,6 +90,20 @@ const NodeMap = {
         export: [],
         notification: []
     },
+    [node_1.NodeType.CLICK_MULTIPLE]: {
+        processing: [
+            node_1.NodeType.COLLECT,
+            node_1.NodeType.PAGINATION,
+            node_1.NodeType.CLICK,
+            node_1.NodeType.LOGIN,
+            node_1.NodeType.SCROLL,
+            node_1.NodeType.SCREENSHOT,
+            node_1.NodeType.PDF,
+            node_1.NodeType.WAIT
+        ],
+        export: [],
+        notification: []
+    },
     [node_1.NodeType.LOGIN]: {
         processing: [
             node_1.NodeType.HTML,
