@@ -16,7 +16,6 @@ import webhookRouter from 'controllers/webhooks'
 import JobController from 'controllers/jobs'
 import Segment from 'components/segment'
 import { tracingMiddleware } from 'utils/logging/tracing'
-import { migrate } from 'migrations/goToPerPage'
 
 export const startServer = async () => {
     await Database.connect()
@@ -97,8 +96,6 @@ export const startServer = async () => {
     JobController.startAnalyticsCleanup()
 
     Segment.initialize()
-
-    migrate()
 }
 
 // temporary workaround for workflow cancels
