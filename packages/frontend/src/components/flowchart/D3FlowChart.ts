@@ -1,3 +1,4 @@
+import { ReactNode } from 'react'
 import { select } from 'd3-selection'
 import { hierarchy, tree } from 'd3-hierarchy'
 import {
@@ -11,8 +12,8 @@ import {
 } from './constants'
 import { NodeId } from '@bitpull/worker/lib/typedefs'
 import { Node } from 'typedefs/common'
-import { ChartClasses } from './helper'
-import { ReactNode } from 'react'
+import { ChartClasses, isBranchLink } from './helper'
+import { getMarker } from './helper'
 
 export interface ChartOptions {
     classes: ChartClasses
@@ -45,6 +46,7 @@ class D3FlowChart {
 
         // append groups for links and nodes
         this.linkGroup = svgGroup.append('g')
+        this.markerGroup = svgGroup.append('g')
         this.nodeGroup = svgGroup.append('g')
     }
 
@@ -56,6 +58,7 @@ class D3FlowChart {
 
         this.drawNodes(nodeData, sourcePoint)
         this.drawLinks(linkData, sourcePoint)
+        this.drawMarkers(linkData, sourcePoint)
     }
 
     drawNodes(nodes: any, sourcePoint: any) {
@@ -172,7 +175,6 @@ class D3FlowChart {
                 // they are then transitioned to correct positions later as part of the animation
                 return `M${x} ${y}C${x} ${y}, ${x} ${y}, ${x} ${y}`
             })
-            .attr('marker-mid', 'url(#triangle)')
 
         const updatedSvgLinks = newSvgLinks.merge(allLinks)
 
@@ -186,6 +188,62 @@ class D3FlowChart {
             })
 
         allLinks.exit().remove()
+    }
+
+    drawMarkers(links: any, sourcePoint: any) {
+        const { classes } = this.options
+
+        // select all links and merge with data
+        const allMarkers = this.markerGroup
+            .selectAll(`g.${classes.marker}`)
+            .data(
+                links.filter(isBranchLink),
+                (d: any) => `${d.source.data.id}${d.target.data.id}`
+            )
+
+        // add path to link tree nodes
+        const newMarkers = allMarkers
+            .enter()
+            .append('g')
+            .attr('class', classes.marker)
+            .attr('transform', () => {
+                return `translate(${sourcePoint.x0}, ${sourcePoint.y0})`
+            })
+
+        newMarkers
+            .append('circle')
+            .attr('r', 10)
+            .attr('cx', 10)
+            .attr('cy', 10)
+            .attr('fill', 'white')
+            .attr('stroke', '#9e9e9e')
+            .attr('stroke-width', 2)
+            .attr('transform', () => `translate(-10, -10)`)
+
+        // add path for icons
+        newMarkers
+            .append('path')
+            .attr('d', () => null)
+            .attr('transform', () => `translate(-12, -12)`)
+
+        const updatedMarkers = newMarkers.merge(allMarkers)
+
+        // transition links to correct positions
+        updatedMarkers
+            .transition()
+            .duration(ANIMATION_SPEED)
+            .attr('transform', (d: any) => {
+                const midX = d.source.x + (d.target.x - d.source.x) * 0.5
+                const midY = d.source.y + (d.target.y - d.source.y) * 0.5
+                return `translate(${midX}, ${midY})`
+            })
+
+        // update icons
+        updatedMarkers.select('path').attr('d', (d: any) => {
+            return getMarker(d) || null
+        })
+
+        allMarkers.exit().remove()
     }
 
     updateLinkPath(d: any, target: any = {}, source: any = {}) {
@@ -277,19 +335,6 @@ class D3FlowChart {
 
         feMerge.append('feMergeNode').attr('in', 'offsetBlur')
         feMerge.append('feMergeNode').attr('in', 'SourceGraphic')
-
-        defs.append('svg:marker')
-            .attr('viewBox', '0 0 10 10')
-            .attr('id', 'triangle')
-            .attr('refX', 6)
-            .attr('refY', 6)
-            .attr('markerWidth', 30)
-            .attr('markerHeight', 30)
-            .attr('markerUnits', 'userSpaceOnUse')
-            .attr('orient', 'auto')
-            .append('path')
-            .attr('d', 'M 0 0 12 6 0 12 3 6')
-            .style('fill', 'black')
     }
 }
 

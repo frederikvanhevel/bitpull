@@ -158,5 +158,8 @@ export const getStyles = (theme: Theme): ChartClasses => ({
     },
     icon: {
         fill: `${theme.palette.grey['500']} !important`
+    },
+    marker: {
+        fill: `${theme.palette.grey['500']} !important`
     }
 })

@@ -29,7 +29,9 @@ import {
     disabledIcon,
     emailIcon,
     githubIcon,
-    scrollIcon
+    scrollIcon,
+    branchUp,
+    branchDown
 } from './icons'
 
 export interface ChartClasses {
@@ -37,6 +39,7 @@ export interface ChartClasses {
     link: any
     info: any
     icon: any
+    marker: any
     primaryNode: any
     secondaryNode: any
     defaultNode: any
@@ -159,4 +162,20 @@ export const isRootNode = (node: Node) => {
             (node as HtmlNode).link !== undefined) ||
         node.type === NodeType.HTML_MULTIPLE
     )
+}
+
+export const isBranchLink = (link: any) => {
+    return (
+        link.source.data.type === NodeType.PAGINATION ||
+        link.source.data.type === NodeType.HTML_MULTIPLE ||
+        link.source.data.type === NodeType.CLICK_MULTIPLE
+    )
+}
+
+export const getMarker = (link: any) => {
+    if (link.source.data.goToOnEnd === link.target.data.id) {
+        return branchDown
+    } else {
+        return branchUp
+    }
 }
