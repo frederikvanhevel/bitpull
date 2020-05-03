@@ -168,7 +168,9 @@ export const isBranchLink = (link: any) => {
     return (
         link.source.data.type === NodeType.PAGINATION ||
         link.source.data.type === NodeType.HTML_MULTIPLE ||
-        link.source.data.type === NodeType.CLICK_MULTIPLE
+        link.source.data.type === NodeType.CLICK_MULTIPLE ||
+        (link.source.data.type === NodeType.COLLECT &&
+            link.target.data.type === NodeType.HTML_LINKED)
     )
 }
 

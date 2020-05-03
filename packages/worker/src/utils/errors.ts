@@ -105,7 +105,7 @@ export const ErrorMessages: Record<string, string> = {
 
     // Pagination error
     [PaginationError.GOTOPERPAGE_NODE_MISSING]: 'No per page step specified',
-    [PaginationError.PAGINATION_METHOD_MISSING]: 'Pagination method missing',
+    [PaginationError.PAGINATION_METHOD_MISSING]: 'Next button selector missing',
     [PaginationError.NEXT_LINK_MISSING]: 'Next link was not specified',
     [PaginationError.NO_LINKS_SPECIFIED]: 'No links were specified',
 

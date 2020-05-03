@@ -191,8 +191,6 @@ class Traverser {
                 code: error.code
             })
 
-            if (!this.canceled) Logger.error(new Error('Error happend during node run'), error)
-
             originalErrorFn && originalErrorFn(node, error)
         }
 

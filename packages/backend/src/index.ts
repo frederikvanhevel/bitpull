@@ -1,7 +1,9 @@
 import dotenv from 'dotenv'
 dotenv.config()
-import { startServer } from 'server'
+import Server from 'server'
 import Scheduler from 'components/scheduler'
+import JobController from 'controllers/jobs'
+import Segment from 'components/segment'
 
 const requiredVars = [
     'API_URL',
@@ -39,6 +41,17 @@ if (missingVars.length) {
     throw new Error(`${missingVars.join(' ')} variables are missing`)
 }
 
+Segment.initialize()
 Scheduler.start()
 
-export default startServer()
+Server.start()
+
+JobController.startJobProcessor()
+JobController.startStorageCleanup()
+JobController.startAnalyticsCleanup()
+
+// temporary workaround for workflow cancels
+process.on('unhandledRejection', reason => {
+    // @ts-ignore
+    if (reason?.message !== 'Operation was cancelled') throw reason
+})

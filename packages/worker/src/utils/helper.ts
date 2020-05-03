@@ -100,18 +100,26 @@ export const isBranchNode = (node: FlowNode) => {
     )
 }
 
-export const findPerPageNode = (node: BranchNode) => {
+export const findPerPageNode = (node: FlowNode, type?: NodeType) => {
     if (!node.children?.length) return undefined
 
+    const children = type
+        ? node.children.filter(child => child.type === type)
+        : node.children
+
     let child
-    if (node.goToPerPage) {
-        child = node.children.find(child => child.id === node.goToPerPage)
+    if ((node as BranchNode).goToPerPage) {
+        child = children.find(
+            child => child.id === (node as BranchNode).goToPerPage
+        )
     }
 
     if (!child) {
-        const filtered = node.goToOnEnd
-            ? node.children.filter(child => child.id !== node.goToOnEnd)
-            : node.children
+        const filtered = (node as BranchNode).goToOnEnd
+            ? children.filter(
+                  child => child.id !== (node as BranchNode).goToOnEnd
+              )
+            : children
         child = filtered.length ? filtered[0] : undefined
     }
 

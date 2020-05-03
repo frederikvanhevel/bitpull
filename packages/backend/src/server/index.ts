@@ -13,11 +13,9 @@ import Logger from 'utils/logging/logger'
 import { GraphQLError } from 'graphql'
 import apiRouter from 'controllers/rest/routes'
 import webhookRouter from 'controllers/webhooks'
-import JobController from 'controllers/jobs'
-import Segment from 'components/segment'
 import { tracingMiddleware } from 'utils/logging/tracing'
 
-export const startServer = async () => {
+const start = async () => {
     await Database.connect()
 
     const server = new ApolloServer({
@@ -90,16 +88,10 @@ export const startServer = async () => {
             `🚀 Server ready at http://localhost:${port}${server.graphqlPath}`
         )
     )
-
-    JobController.startJobProcessor()
-    JobController.startStorageCleanup()
-    JobController.startAnalyticsCleanup()
-
-    Segment.initialize()
 }
 
-// temporary workaround for workflow cancels
-process.on('unhandledRejection', reason => {
-    // @ts-ignore
-    if (reason?.message !== 'Operation was cancelled') throw reason
-})
+const Server = {
+    start
+}
+
+export default Server
