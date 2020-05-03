@@ -26,7 +26,8 @@ const save = async (owner: string, payload: Resource) => {
         {
             resourceType: payload.resourceType,
             resourceId: payload.resourceId,
-            resourceName: payload.resourceName
+            resourceName: payload.resourceName,
+            owner
         },
         {
             $push: {
@@ -42,7 +43,6 @@ const save = async (owner: string, payload: Resource) => {
                 }
             },
             $inc: { count: 1 },
-            owner,
             updatedAt: Date.now()
         },
         { upsert: true, new: true }

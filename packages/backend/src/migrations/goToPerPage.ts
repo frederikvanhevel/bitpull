@@ -1,6 +1,7 @@
 import { Types } from 'mongoose'
 import WorkflowModel from 'models/workflow'
 import { FlowNode, NodeType } from '@bitpull/worker'
+import CatalogModel from 'models/catalog'
 
 const fixProperties = (node: FlowNode) => {
     const fix = (innerNode: FlowNode) => {
@@ -38,12 +39,12 @@ const fixProperties = (node: FlowNode) => {
 }
 
 export const migrate = async () => {
-    const workflows = await WorkflowModel.find()
+    const workflows = await CatalogModel.find()
 
     workflows.forEach(async workflow => {
         workflow.node = fixProperties(workflow.node)
 
-        await WorkflowModel.collection.updateOne(
+        await CatalogModel.collection.updateOne(
             { _id: Types.ObjectId(workflow.id) },
             {
                 $set: { node: fixProperties(workflow.node) }
