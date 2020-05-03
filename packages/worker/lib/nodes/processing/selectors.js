@@ -57,7 +57,7 @@ exports.getFieldsFromHtml = async (input, settings, xmlMode = false) => {
                 field.selector.attribute !== 'text'
                 ? el.attr(field.selector.attribute)
                 : el.text();
-            let trimmedVal = val ? val.trim().replace(/[\r\n]( +)/, '') : val;
+            let trimmedVal = val ? val.trim().replace(/[\r\n]( +)/, '').replace(/(\r\n|\r|\t|\n){2,}/g, '$1\n') : val;
             // remove proxy url and decode if its a link
             if (trimmedVal &&
                 settings.proxyEndpoint &&

@@ -130,8 +130,6 @@ class Traverser {
                 message: error.message,
                 code: error.code
             });
-            if (!this.canceled)
-                logger_1.default.error(new Error('Error happend during node run'), error);
             originalErrorFn && originalErrorFn(node, error);
         };
         this.options.onLog = (node, message, type = common_1.LogType.INFO) => {

@@ -88,18 +88,21 @@ exports.isBranchNode = (node) => {
         node.type === node_1.NodeType.HTML_MULTIPLE ||
         node.type === node_1.NodeType.CLICK_MULTIPLE);
 };
-exports.findPerPageNode = (node) => {
+exports.findPerPageNode = (node, type) => {
     var _a;
     if (!((_a = node.children) === null || _a === void 0 ? void 0 : _a.length))
         return undefined;
+    const children = type
+        ? node.children.filter(child => child.type === type)
+        : node.children;
     let child;
     if (node.goToPerPage) {
-        child = node.children.find(child => child.id === node.goToPerPage);
+        child = children.find(child => child.id === node.goToPerPage);
     }
     if (!child) {
         const filtered = node.goToOnEnd
-            ? node.children.filter(child => child.id !== node.goToOnEnd)
-            : node.children;
+            ? children.filter(child => child.id !== node.goToOnEnd)
+            : children;
         child = filtered.length ? filtered[0] : undefined;
     }
     return child;

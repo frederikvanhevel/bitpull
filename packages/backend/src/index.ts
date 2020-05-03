@@ -4,7 +4,6 @@ import Server from 'server'
 import Scheduler from 'components/scheduler'
 import JobController from 'controllers/jobs'
 import Segment from 'components/segment'
-import { migrate } from 'migrations/goToPerPage'
 
 const requiredVars = [
     'API_URL',
@@ -50,8 +49,6 @@ Server.start()
 JobController.startJobProcessor()
 JobController.startStorageCleanup()
 JobController.startAnalyticsCleanup()
-
-migrate()
 
 // temporary workaround for workflow cancels
 process.on('unhandledRejection', reason => {

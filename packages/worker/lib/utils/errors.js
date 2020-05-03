@@ -62,6 +62,7 @@ exports.ErrorMessages = {
     [errors_8.StorageError.AWS_ACCESS_KEY_ID_MISSING]: 'AWS access key missing',
     [errors_8.StorageError.AWS_SECRET_ACCESS_KEY_MISSING]: 'AWS secret missing',
     [errors_8.StorageError.INVALID_PARENT_TYPE]: 'Previous step does not produce a file',
+    [errors_8.StorageError.STORAGE_FAILED]: 'Could not store file',
     // Dropbox error
     [errors_4.DropboxError.UPLOAD_FAILED]: 'Error uploading to Dropbox',
     // OneDrive error
@@ -74,6 +75,7 @@ exports.ErrorMessages = {
     [errors_17.GithubError.WRONG_REPOSITORY_FORMAT]: 'Invalid Github repository',
     // Webhook error
     [errors_9.WebhookError.REQUEST_PATH_MISSING]: 'Invalid webhook path',
+    [errors_9.WebhookError.REQUEST_FAILED]: 'Request to webhook failed',
     // Slack error
     [errors_10.SlackError.CHANNEL_MISSING]: 'Slack channel is not defined',
     // Email error
@@ -86,7 +88,7 @@ exports.ErrorMessages = {
     [errors_13.HtmlError.INVALID_URL]: 'The given url is invalid',
     // Pagination error
     [errors_11.PaginationError.GOTOPERPAGE_NODE_MISSING]: 'No per page step specified',
-    [errors_11.PaginationError.PAGINATION_METHOD_MISSING]: 'Pagination method missing',
+    [errors_11.PaginationError.PAGINATION_METHOD_MISSING]: 'Next button selector missing',
     [errors_11.PaginationError.NEXT_LINK_MISSING]: 'Next link was not specified',
     [errors_11.PaginationError.NO_LINKS_SPECIFIED]: 'No links were specified',
     // Login error
