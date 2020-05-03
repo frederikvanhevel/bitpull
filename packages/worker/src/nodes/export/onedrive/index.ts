@@ -46,7 +46,7 @@ const onedrive: NodeParser<OnedriveNode> = async (
             }
         })
     } catch (error) {
-        throw new FlowError(OneDriveError.UPLOAD_FAILED)
+        throw new FlowError(OneDriveError.UPLOAD_FAILED, error)
     }
 
     const response = JSON.parse(result)

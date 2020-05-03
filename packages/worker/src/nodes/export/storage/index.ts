@@ -1,5 +1,6 @@
 import { createReadStream } from 'fs'
 import AWS from 'aws-sdk'
+import { FlowError } from '../../../utils/errors'
 import { FileError, NodeError } from '../../common/errors'
 import { NodeParser, UploadedFile, NodeInput } from '../../../typedefs/node'
 import { assert } from '../../../utils/common'
@@ -10,10 +11,9 @@ import {
     StorageObject,
     StorageService
 } from '../../../typedefs/common'
-import { FileWriteResult, FileEncoding } from '../../../utils/file'
+import { FileWriteResult } from '../../../utils/file'
 import { StorageNode } from './typedefs'
 import { StorageError } from './errors'
-import { FlowError } from 'utils/errors'
 
 const usesStorage = (settings?: Settings) => {
     return (

@@ -1,4 +1,5 @@
 import request from 'request-promise-native'
+import Logger from '../../../utils/logging/logger'
 import { FileError, IntegrationError } from '../../common/errors'
 import { NodeParser, NodeInput, UploadedFile } from '../../../typedefs/node'
 import { assert } from '../../../utils/common'
@@ -55,7 +56,7 @@ const github: NodeParser<GithubNode> = async (
             }
         })
     } catch (error) {
-        throw new FlowError(GithubError.UPLOAD_FAILED)
+        throw new FlowError(GithubError.UPLOAD_FAILED, error)
     }
 
     if (onLog) {

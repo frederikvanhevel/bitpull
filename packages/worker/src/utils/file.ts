@@ -50,7 +50,10 @@ export const writeFile = (
     })
 }
 
-export const readFile = async (path: string, encoding: FileEncoding) => {
+export const readFile = async (
+    path: string,
+    encoding: FileEncoding
+): Promise<string> => {
     return new Promise((resolve, reject) => {
         fs.readFile(path, { encoding }, (err, data) => {
             if (err) reject(err)

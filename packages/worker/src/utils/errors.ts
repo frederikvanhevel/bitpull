@@ -88,6 +88,7 @@ export const ErrorMessages: Record<string, string> = {
 
     // Webhook error
     [WebhookError.REQUEST_PATH_MISSING]: 'Invalid webhook path',
+    [WebhookError.REQUEST_FAILED]: 'Request to webhook failed',
 
     // Slack error
     [SlackError.CHANNEL_MISSING]: 'Slack channel is not defined',

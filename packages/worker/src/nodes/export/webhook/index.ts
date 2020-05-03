@@ -1,6 +1,7 @@
 import { createReadStream } from 'fs'
 import { CoreOptions } from 'request'
 import request from 'request-promise-native'
+import { FlowError } from '../../../utils/errors'
 import { FileError } from '../../common/errors'
 import { assert } from '../../../utils/common'
 import { NodeParser, NodeInput } from '../../../typedefs/node'
@@ -48,18 +49,22 @@ const webhook: NodeParser<WebhookNode> = async (
         }
     }
 
-    await request({
-        uri: node.path,
-        method: node.method || 'POST',
-        ...requestOptions,
-        headers: {
-            userAgent: 'Bitpull/1.0'
-        }
-    })
+    try {
+        await request({
+            uri: node.path,
+            method: node.method || 'POST',
+            ...requestOptions,
+            headers: {
+                userAgent: 'Bitpull/1.0'
+            }
+        })
+    } catch (error) {
+        throw new FlowError(WebhookError.REQUEST_FAILED, error)
+    }
 
     if (onLog) onLog(node, `Successfully sent data to ${node.path}`)
 
-    return Promise.resolve(input)
+    return input
 }
 
 export default webhook
