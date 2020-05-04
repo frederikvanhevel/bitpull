@@ -61,8 +61,8 @@ resource "google_container_node_pool" "primary_nodes" {
     max_node_count = 3
   }
   management {
-    auto_upgrade = true
-    auto_repair  = true
+    auto_upgrade = false
+    auto_repair  = false
   }
 
   node_config {
