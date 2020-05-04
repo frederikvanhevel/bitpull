@@ -10,12 +10,12 @@ app.use(helmet())
 // for our static assets
 app.use(express.static(path.join(__dirname, '../dist')))
 
+app.get('/health', (req, res) => res.status(200).send({ success: true }))
+
 // Handles any requests that don't match the ones above
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../dist/index.html'))
 })
-
-app.get('/health', (req, res) => res.status(200).send({ success: true }))
 
 const port = process.env.PORT || 8080
 
