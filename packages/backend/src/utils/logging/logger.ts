@@ -1,11 +1,12 @@
 import os from 'os'
 import { User } from 'models/user'
+import Config from 'utils/config'
 import { ErrorLog, Logs, InfoLog, LogType } from './typedefs'
 import { isErrorLog } from './helper'
 import { getTraceId } from './tracing'
 
 class Logger {
-    public static jsonOutput = process.env.NODE_ENV === 'production'
+    public static jsonOutput = Config.NODE_ENV === 'production'
 
     public static info(message: string, user?: User) {
         const data: InfoLog = {

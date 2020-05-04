@@ -1,5 +1,6 @@
 import sendgrid from '@sendgrid/mail'
 import Logger from 'utils/logging/logger'
+import Config from 'utils/config'
 import { EmailOptions } from './typedefs'
 
 // Sendgrid templates
@@ -14,7 +15,7 @@ export enum Template {
     FEEDBACK = 'd-1c4ed463161f4bcb8f6de041954763b2'
 }
 
-sendgrid.setApiKey(process.env.SENDGRID_API_KEY!)
+sendgrid.setApiKey(Config.SENDGRID_API_KEY)
 
 export const SUPPORT_EMAIL_ADDRESS = 'help@bitpull.io'
 
@@ -23,7 +24,7 @@ export const Senders = {
 }
 
 export const send = (options: EmailOptions) => {
-    if (process.env.NODE_ENV === 'test') {
+    if (Config.NODE_ENV === 'test') {
         return
     }
 

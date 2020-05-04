@@ -5,6 +5,7 @@ import { AuthenticationContext } from 'controllers/graphql/directives/auth'
 import { NotFoundError } from 'utils/errors'
 import { IntegrationType } from '@bitpull/worker'
 import Logger from 'utils/logging/logger'
+import Config from 'utils/config'
 import { AuthorizationHandler, AuthroizationCode } from '../typedefs'
 import { SlackChannel } from './typedefs'
 
@@ -13,9 +14,9 @@ const authorize: AuthorizationHandler = async (
     data: AuthroizationCode
 ) => {
     const requestBody = {
-        client_id: process.env.SLACK_CLIENT_ID,
-        client_secret: process.env.SLACK_CLIENT_SECRET,
-        redirect_uri: `${process.env.APP_URL}/integrations/slack`,
+        client_id: Config.SLACK_CLIENT_ID,
+        client_secret: Config.SLACK_CLIENT_SECRET,
+        redirect_uri: `${Config.APP_URL}/integrations/slack`,
         code: data.code
     }
 

@@ -1,3 +1,5 @@
+import Config from 'utils/config'
+
 export const addScript = (html: string, script: string): string => {
     return html.replace(/<\/body>/g, `${script}</body>`)
 }
@@ -5,7 +7,7 @@ export const addScript = (html: string, script: string): string => {
 export const addSelectorScript = (html: string): string => {
     return addScript(
         html,
-        `<script src="${process.env.APP_URL}/selector.js"></script>`.replace(
+        `<script src="${Config.APP_URL}/selector.js"></script>`.replace(
             /\n/g,
             ' '
         )

@@ -1,14 +1,15 @@
 import Analytics from 'analytics-node'
 import { User } from 'models/user'
 import Logger from 'utils/logging/logger'
+import Config from 'utils/config'
 import { SegmentMessage, TrackingEvent } from './typedefs'
 
 let analytics: Analytics
 
 const initialize = () => {
-    if (process.env.NODE_ENV !== 'production') return
+    if (Config.NODE_ENV !== 'production') return
 
-    analytics = new Analytics(process.env.SEGMENT_WRITE_KEY!)
+    analytics = new Analytics(Config.SEGMENT_WRITE_KEY)
 }
 
 const getUserId = (user: User) => {

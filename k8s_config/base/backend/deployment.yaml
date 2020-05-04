@@ -26,13 +26,13 @@ spec:
           ports:
             - containerPort: 5000
               name: backend
-          resources:
-            requests:
-              memory: "124Mi"
-              cpu: "300m"
-            limits:
-              memory: "1280Mi"
-              cpu: "1000m"
+          # resources:
+          #   requests:
+          #     memory: "124Mi"
+          #     cpu: "300m"
+          #   limits:
+          #     memory: "1280Mi"
+          #     cpu: "1000m"
           env:
             - name: PUPPETEER_ENDPOINT
               value: ws://chrome:3000

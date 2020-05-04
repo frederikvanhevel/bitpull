@@ -4,6 +4,7 @@ import IntegrationModel from 'models/integration'
 import { AuthenticationContext } from 'controllers/graphql/directives/auth'
 import { IntegrationType } from '@bitpull/worker'
 import Logger from 'utils/logging/logger'
+import Config from 'utils/config'
 import { AuthorizationHandler, AuthroizationCode } from '../typedefs'
 
 const authorize: AuthorizationHandler = async (
@@ -11,10 +12,10 @@ const authorize: AuthorizationHandler = async (
     data: AuthroizationCode
 ) => {
     const requestBody = {
-        client_id: process.env.DROPBOX_CLIENT_ID,
-        client_secret: process.env.DROPBOX_CLIENT_SECRET,
+        client_id: Config.DROPBOX_CLIENT_ID,
+        client_secret: Config.DROPBOX_CLIENT_SECRET,
         grant_type: 'authorization_code',
-        redirect_uri: `${process.env.APP_URL}/integrations/dropbox`,
+        redirect_uri: `${Config.APP_URL}/integrations/dropbox`,
         code: data.code
     }
 

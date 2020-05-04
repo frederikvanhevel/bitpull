@@ -4,6 +4,7 @@ import IntegrationModel, { Integration } from 'models/integration'
 import { AuthenticationContext } from 'controllers/graphql/directives/auth'
 import { IntegrationType } from '@bitpull/worker'
 import { NotFoundError } from 'utils/errors'
+import Config from 'utils/config'
 import { AuthorizationHandler } from '../typedefs'
 import { GoogleProfile } from './typedefs'
 
@@ -13,11 +14,11 @@ const authorize: AuthorizationHandler = async (
 ) => {
     const requestBody = {
         code: data.code,
-        client_id: process.env.GOOGLE_CLIENT_ID,
-        client_secret: process.env.GOOGLE_CLIENT_SECRET,
+        client_id: Config.GOOGLE_CLIENT_ID,
+        client_secret: Config.GOOGLE_CLIENT_SECRET,
         scope: 'https://www.googleapis.com/auth/drive.file',
         grant_type: 'authorization_code',
-        redirect_uri: `${process.env.APP_URL}/integrations/google-drive`
+        redirect_uri: `${Config.APP_URL}/integrations/google-drive`
     }
 
     let result
@@ -48,8 +49,8 @@ const authorize: AuthorizationHandler = async (
 
 const refreshToken = async (integration: Integration): Promise<Integration> => {
     const requestBody = {
-        client_id: process.env.GOOGLE_CLIENT_ID,
-        client_secret: process.env.GOOGLE_CLIENT_SECRET,
+        client_id: Config.GOOGLE_CLIENT_ID,
+        client_secret: Config.GOOGLE_CLIENT_SECRET,
         grant_type: 'refresh_token',
         refresh_token: integration.settings.refresh_token
     }
@@ -90,10 +91,10 @@ const getProfile = async (code: string): Promise<GoogleProfile> => {
     try {
         const data = {
             code,
-            client_id: process.env.GOOGLE_CLIENT_ID,
-            client_secret: process.env.GOOGLE_CLIENT_SECRET,
+            client_id: Config.GOOGLE_CLIENT_ID,
+            client_secret: Config.GOOGLE_CLIENT_SECRET,
             grant_type: 'authorization_code',
-            redirect_uri: `${process.env.APP_URL}/auth/callback/google`
+            redirect_uri: `${Config.APP_URL}/auth/callback/google`
         }
 
         const token = await Axios({

@@ -1,21 +1,22 @@
 import { absolutifyHtml, FlowNode } from '@bitpull/worker'
 import Logger from 'utils/logging/logger'
 import Worker from 'components/worker'
+import Config from 'utils/config'
 import { addSelectorScript } from './helper'
 
 const prepareForSelector = async (node: FlowNode) => {
-    const proxy = `${process.env.API_URL}/api/proxy?url=`
+    const proxy = `${Config.API_URL}/api/proxy?url=`
     const result = await Worker.runSingleNode({
         node,
         options: {
             settings: {
                 puppeteer: {
-                    endpoint: process.env.PUPPETEER_ENDPOINT!
+                    endpoint: Config.PUPPETEER_ENDPOINT
                 },
                 proxyEndpoint: proxy,
                 encryption: {
                     version: 'v1',
-                    key: process.env.ENCRYPTION_KEY!
+                    key: Config.ENCRYPTION_KEY
                 },
                 exitOnError: true
             }

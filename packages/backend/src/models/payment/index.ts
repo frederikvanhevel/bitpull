@@ -1,10 +1,8 @@
 import { Schema, model, Types, Document } from 'mongoose'
 import { UserDocument } from 'models/user'
+import Config from 'utils/config'
 
-const TRIAL_CREDIT_AMOUNT = parseInt(
-    process.env.TRIAL_CREDIT_AMOUNT || '300',
-    10
-)
+const TRIAL_CREDIT_AMOUNT = Config.TRIAL_CREDIT_AMOUNT
 export const REFERRED_CREDIT_AMOUNT = 1000
 export const MAX_REFERRED_CREDITS = 20000
 

@@ -1,13 +1,12 @@
 import crypto from 'crypto'
 import jwt from 'jsonwebtoken'
 import { User } from 'models/user'
+import Config from 'utils/config'
 
 export const generateLoginToken = (user: User) => {
-    return jwt.sign(
-        { id: user._id, email: user.email },
-        process.env.JWT_SECRET!,
-        { expiresIn: '7 days' }
-    )
+    return jwt.sign({ id: user._id, email: user.email }, Config.JWT_SECRET, {
+        expiresIn: '7 days'
+    })
 }
 
 export const generateRandomToken = async (length = 20) => {

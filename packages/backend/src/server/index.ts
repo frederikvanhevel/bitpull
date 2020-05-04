@@ -14,13 +14,14 @@ import { GraphQLError } from 'graphql'
 import apiRouter from 'controllers/rest/routes'
 import webhookRouter from 'controllers/webhooks'
 import { tracingMiddleware } from 'utils/logging/tracing'
+import Config from 'utils/config'
 
 const start = async () => {
     await Database.connect()
 
     const server = new ApolloServer({
         schema,
-        tracing: process.env.NODE_ENV !== 'production',
+        tracing: Config.NODE_ENV !== 'production',
         context: async ({ req, connection }) => {
             if (connection) return connection.context
 
@@ -36,7 +37,7 @@ const start = async () => {
     })
 
     const options: StrategyOptions = {
-        secretOrKey: process.env.JWT_SECRET,
+        secretOrKey: Config.JWT_SECRET,
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
     }
 
@@ -52,7 +53,7 @@ const start = async () => {
     app.use(helmet())
     app.use(
         cors({
-            origin: process.env.APP_URL
+            origin: Config.APP_URL
         })
     )
     passport.use(strategy)

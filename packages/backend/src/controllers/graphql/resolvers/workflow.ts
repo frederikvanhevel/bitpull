@@ -23,11 +23,10 @@ import {
 } from 'utils/errors'
 import Worker from 'components/worker'
 import { limitFollowedLinks } from 'services/workflow/helper'
+import Config from 'utils/config'
 import { AuthenticationContext } from '../directives/auth'
 import { pubsub } from '../schema'
 import { SubscriptionEvent } from '../typedefs/workflow'
-
-const TIMEOUT = Number(process.env.RUNNER_TIMEOUT || 900000)
 
 export const getWorkflow: GraphQLFieldResolver<
     any,
@@ -135,7 +134,7 @@ export const runWorkflow: GraphQLFieldResolver<
 
     try {
         if (context.req) {
-            context.req.setTimeout(TIMEOUT)
+            context.req.setTimeout(Config.RUNNER_TIMEOUT)
             context.req.on('close', kill)
         }
 

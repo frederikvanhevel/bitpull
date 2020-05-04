@@ -15,10 +15,11 @@ import { User } from 'models/user'
 import Segment, { TrackingEvent } from 'components/segment'
 import { ResourceType } from 'models/storage'
 import { getTraceId } from 'utils/logging/tracing'
+import Config from 'utils/config'
 import { NodeEventHandler } from './typedefs'
 
 const WORKFLOW_LIMIT =
-    process.env.NODE_ENV === 'production' ? 50 : Number.POSITIVE_INFINITY
+    Config.NODE_ENV === 'production' ? 50 : Number.POSITIVE_INFINITY
 
 const getWorkflow = async (user: User, id: string) => {
     const workflow = await WorkflowModel.findById(id)
@@ -142,25 +143,25 @@ const run = async (
 
     const settings: Settings = {
         puppeteer: {
-            endpoint: process.env.PUPPETEER_ENDPOINT!
+            endpoint: Config.PUPPETEER_ENDPOINT
         },
-        proxyEndpoint: `${process.env.API_URL}/api/proxy?url=`,
+        proxyEndpoint: `${Config.API_URL}/api/proxy?url=`,
         storage: {
             provider: StorageProvider.AMAZON,
             credentials: {
-                bucket: process.env.AWS_S3_BUCKET!,
-                accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-                secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!
+                bucket: Config.AWS_S3_BUCKET,
+                accessKeyId: Config.AWS_ACCESS_KEY_ID,
+                secretAccessKey: Config.AWS_SECRET_ACCESS_KEY
             }
         },
         email: {
-            apiKey: process.env.SENDGRID_API_KEY!,
+            apiKey: Config.SENDGRID_API_KEY,
             template: 'd-165400b378b440dcbbc555b491291dbb',
             to: user.email
         },
         encryption: {
             version: 'v1',
-            key: process.env.ENCRYPTION_KEY!
+            key: Config.ENCRYPTION_KEY
         },
         metaData: {
             isJob: resourceType === ResourceType.JOB,

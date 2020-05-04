@@ -5,6 +5,7 @@ import { AuthenticationContext } from 'controllers/graphql/directives/auth'
 import { IntegrationType } from '@bitpull/worker'
 import { NotFoundError } from 'utils/errors'
 import Logger from 'utils/logging/logger'
+import Config from 'utils/config'
 import { AuthorizationHandler } from '../typedefs'
 
 const authorize: AuthorizationHandler = async (
@@ -12,11 +13,11 @@ const authorize: AuthorizationHandler = async (
     data: any
 ) => {
     const requestBody = {
-        client_id: process.env.ONEDRIVE_CLIENT_ID,
-        client_secret: process.env.ONEDRIVE_CLIENT_SECRET,
+        client_id: Config.ONEDRIVE_CLIENT_ID,
+        client_secret: Config.ONEDRIVE_CLIENT_SECRET,
         scope: 'Files.ReadWrite offline_access',
         grant_type: 'authorization_code',
-        redirect_uri: `${process.env.APP_URL}/integrations/onedrive`,
+        redirect_uri: `${Config.APP_URL}/integrations/onedrive`,
         code: data.code
     }
 
@@ -49,8 +50,8 @@ const authorize: AuthorizationHandler = async (
 
 const refreshToken = async (integration: Integration): Promise<Integration> => {
     const requestBody = {
-        client_id: process.env.ONEDRIVE_CLIENT_ID,
-        client_secret: process.env.ONEDRIVE_CLIENT_SECRET,
+        client_id: Config.ONEDRIVE_CLIENT_ID,
+        client_secret: Config.ONEDRIVE_CLIENT_SECRET,
         scope: 'Files.ReadWrite offline_access',
         grant_type: 'refresh_token',
         refresh_token: integration.settings.refresh_token

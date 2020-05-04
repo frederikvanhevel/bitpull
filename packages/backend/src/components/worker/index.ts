@@ -3,9 +3,8 @@ import { fork, ChildProcess } from 'child_process'
 import treekill from 'tree-kill'
 import { RunnerTimeoutReachedError } from 'utils/errors'
 import Logger from 'utils/logging/logger'
+import Config from 'utils/config'
 import { Handler, WorkerArgs, WorkerEvent } from './typedefs'
-
-const TIMEOUT = Number(process.env.RUNNER_TIMEOUT || 900000)
 
 export enum Work {
     WORKFLOW = 'workflow.ts',
@@ -31,7 +30,7 @@ const spawn = (
                 Logger.info(`Worker timeout reached`)
                 reject(new RunnerTimeoutReachedError())
                 kill(forked)
-            }, TIMEOUT)
+            }, Config.RUNNER_TIMEOUT)
 
             forked = fork(join(__dirname, './work', work), [
                 '-r',

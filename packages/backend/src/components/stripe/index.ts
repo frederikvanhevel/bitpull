@@ -3,19 +3,20 @@ import getUnixTime from 'date-fns/getUnixTime'
 import fromUnixTime from 'date-fns/fromUnixTime'
 import { startOfMonth } from 'date-fns'
 import { PaymentPlan, Payment } from 'models/payment'
+import Logger from 'utils/logging/logger'
+import Config from 'utils/config'
 import {
     StripePaymentPlan,
     StripeSubscription,
     Invoice,
     UsageSummary
 } from './typedefs'
-import Logger from 'utils/logging/logger'
 
 const PAYMENT_PLAN_MAP: Record<PaymentPlan, StripePaymentPlan> = {
     [PaymentPlan.METERED]: StripePaymentPlan.METERED,
     [PaymentPlan.MONTHLY]: StripePaymentPlan.MONTHLY
 }
-const stripeHandler = new stripe(process.env.STRIPE_SECRET_KEY!, {
+const stripeHandler = new stripe(Config.STRIPE_SECRET_KEY, {
     apiVersion: '2020-03-02'
 })
 
@@ -124,7 +125,7 @@ const getWebhookEvent = (body: any, signature: string) => {
     return stripeHandler.webhooks.constructEvent(
         body,
         signature,
-        process.env.STRIPE_WEBHOOK_SECRET!
+        Config.STRIPE_WEBHOOK_SECRET
     )
 }
 

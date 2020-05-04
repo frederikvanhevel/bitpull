@@ -2,10 +2,10 @@ import UserModel, { User } from 'models/user'
 import Email, { Template } from 'components/email'
 import PaymentModel from 'models/payment'
 import { NotFoundError } from 'utils/errors'
+import Config from 'utils/config'
 
 const sendVerificationEmail = (user: User, token: string) => {
-    const APP_URL = process.env.APP_URL
-    const link = `${APP_URL}/verify?token=${token}`
+    const link = `${Config.APP_URL}/verify?token=${token}`
 
     Email.send({
         to: user.email,
@@ -17,8 +17,7 @@ const sendVerificationEmail = (user: User, token: string) => {
 }
 
 const sendForgotPasswordEmail = (email: string, token: string) => {
-    const APP_URL = process.env.APP_URL
-    const link = `${APP_URL}/reset-password?token=${token}`
+    const link = `${Config.APP_URL}/reset-password?token=${token}`
 
     Email.send({
         to: email,
@@ -30,8 +29,7 @@ const sendForgotPasswordEmail = (email: string, token: string) => {
 }
 
 const sendJobHasErrorsEmail = (email: string, jobName: string) => {
-    const APP_URL = process.env.APP_URL
-    const link = `${APP_URL}/jobs`
+    const link = `${Config.APP_URL}/jobs`
 
     Email.send({
         to: email,
@@ -44,8 +42,7 @@ const sendJobHasErrorsEmail = (email: string, jobName: string) => {
 }
 
 const sendPaymentFailedEmail = (email: string) => {
-    const APP_URL = process.env.APP_URL
-    const link = `${APP_URL}/settings/payment`
+    const link = `${Config.APP_URL}/settings/payment`
 
     Email.send({
         to: email,
@@ -69,8 +66,7 @@ const sendTrialWillEndEmail = async (customerId: string) => {
         throw new NotFoundError()
     }
 
-    const APP_URL = process.env.APP_URL
-    const link = `${APP_URL}/settings/payment`
+    const link = `${Config.APP_URL}/settings/payment`
 
     Email.send({
         to: user.email,
@@ -92,8 +88,7 @@ const sendOutOfFreeCreditsEmail = async (user: User) => {
 
     if (payment.sourceId) return
 
-    const APP_URL = process.env.APP_URL
-    const link = `${APP_URL}/settings/payment`
+    const link = `${Config.APP_URL}/settings/payment`
 
     Email.send({
         to: user.email,
@@ -109,8 +104,7 @@ const sendReferralAwardEmail = async (
     referredUser: User,
     credits: number
 ) => {
-    const APP_URL = process.env.APP_URL
-    const referralLink = `${APP_URL}/register?ref=${user.referralId}`
+    const referralLink = `${Config.APP_URL}/register?ref=${user.referralId}`
 
     Email.send({
         to: user.email,

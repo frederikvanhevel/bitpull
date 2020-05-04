@@ -5,6 +5,7 @@ import { AuthenticationContext } from 'controllers/graphql/directives/auth'
 import { IntegrationType } from '@bitpull/worker'
 import Logger from 'utils/logging/logger'
 import { NotFoundError } from 'utils/errors'
+import Config from 'utils/config'
 import { AuthorizationHandler, AuthroizationCode } from '../typedefs'
 import { GithubRepository } from './typedefs'
 
@@ -13,9 +14,9 @@ const authorize: AuthorizationHandler = async (
     data: AuthroizationCode
 ) => {
     const requestBody = {
-        client_id: process.env.GITHUB_CLIENT_ID,
-        client_secret: process.env.GITHUB_CLIENT_SECRET,
-        redirect_uri: `${process.env.APP_URL}/integrations/github`,
+        client_id: Config.GITHUB_CLIENT_ID,
+        client_secret: Config.GITHUB_CLIENT_SECRET,
+        redirect_uri: `${Config.APP_URL}/integrations/github`,
         code: data.code
     }
 
