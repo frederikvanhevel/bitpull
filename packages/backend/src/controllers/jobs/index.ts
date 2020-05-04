@@ -84,6 +84,7 @@ const startJobProcessor = () => {
                 result.status === Status.ERROR ||
                 result.errors.length === result.logs.length - 1
             ) {
+                Logger.warn(`Job failed: ${JSON.stringify(result.errors)}`)
                 throw new Error(`Workflow failed for job ${job._id}`)
             }
 
