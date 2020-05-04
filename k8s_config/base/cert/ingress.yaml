@@ -4,7 +4,7 @@ metadata:
   name: main-ingress
   annotations:
     kubernetes.io/ingress.global-static-ip-name: bitpull-address
-    networking.gke.io/managed-certificates: bitpull-cert
+    networking.gke.io/managed-certificates: "api-certificate,app-certificate"
 spec:
   rules:
   - host: api.bitpull.io

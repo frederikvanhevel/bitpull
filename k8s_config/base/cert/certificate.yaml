@@ -1,8 +1,0 @@
-apiVersion: networking.gke.io/v1beta2
-kind: ManagedCertificate
-metadata:
-  name: bitpull-cert
-spec:
-  domains:
-    - api.bitpull.io
-    - app.bitpull.io
