@@ -143,7 +143,7 @@ const run = async (
 
     const settings: Settings = {
         puppeteer: {
-            endpoint: Config.PUPPETEER_ENDPOINT
+            endpoint: Config.PUPPETEER_ENDPOINT!
         },
         proxyEndpoint: `${Config.API_URL}/api/proxy?url=`,
         storage: {

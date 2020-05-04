@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import Config from 'utils/config'
+import Logger from 'utils/logging/logger'
 
 const connect = async () => {
     try {
@@ -10,7 +11,7 @@ const connect = async () => {
             useFindAndModify: false
         })
     } catch (error) {
-        throw new Error('Could not connect to database')
+        Logger.throw(new Error('Could not connect to database'), error)
     }
 }
 

@@ -73,6 +73,7 @@ const start = async () => {
     app.use('/webhooks', webhookRouter)
     app.get('/health', (req, res) => {
         const success = Database.isHealthy()
+        if (!success) Logger.error(new Error('Healthcheck failed'))
         res.status(success ? 200 : 500).send({
             success
         })
