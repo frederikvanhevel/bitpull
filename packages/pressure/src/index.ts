@@ -28,12 +28,11 @@ const main = async () => {
         try {
             response = await got(pressureApiUrl).json()
         } catch (error) {
-            console.error(
-                {
-                    ...serializeError(error),
-                    message: 'cannot get the latest pressure metrics; signaling that instance is not ready',
-                }
-            )
+            console.error({
+                ...serializeError(error),
+                message:
+                    'cannot get the latest pressure metrics; signaling that instance is not ready'
+            })
 
             lightship.signalNotReady()
         }
@@ -61,9 +60,9 @@ const main = async () => {
 
                 lightship.signalNotReady()
             } else {
-                console.info(
-                    'instance is ready and can handle more requests; signaling that instance is ready'
-                )
+                // console.info(
+                //     'instance is ready and can handle more requests; signaling that instance is ready'
+                // )
 
                 lightship.signalReady()
             }

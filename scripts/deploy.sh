@@ -51,7 +51,8 @@ rm k8s_config/overlays/production/frontend/deployment.yaml.original
 # kubectl set image deployment/chrome pressure=gcr.io/bitpull/pressure:latest
 
 
-kubectl apply -f k8s_config/base/cert/certificate.yaml
+kubectl apply -f k8s_config/base/cert/api-certificate.yaml
+kubectl apply -f k8s_config/base/cert/app-certificate.yaml
 kubectl apply -f k8s_config/base/cert/ingress.yaml
 kubectl apply -k k8s_config/overlays/production/chrome
 kubectl rollout status deployment/chrome

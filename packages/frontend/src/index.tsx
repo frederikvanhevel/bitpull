@@ -13,7 +13,7 @@ import { LocalizationProvider } from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns'
 import Initializer from 'Initializer'
 
-const store = configureStore()
+export const store = configureStore()
 
 const Wrapper: React.FC = () => {
     return (

@@ -1,4 +1,5 @@
 import stackdriver from 'services/stackdriver'
+import { store } from '../index'
 
 stackdriver.initialize()
 
@@ -15,10 +16,17 @@ class Logger {
         console.warn(message)
     }
 
-    public static async error(originalError: Error) {
+    public static async error(error: Error) {
         if (Logger.LOG_LEVEL < 1) return
-        console.error(originalError)
-        stackdriver.error(originalError)
+        console.error(error)
+
+        stackdriver.error(
+            new Error(
+                `Error: ${
+                    error.message || 'Unknown error'
+                } State: ${JSON.stringify(store.getState())}`
+            )
+        )
     }
 
     public static throw(error: Error): never {

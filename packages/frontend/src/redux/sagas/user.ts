@@ -27,6 +27,7 @@ import {
 import { addNotification } from './helper'
 import { oAuth, oAuthVariables } from 'mutations/user/typedefs/oAuth'
 import Segment, { TrackingEvent } from 'services/segment'
+import Logger from 'utils/logger'
 
 const LOCALSTORAGE_TOKEN = 'token'
 
@@ -47,6 +48,7 @@ function* loadUser() {
         if (!user) throw new Error('Unable to load user')
 
         Segment.identify(user)
+        Logger.setUser(user.id)
 
         yield put({
             type: UserConstants.LOAD_USER_SUCCESS,
@@ -77,6 +79,7 @@ function* login(action: Login) {
         localStorage.setItem(LOCALSTORAGE_TOKEN, token)
 
         Segment.identify(user)
+        Logger.setUser(user.id)
 
         yield put({
             type: UserConstants.LOGIN_SUCCESS,
@@ -106,6 +109,7 @@ function* oAuth(action: OAuth) {
         localStorage.setItem(LOCALSTORAGE_TOKEN, token)
 
         Segment.identify(user)
+        Logger.setUser(user.id)
 
         yield put({
             type: UserConstants.OAUTH_SUCCESS,
@@ -135,6 +139,7 @@ function* register(action: Register) {
         localStorage.setItem(LOCALSTORAGE_TOKEN, token)
 
         Segment.identify(user)
+        Logger.setUser(user.id)
 
         yield put({
             type: UserConstants.REGISTER_SUCCESS,
