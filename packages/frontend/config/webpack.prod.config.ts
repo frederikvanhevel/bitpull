@@ -11,7 +11,7 @@ const config: WebpackConfiguration = {
     entry: path.resolve(__dirname, '../src/index.tsx'),
     output: {
         path: path.resolve(__dirname, '../dist'),
-        filename: 'main.js',
+        filename: 'main.[contenthash].js',
         publicPath: '/',
         pathinfo: false
     },

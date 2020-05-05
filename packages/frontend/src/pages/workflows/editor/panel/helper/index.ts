@@ -12,6 +12,7 @@ import { CollectNode, CollectField } from '@bitpull/worker/lib/typedefs'
 import { PaginationNode } from '@bitpull/worker/lib/typedefs'
 import { Attributes } from '../modules/common/Selector'
 import { getDefaultProps } from './defaults'
+import Logger from 'utils/logger'
 
 export interface NodeMenuItem {
     type: NodeType
@@ -27,16 +28,22 @@ export const capitalize = (text: string) => {
         .replace(/(?:^|\s)\S/g, firstLetter => firstLetter.toUpperCase())
 }
 
+const getNodeProperty = (type: NodeType) => {
+    const property = NODE_PROPERTIES[type]
+    if (!property) Logger.error(new Error(`No property found for ${type}`))
+    return property
+}
+
 export const getIcon = (type: NodeType) => {
-    return NODE_PROPERTIES[type].icon
+    return getNodeProperty(type).icon
 }
 
 export const getTitle = (node: Node) => {
-    return NODE_PROPERTIES[node.type].label
+    return getNodeProperty(node.type).label
 }
 
 export const getEditor = (node: Node) => {
-    return NODE_PROPERTIES[node.type].editor
+    return getNodeProperty(node.type).editor
 }
 
 export const isNodeType = (value: string): boolean => {
