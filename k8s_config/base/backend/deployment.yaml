@@ -17,6 +17,13 @@ spec:
         app: backend
         tier: backend
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+                matchLabels:
+                  app: backend
+            topologyKey: kubernetes.io/hostname
       containers:
         - name: backend
           imagePullPolicy: IfNotPresent

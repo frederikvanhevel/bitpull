@@ -17,6 +17,13 @@ spec:
         app: frontend
         tier: frontend
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+                matchLabels:
+                  app: frontend
+            topologyKey: kubernetes.io/hostname
       containers:
         - name: frontend
           imagePullPolicy: IfNotPresent

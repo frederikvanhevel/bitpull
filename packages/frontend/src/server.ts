@@ -8,7 +8,7 @@ app.use(helmet())
 
 // Tell express that we want to use the dist folder
 // for our static assets
-app.use(express.static(path.join(__dirname, '../dist')))
+app.use(express.static(path.join(__dirname, '../dist'), { maxAge: 0 }))
 
 app.get('/health', (req, res) => res.status(200).send({ success: true }))
 
