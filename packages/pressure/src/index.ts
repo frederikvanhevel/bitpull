@@ -7,7 +7,9 @@ import dotenv from 'dotenv'
 import { ChromePressure } from 'typedefs'
 dotenv.config()
 
-const lightship = createLightship()
+const lightship = createLightship({
+    port: parseInt(process.env.PORT || '9000', 10)
+})
 
 const PUPPETEER_URL = process.env.PUPPETEER_URL
 const CHECK_INTERVAL = parseInt(process.env.CHECK_INTERVAL || '1', 10)

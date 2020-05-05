@@ -20,10 +20,10 @@ spec:
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
+            - labelSelector:
                 matchLabels:
                   app: frontend
-            topologyKey: kubernetes.io/hostname
+              topologyKey: kubernetes.io/hostname
       containers:
         - name: frontend
           imagePullPolicy: IfNotPresent

@@ -39,9 +39,9 @@ const DESCRIPTIONS: Record<QuestionType, string> = {
     [QuestionType.INTEGRATION]:
         'Which integration would you like to see added?',
     [QuestionType.WORKFLOW]:
-        'Tell us abit more about the feature and why you need it.',
+        'Tell us a bit more about the feature and why you need it.',
     [QuestionType.JOB]:
-        'Tell us abit more about the feature and why you need it.',
+        'Tell us a bit more about the feature and why you need it.',
     [QuestionType.GENERAL]: 'What can we help you with?'
 }
 
@@ -89,7 +89,8 @@ const FeedbackForm: React.FC<Props> = ({ loading, onSubmit }) => {
                                 I would like to request a feature
                             </MenuItem>
                             <MenuItem value={QuestionType.INTEGRATION}>
-                                I want to integrate with another platform
+                                I want to integrate with another platform or
+                                tool
                             </MenuItem>
                             {/* <MenuItem value={QuestionType.WORKFLOW}>
                                 My workflow is not working
