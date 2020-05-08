@@ -50,19 +50,19 @@ export interface NodeProperty {
 export const NODE_PROPERTIES: Record<NodeType, NodeProperty> = {
     [NodeType.HTML]: {
         icon: UrlIcon,
-        label: 'Get HTML content',
+        label: 'Go to url',
         shortLabel: 'Get HTML',
         editor: HtmlModule
     },
     [NodeType.HTML_LINKED]: {
         icon: UrlIcon,
-        label: 'Get HTML content',
+        label: 'Go to collected url',
         shortLabel: 'Get HTML',
         editor: HtmlModule
     },
     [NodeType.HTML_MULTIPLE]: {
         icon: UrlIcon,
-        label: 'Get HTML content',
+        label: 'Go to urls',
         shortLabel: 'Get HTML',
         editor: HtmlModule
     },

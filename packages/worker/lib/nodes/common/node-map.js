@@ -52,7 +52,7 @@ const NodeMap = {
         notification: []
     },
     [node_1.NodeType.COLLECT]: {
-        processing: [node_1.NodeType.HTML],
+        processing: [node_1.NodeType.HTML_LINKED],
         export: [node_1.NodeType.EXCEL, node_1.NodeType.JSON, node_1.NodeType.CSV, node_1.NodeType.WEBHOOK],
         notification: []
     },

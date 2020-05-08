@@ -57,7 +57,7 @@ const NodeMap: Record<NodeType, Map> = {
         notification: []
     },
     [NodeType.COLLECT]: {
-        processing: [NodeType.HTML],
+        processing: [NodeType.HTML_LINKED],
         export: [NodeType.EXCEL, NodeType.JSON, NodeType.CSV, NodeType.WEBHOOK],
         notification: []
     },

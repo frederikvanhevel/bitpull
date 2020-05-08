@@ -94,6 +94,7 @@ export const isExportOnlyNode = (node: Node) => {
 export const isProcessingOnlyNode = (node: Node) => {
     return (
         node.type === NodeType.HTML ||
+        node.type === NodeType.HTML_LINKED ||
         node.type === NodeType.HTML_MULTIPLE ||
         node.type === NodeType.CLICK ||
         node.type === NodeType.CLICK_MULTIPLE ||

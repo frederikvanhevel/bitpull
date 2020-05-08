@@ -170,7 +170,9 @@ export const isBranchLink = (link: any) => {
         link.source.data.type === NodeType.HTML_MULTIPLE ||
         link.source.data.type === NodeType.CLICK_MULTIPLE ||
         (link.source.data.type === NodeType.COLLECT &&
-            link.target.data.type === NodeType.HTML_LINKED)
+            link.target.data.type === NodeType.HTML_LINKED) ||
+        (link.source.data.type === NodeType.COLLECT &&
+            link.target.data.type === NodeType.HTML)
     )
 }
 
