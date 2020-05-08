@@ -10,6 +10,7 @@ const tree_kill_1 = __importDefault(require("tree-kill"));
 const common_1 = require("../utils/common");
 const scripts_1 = require("../utils/scripts");
 const logger_1 = __importDefault(require("../utils/logging/logger"));
+const delay_1 = require("../utils/delay");
 const DEFAULT_OPTIONS = {
     defaultViewport: {
         width: 1920,
@@ -46,19 +47,23 @@ class CustomBrowser {
         }
     }
     async with(func, settings, currentPage) {
-        if (!this.browser)
-            await this.initialize(settings);
-        let page = currentPage;
-        try {
-            if (!page)
-                page = await this.newPage(settings);
-            await func(page);
-        }
-        catch (error) {
-            logger_1.default.error(new Error('Browser error'), error);
-            throw error;
-        }
-        return page;
+        return new Promise((resolve, reject) => {
+            delay_1.retryBackoff(async () => {
+                if (!this.browser)
+                    await this.initialize(settings);
+                let page = currentPage;
+                try {
+                    if (!page)
+                        page = await this.newPage(settings);
+                    await func(page);
+                }
+                catch (error) {
+                    logger_1.default.error(new Error('Browser error'), error);
+                    throw error;
+                }
+                resolve(page);
+            }, 3, 2000).catch(error => reject(error));
+        });
     }
     async getPageContent(page, link, before) {
         const response = await page.goto(link);

@@ -12,6 +12,7 @@ import { isTestEnv } from '../utils/common'
 import { stripScriptTags, removeAttribute } from '../utils/scripts'
 import Logger from '../utils/logging/logger'
 import { PageCallback, MockHandler } from './typedefs'
+import { retryBackoff } from '../utils/delay'
 
 const DEFAULT_OPTIONS: ConnectOptions | LaunchOptions = {
     defaultViewport: {
@@ -65,18 +66,22 @@ class CustomBrowser {
         settings: Settings,
         currentPage?: Page
     ): Promise<Page> {
-        if (!this.browser) await this.initialize(settings)
-
-        let page = currentPage
-        try {
-            if (!page) page = await this.newPage(settings)
-            await func(page)
-        } catch (error) {
-            Logger.error(new Error('Browser error'), error)
-            throw error
-        }
-
-        return page!
+        return new Promise((resolve, reject) => {
+            retryBackoff(async () => {
+                if (!this.browser) await this.initialize(settings)
+    
+                let page = currentPage
+                try {
+                    if (!page) page = await this.newPage(settings)
+                    await func(page)
+                } catch (error) {
+                    Logger.error(new Error('Browser error'), error)
+                    throw error
+                }
+        
+                resolve(page)
+            }, 3, 2000).catch(error => reject(error))
+        })
     }
 
     async getPageContent(
