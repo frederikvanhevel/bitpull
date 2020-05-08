@@ -127,9 +127,9 @@ const privateRoutes: Route[] = [
     },
     {
         exact: true,
-        path: '/catalog',
+        path: '/templates',
         component: CatalogPage,
-        label: 'Catalog'
+        label: 'Templates'
     },
     {
         exact: true,

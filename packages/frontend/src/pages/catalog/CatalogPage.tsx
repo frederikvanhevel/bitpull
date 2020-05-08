@@ -42,11 +42,12 @@ const CatalogPage: React.FC = () => {
 
     return (
         <>
-            <PageTitle>Catalog - BitPull</PageTitle>
+            <PageTitle>Templates - BitPull</PageTitle>
 
             <Toolbar>
                 <Typography variant="body2">
-                    Choose from a selection of premade workflows
+                    Choose from a selection of premade workflows to help get you
+                    started
                 </Typography>
             </Toolbar>
 

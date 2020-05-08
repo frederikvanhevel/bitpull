@@ -13,7 +13,7 @@ import { NodeId } from '@bitpull/worker/lib/typedefs'
 import { Node } from 'typedefs/common'
 import { isBranchLink, getTooltipType } from './helper'
 import { getMarker } from './helper'
-import { ChartOptions, TooltipType } from './typedefs'
+import { ChartOptions } from './typedefs'
 
 class D3FlowChart {
     svg: any

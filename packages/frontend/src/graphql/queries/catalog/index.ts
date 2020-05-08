@@ -7,6 +7,7 @@ export const GET_CATALOG = gql`
             name
             title
             description
+            node
         }
     }
 `

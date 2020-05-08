@@ -80,8 +80,8 @@ const IntroductionOverlay: React.FC = () => {
                             className={classes.description}
                         >
                             No analytics to see here yet! Start by creating a
-                            workflow either from scratch or choose one from our
-                            catalog.
+                            workflow either from scratch or pick a template to
+                            start with.
                         </Typography>
 
                         <div className={classes.actions}>
@@ -89,9 +89,9 @@ const IntroductionOverlay: React.FC = () => {
                                 color="primary"
                                 variant="contained"
                                 component={Link}
-                                to="/catalog"
+                                to="/templates"
                             >
-                                View catalog
+                                Pick a template
                             </Button>
                             <Button
                                 color="primary"

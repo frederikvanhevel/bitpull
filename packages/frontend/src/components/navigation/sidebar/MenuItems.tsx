@@ -85,8 +85,8 @@ export const MainListItems: React.FC = () => {
             />
             <ListItemLink
                 exact
-                to="/catalog"
-                primary="Catalog"
+                to="/templates"
+                primary="Templates"
                 icon={<Dashboard />}
             />
         </List>

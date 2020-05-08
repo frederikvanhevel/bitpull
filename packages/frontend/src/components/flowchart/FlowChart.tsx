@@ -110,7 +110,7 @@ const FlowChart: React.FC<Props> = ({ onClickNode }) => {
                 getNodeIcon(currentNode, workflowRef.current.watchedNodeId),
             isLinkDotted,
             onClickNode,
-            onShowTooltip: tooltip => setTooltip(tooltip),
+            onShowTooltip: t => setTooltip(t),
             onHideTooltip: () => setTooltip(undefined)
         })
     }, [])

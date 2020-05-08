@@ -16,30 +16,7 @@ import {
     pickCatalogItem,
     pickCatalogItemVariables
 } from 'mutations/catalog/typedefs/pickCatalogItem'
-import twitter from './images/twitter.svg'
-import newyorktimes from './images/new-york-times.svg'
-import medium from './images/medium.svg'
-import producthunt from './images/product-hunt.svg'
-import bookingcom from './images/bookingcom.svg'
-import ebay from './images/ebay.svg'
-import hackernews from './images/hackernews.svg'
-import tripadvisor from './images/tripadvisor.svg'
-import google from './images/google.svg'
-import linkedin from './images/linkedin.svg'
-
-const IMAGES: Record<string, string> = {
-    default: twitter,
-    twitter,
-    newyorktimes,
-    medium,
-    producthunt,
-    bookingcom,
-    ebay,
-    hackernews,
-    tripadvisor,
-    google,
-    linkedin
-}
+import SimpleFlowChart from 'components/flowchart/SimpleFlowChart'
 
 interface Props {
     item: CatalogItem
@@ -72,7 +49,6 @@ const CatalogItem: React.FC<Props> = ({ item }) => {
         pickCatalogItem,
         pickCatalogItemVariables
     >(PICK_CATALOG_ITEM)
-    const image = IMAGES[item.name] || IMAGES.default
 
     useEffect(() => {
         if (data?.pickCatalogItem.id)
@@ -82,7 +58,7 @@ const CatalogItem: React.FC<Props> = ({ item }) => {
     return (
         <Card>
             <div className={classes.media}>
-                <img src={image} />
+                <SimpleFlowChart node={item.node} />
             </div>
 
             <Divider />

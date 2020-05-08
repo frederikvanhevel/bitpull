@@ -13,6 +13,7 @@ export interface getCatalogItems_getCatalogItems {
   name: string;
   title: string;
   description: string | null;
+  node: any;
 }
 
 export interface getCatalogItems {

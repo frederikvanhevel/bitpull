@@ -24,7 +24,7 @@ export const addCatalogItem: GraphQLFieldResolver<
     AuthenticationContext
 > = async (root, args, context) => {
     try {
-        return await CatalogService.addItem(args.data as CatalogItem)
+        return await CatalogService.addItem(args.data as any)
     } catch (error) {
         Logger.throw(
             new Error('Could not add catalog item'),
