@@ -44,6 +44,9 @@ const useStyles = makeStyles(theme => ({
         flexDirection: 'column',
         '& > div:first-child': {
             marginBottom: theme.spacing(2)
+        },
+        '& > div:only-child': {
+            marginBottom: 0
         }
     },
     addButton: {

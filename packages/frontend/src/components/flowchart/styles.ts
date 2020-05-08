@@ -1,5 +1,5 @@
 import { Theme } from '@material-ui/core'
-import { ChartClasses } from './helper'
+import { ChartClasses } from './typedefs'
 
 export const getStyles = (theme: Theme): ChartClasses => ({
     node: {
@@ -160,6 +160,10 @@ export const getStyles = (theme: Theme): ChartClasses => ({
         fill: `${theme.palette.grey['500']} !important`
     },
     marker: {
-        fill: `${theme.palette.grey['500']} !important`
+        fill: `${theme.palette.grey['500']} !important`,
+        cursor: 'default',
+        '& > path': {
+            pointerEvents: 'none'
+        }
     }
 })

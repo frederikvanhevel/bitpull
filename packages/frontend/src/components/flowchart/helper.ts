@@ -33,25 +33,7 @@ import {
     branchUp,
     branchDown
 } from './icons'
-
-export interface ChartClasses {
-    node: any
-    link: any
-    info: any
-    icon: any
-    marker: any
-    primaryNode: any
-    secondaryNode: any
-    defaultNode: any
-    activeNode: any
-    selectedLink: any
-    selectedNode: any
-    unClickable: any
-    errorNode: any
-    disabledNode: any
-    unreachableNode: any
-    watchedNode: any
-}
+import { TooltipType } from './typedefs'
 
 const NODE_LABELS: Record<NodeType, string> = {
     [NodeType.HTML]: 'html',
@@ -181,5 +163,20 @@ export const getMarker = (link: any) => {
         return branchDown
     } else {
         return branchUp
+    }
+}
+
+export const getTooltipType = (link: any) => {
+    if (link.source.data.goToOnEnd === link.target.data.id) {
+        return TooltipType.BRANCH_DOWN
+    } else if (
+        (link.source.data.type === NodeType.COLLECT &&
+            link.target.data.type === NodeType.HTML_LINKED) ||
+        (link.source.data.type === NodeType.COLLECT &&
+            link.target.data.type === NodeType.HTML)
+    ) {
+        return TooltipType.BRANCH_UP_HTML
+    } else {
+        return TooltipType.BRANCH_UP
     }
 }

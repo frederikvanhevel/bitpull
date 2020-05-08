@@ -1,4 +1,3 @@
-import { ReactNode } from 'react'
 import { select } from 'd3-selection'
 import { hierarchy, tree } from 'd3-hierarchy'
 import {
@@ -12,17 +11,9 @@ import {
 } from './constants'
 import { NodeId } from '@bitpull/worker/lib/typedefs'
 import { Node } from 'typedefs/common'
-import { ChartClasses, isBranchLink } from './helper'
+import { isBranchLink, getTooltipType } from './helper'
 import { getMarker } from './helper'
-
-export interface ChartOptions {
-    classes: ChartClasses
-    getNodeClass: (node: Node) => string
-    getNodeText: (node: Node) => string
-    getNodeIcon: (node: Node) => ReactNode
-    onClickNode: (node: Node) => void
-    isLinkDotted: (node: Node) => boolean
-}
+import { ChartOptions, TooltipType } from './typedefs'
 
 class D3FlowChart {
     svg: any
@@ -191,7 +182,7 @@ class D3FlowChart {
     }
 
     drawMarkers(links: any, sourcePoint: any) {
-        const { classes } = this.options
+        const { classes, onShowTooltip, onHideTooltip } = this.options
 
         // select all links and merge with data
         const allMarkers = this.markerGroup
@@ -208,6 +199,20 @@ class D3FlowChart {
             .attr('class', classes.marker)
             .attr('transform', () => {
                 return `translate(${sourcePoint.x0}, ${sourcePoint.y0})`
+            })
+            .on('mouseover', function (d: any) {
+                // @ts-ignore
+                const bbox = this.getBoundingClientRect()
+                const cx = bbox.x + bbox.width
+                const cy = bbox.y + bbox.height / 2
+
+                onShowTooltip({
+                    type: getTooltipType(d),
+                    position: { x: cx, y: cy }
+                })
+            })
+            .on('mouseout', function () {
+                onHideTooltip()
             })
 
         newMarkers

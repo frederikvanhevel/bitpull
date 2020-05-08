@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core'
 import Zoomable from './Zoomable'
 import { isRootNode, getNodeText, getNodeIcon, isLinkDotted } from './helper'
@@ -10,6 +10,8 @@ import { AppState } from 'redux/store'
 import { WorkflowState } from 'reducers/workflow'
 import usePrevious from 'hooks/usePrevious'
 import { getStyles } from './styles'
+import { Tooltip } from './typedefs'
+import TooltipWrapper from './Tooltip'
 
 interface Props {
     onClickNode: (node: Node) => void
@@ -96,6 +98,7 @@ const FlowChart: React.FC<Props> = ({ onClickNode }) => {
     } = workflow
     const { node } = currentWorkflow!
     const previousSelectedNodeId = usePrevious(selectedNodeId)
+    const [tooltip, setTooltip] = useState<Tooltip | undefined>()
 
     useEffect(() => {
         chartRef.current = new D3FlowChart(svgRef.current!, {
@@ -106,7 +109,9 @@ const FlowChart: React.FC<Props> = ({ onClickNode }) => {
             getNodeIcon: currentNode =>
                 getNodeIcon(currentNode, workflowRef.current.watchedNodeId),
             isLinkDotted,
-            onClickNode
+            onClickNode,
+            onShowTooltip: tooltip => setTooltip(tooltip),
+            onHideTooltip: () => setTooltip(undefined)
         })
     }, [])
 
@@ -126,6 +131,7 @@ const FlowChart: React.FC<Props> = ({ onClickNode }) => {
     return (
         <Zoomable>
             <svg className={classes.svg} ref={svgRef} />
+            <TooltipWrapper tooltip={tooltip} />
         </Zoomable>
     )
 }
