@@ -176,6 +176,8 @@ export const getTooltipType = (link: any) => {
             link.target.data.type === NodeType.HTML)
     ) {
         return TooltipType.BRANCH_UP_HTML
+    } else if (link.source.data.type === NodeType.PAGINATION) {
+        return TooltipType.BRANCH_UP_PAGINATION
     } else {
         return TooltipType.BRANCH_UP
     }

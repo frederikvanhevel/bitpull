@@ -23,6 +23,7 @@ export interface ChartClasses {
 export enum TooltipType {
     BRANCH_UP = 'BRANCH_UP',
     BRANCH_UP_HTML = 'BRANCH_UP_HTML',
+    BRANCH_UP_PAGINATION = 'BRANCH_UP_PAGINATION',
     BRANCH_DOWN = 'BRANCH_DOWN'
 }
 
