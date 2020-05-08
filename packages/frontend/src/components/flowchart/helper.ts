@@ -167,7 +167,17 @@ export const getMarker = (link: any) => {
 }
 
 export const getTooltipType = (link: any) => {
-    if (link.source.data.goToOnEnd === link.target.data.id) {
+    if (
+        link.source.data.type === NodeType.PAGINATION &&
+        link.source.data.goToOnEnd === link.target.data.id
+    ) {
+        return TooltipType.BRANCH_DOWN_PAGINATION
+    } else if (
+        link.source.data.type === NodeType.CLICK_MULTIPLE &&
+        link.source.data.goToOnEnd === link.target.data.id
+    ) {
+        return TooltipType.BRANCH_DOWN_CLICK
+    } else if (link.source.data.goToOnEnd === link.target.data.id) {
         return TooltipType.BRANCH_DOWN
     } else if (
         (link.source.data.type === NodeType.COLLECT &&
