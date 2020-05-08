@@ -8,6 +8,7 @@ import { NodeError } from '../../../nodes/common/errors'
 import { mergeData } from './helper'
 import { CollectError } from './errors'
 import { CollectNode, CollectParseResult } from './typedefs'
+import { FlowError } from '../../../utils/errors'
 
 const collect: NodeParser<CollectNode, CollectParseResult> = async (
     input,
@@ -21,7 +22,12 @@ const collect: NodeParser<CollectNode, CollectParseResult> = async (
     assert(node.fields && node.fields.length, CollectError.FIELDS_MISSING)
     assert(node.fields[0].label !== '', CollectError.FIELDS_MISSING)
 
-    const parsedFields = await getFieldsFromHtml(input, settings)
+    let parsedFields
+    try {
+        parsedFields = await getFieldsFromHtml(input, settings)
+    } catch (error) {
+        throw new FlowError(CollectError.COULD_NOT_COLLECT, error)
+    }
 
     if (onLog) {
         const fields = node.fields.map(field => field.label)

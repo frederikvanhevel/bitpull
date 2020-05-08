@@ -97,9 +97,11 @@ export const ErrorMessages: Record<string, string> = {
     [EmailError.TO_ADDRESS_MISSING]: 'To email address not specified',
 
     // Collect error
+    [CollectError.COULD_NOT_COLLECT]: 'Could not get data',
     [CollectError.FIELDS_MISSING]: 'Selector fields are missing',
 
     // Html error
+    [HtmlError.NAVIGATION_FAILED]: 'Could not navigate to page',
     [HtmlError.LINKED_FIELD_MISSING]: 'Linked field is not defined',
     [HtmlError.LINKS_MISSING]: 'No links are defined',
     [HtmlError.INVALID_URL]: 'The given url is invalid',

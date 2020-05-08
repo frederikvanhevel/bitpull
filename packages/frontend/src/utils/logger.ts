@@ -1,5 +1,5 @@
 import stackdriver from 'services/stackdriver'
-import { store } from '../index'
+// import { store } from '../index'
 
 stackdriver.initialize()
 
@@ -20,13 +20,14 @@ class Logger {
         if (Logger.LOG_LEVEL < 1) return
         console.error(error)
 
-        stackdriver.error(
-            new Error(
-                `Error: ${
-                    error.message || 'Unknown error'
-                } State: ${JSON.stringify(store.getState())}`
-            )
-        )
+        stackdriver.error(error)
+        // stackdriver.error(
+        //     new Error(
+        //         `Error: ${
+        //             error.message || 'Unknown error'
+        //         } State: ${JSON.stringify(store.getState())}`
+        //     )
+        // )
     }
 
     public static throw(error: Error): never {

@@ -81,8 +81,10 @@ exports.ErrorMessages = {
     // Email error
     [errors_16.EmailError.TO_ADDRESS_MISSING]: 'To email address not specified',
     // Collect error
+    [errors_12.CollectError.COULD_NOT_COLLECT]: 'Could not get data',
     [errors_12.CollectError.FIELDS_MISSING]: 'Selector fields are missing',
     // Html error
+    [errors_13.HtmlError.NAVIGATION_FAILED]: 'Could not navigate to page',
     [errors_13.HtmlError.LINKED_FIELD_MISSING]: 'Linked field is not defined',
     [errors_13.HtmlError.LINKS_MISSING]: 'No links are defined',
     [errors_13.HtmlError.INVALID_URL]: 'The given url is invalid',

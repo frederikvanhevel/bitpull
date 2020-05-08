@@ -11,6 +11,7 @@ import {
     PaginationParseResult
 } from './typedefs'
 import { isNextLinkPagination } from './helper'
+import { HtmlError } from '../html/errors'
 
 const clickNextButton = async (
     input: NodeInput<PaginationNode>,
@@ -23,8 +24,7 @@ const clickNextButton = async (
     try {
         await page.click(selector)
     } catch (error) {
-        console.log(error)
-        throw new FlowError(ClickError.COULD_NOT_CLICK)
+        throw new FlowError(ClickError.COULD_NOT_CLICK, error)
     }
 
     // add random delay between requests
@@ -66,9 +66,13 @@ const loopNextButton = async (
 
         await func()
 
-        hasNext = await hasNextButton()
-
-        const currentContent = await page.content()
+        let currentContent
+        try {
+            hasNext = await hasNextButton()
+            currentContent = await page.content()
+        } catch (error) {
+            throw new FlowError(HtmlError.NAVIGATION_FAILED, error)
+        }
 
         if (currentContent === lastContent) break
 

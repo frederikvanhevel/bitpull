@@ -46,3 +46,6 @@ const cleanup = async () => {
 process.on('SIGINT', cleanup)
 process.on('SIGTERM', cleanup)
 process.on('exit', cleanup)
+process.on('unhandledRejection', reason => {
+    process.exit(1)
+})

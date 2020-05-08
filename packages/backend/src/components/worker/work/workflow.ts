@@ -63,7 +63,9 @@ process.on('message', async (args: WorkerArgs) => {
         await traverser.cleanup()
     } catch (error) {
         await traverser.cleanup()
-        if (!traverser.canceled) throw error
+        // if (!traverser.canceled) throw error
+        // eslint-disable-next-line no-process-exit
+        process.exit(1)
     }
 })
 
@@ -74,3 +76,6 @@ const cleanup = async () => {
 process.on('SIGINT', cleanup)
 process.on('SIGTERM', cleanup)
 process.on('exit', cleanup)
+process.on('unhandledRejection', reason => {
+    process.exit(1)
+})
