@@ -177,6 +177,11 @@ export const getTooltipType = (link: any) => {
         link.source.data.goToOnEnd === link.target.data.id
     ) {
         return TooltipType.BRANCH_DOWN_CLICK
+    } else if (
+        link.source.data.type === NodeType.HTML_MULTIPLE &&
+        link.source.data.goToOnEnd === link.target.data.id
+    ) {
+        return TooltipType.BRANCH_DOWN_HTML
     } else if (link.source.data.goToOnEnd === link.target.data.id) {
         return TooltipType.BRANCH_DOWN
     } else if (
@@ -188,6 +193,8 @@ export const getTooltipType = (link: any) => {
         return TooltipType.BRANCH_UP_HTML
     } else if (link.source.data.type === NodeType.PAGINATION) {
         return TooltipType.BRANCH_UP_PAGINATION
+    } else if (link.source.data.type === NodeType.HTML_MULTIPLE) {
+        return TooltipType.BRANCH_UP_HTML
     } else {
         return TooltipType.BRANCH_UP
     }

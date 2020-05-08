@@ -22,8 +22,10 @@ const TOOLTIP_TEXT: Record<TooltipType, string> = {
         'Will only run after pagination is finished',
     [TooltipType.BRANCH_DOWN_CLICK]:
         'Will only run after everything was clicked',
+    [TooltipType.BRANCH_DOWN_HTML]:
+        'Will only run after all links were processed',
     [TooltipType.BRANCH_UP]: 'Step will be repeated',
-    [TooltipType.BRANCH_UP_HTML]: 'Step will be repeated for each link found',
+    [TooltipType.BRANCH_UP_HTML]: 'Step will be repeated for each link',
     [TooltipType.BRANCH_UP_PAGINATION]: 'Step will be repeated for each page'
 }
 
