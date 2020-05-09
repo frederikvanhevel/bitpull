@@ -29,12 +29,12 @@ import PageTitle from 'components/navigation/PageTitle'
 
 const useStyles = makeStyles(theme => ({
     select: {
-        width: 280
+        width: 322
     },
     actions: {
         marginTop: theme.spacing(2),
         '& > div': {
-            minWidth: 280
+            minWidth: 322
         },
         '& > button, & > a': {
             marginLeft: theme.spacing(2)

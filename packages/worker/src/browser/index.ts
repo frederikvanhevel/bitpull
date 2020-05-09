@@ -41,24 +41,26 @@ class CustomBrowser {
     async initialize(settings: Settings = {}) {
         this.settings = settings
 
-        try {
-            if (settings.puppeteer?.endpoint) {
-                this.browser = await puppeteer.connect({
-                    browserWSEndpoint: settings.puppeteer.endpoint,
-                    ignoreHTTPSErrors: true,
-                    ...getPuppeteerArgs(settings),
-                    ...DEFAULT_OPTIONS
-                })
-            } else {
-                this.browser = await chromium.puppeteer.launch({
-                    executablePath: await chromium.executablePath,
-                    ...getPuppeteerArgs(settings),
-                    ...DEFAULT_OPTIONS
-                })
+        await retryBackoff(async () => {
+            try {
+                if (settings.puppeteer?.endpoint) {
+                    this.browser = await puppeteer.connect({
+                        browserWSEndpoint: settings.puppeteer.endpoint,
+                        ignoreHTTPSErrors: true,
+                        ...getPuppeteerArgs(settings),
+                        ...DEFAULT_OPTIONS
+                    })
+                } else {
+                    this.browser = await chromium.puppeteer.launch({
+                        executablePath: await chromium.executablePath,
+                        ...getPuppeteerArgs(settings),
+                        ...DEFAULT_OPTIONS
+                    })
+                }
+            } catch (error) {
+                throw new Error('Could not launch browser')
             }
-        } catch (error) {
-            throw new Error('Could not launch browser')
-        }
+        }, 3, 2000)
     }
 
     async with(
@@ -66,22 +68,18 @@ class CustomBrowser {
         settings: Settings,
         currentPage?: Page
     ): Promise<Page> {
-        return new Promise((resolve, reject) => {
-            retryBackoff(async () => {
-                if (!this.browser) await this.initialize(settings)
+        if (!this.browser) await this.initialize(settings)
     
-                let page = currentPage
-                try {
-                    if (!page) page = await this.newPage(settings)
-                    await func(page)
-                } catch (error) {
-                    Logger.error(new Error('Browser error'), error)
-                    throw error
-                }
-        
-                resolve(page)
-            }, 3, 2000).catch(error => reject(error))
-        })
+        let page = currentPage
+        try {
+            if (!page) page = await this.newPage(settings)
+            await func(page)
+        } catch (error) {
+            Logger.error(new Error('Browser error'), error)
+            throw error
+        }
+
+        return page
     }
 
     async getPageContent(

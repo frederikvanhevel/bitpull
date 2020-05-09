@@ -53,7 +53,10 @@ const useStyles = makeStyles(theme => ({
             marginRight: theme.spacing(1)
         },
         '& > div:last-child': {
-            width: 168
+            width: 210
+        },
+        '& > div:only-child': {
+            width: 322
         }
     }
 }))
@@ -101,6 +104,7 @@ const TimeSelect: React.FC<Props> = ({ time, onChange }) => {
 
             {time.type === ScheduleType.ONCE && (
                 <DateTimePicker
+                    renderInput={props => <TextField {...props} />}
                     disablePast
                     value={time.value}
                     onChange={e => onChangeValue(e)}
