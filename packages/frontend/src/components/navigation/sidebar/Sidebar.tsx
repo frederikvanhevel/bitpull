@@ -4,15 +4,21 @@ import { useSelector } from 'react-redux'
 import { AppState } from 'redux/store'
 import { Link } from 'react-router-dom'
 import { MainListItems, SecondaryListItems, BottomListItems } from './MenuItems'
-import Logo from '../../ui/Logo'
+import logo from './images/logo-white.png'
+import logoText from './images/logo-white-text.png'
 
 export const SIDEBAR_WIDTH = 240
 
 const useStyles = makeStyles(theme => ({
+    logoWrapper: {
+        display: 'flex',
+        flexDirection: 'row'
+    },
     logo: {
-        width: '100%',
-        height: '100%',
-        marginTop: theme.spacing(1)
+        marginRight: theme.spacing(2)
+    },
+    logoText: {
+        marginLeft: 2
     },
     drawerPaper: {
         position: 'relative',
@@ -57,7 +63,10 @@ const Sidebar: React.FC = () => {
         >
             <div className={classes.toolbarIcon}>
                 <Link to="/">
-                    <Logo />
+                    <div className={classes.logoWrapper}>
+                        <img src={logo} className={classes.logo} />
+                        <img src={logoText} className={classes.logoText} />
+                    </div>
                 </Link>
             </div>
             <Divider className={classes.divider} />
