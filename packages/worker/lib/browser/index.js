@@ -32,38 +32,36 @@ class CustomBrowser {
         this.settings = {};
     }
     async initialize(settings = {}) {
-        var _a;
         this.settings = settings;
-        try {
-            if ((_a = settings.puppeteer) === null || _a === void 0 ? void 0 : _a.endpoint) {
-                this.browser = await puppeteer_core_1.default.connect(Object.assign(Object.assign({ browserWSEndpoint: settings.puppeteer.endpoint, ignoreHTTPSErrors: true }, getPuppeteerArgs(settings)), DEFAULT_OPTIONS));
+        await delay_1.retryBackoff(async () => {
+            var _a;
+            try {
+                if ((_a = settings.puppeteer) === null || _a === void 0 ? void 0 : _a.endpoint) {
+                    this.browser = await puppeteer_core_1.default.connect(Object.assign(Object.assign({ browserWSEndpoint: settings.puppeteer.endpoint, ignoreHTTPSErrors: true }, getPuppeteerArgs(settings)), DEFAULT_OPTIONS));
+                }
+                else {
+                    this.browser = await chrome_aws_lambda_1.default.puppeteer.launch(Object.assign(Object.assign({ executablePath: await chrome_aws_lambda_1.default.executablePath }, getPuppeteerArgs(settings)), DEFAULT_OPTIONS));
+                }
             }
-            else {
-                this.browser = await chrome_aws_lambda_1.default.puppeteer.launch(Object.assign(Object.assign({ executablePath: await chrome_aws_lambda_1.default.executablePath }, getPuppeteerArgs(settings)), DEFAULT_OPTIONS));
+            catch (error) {
+                throw new Error('Could not launch browser');
             }
-        }
-        catch (error) {
-            throw new Error('Could not launch browser');
-        }
+        }, 3, 2000);
     }
     async with(func, settings, currentPage) {
-        return new Promise((resolve, reject) => {
-            delay_1.retryBackoff(async () => {
-                if (!this.browser)
-                    await this.initialize(settings);
-                let page = currentPage;
-                try {
-                    if (!page)
-                        page = await this.newPage(settings);
-                    await func(page);
-                }
-                catch (error) {
-                    logger_1.default.error(new Error('Browser error'), error);
-                    throw error;
-                }
-                resolve(page);
-            }, 3, 2000).catch(error => reject(error));
-        });
+        if (!this.browser)
+            await this.initialize(settings);
+        let page = currentPage;
+        try {
+            if (!page)
+                page = await this.newPage(settings);
+            await func(page);
+        }
+        catch (error) {
+            logger_1.default.error(new Error('Browser error'), error);
+            throw error;
+        }
+        return page;
     }
     async getPageContent(page, link, before) {
         const response = await page.goto(link);

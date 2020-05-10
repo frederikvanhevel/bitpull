@@ -22,7 +22,9 @@ export const parseLink = async (
     try {
         currentPage = await browser.with(
             async (page: Page) => {
-                await page.goto(link, { waitUntil: 'load' })
+                await page.goto(link, {
+                    waitUntil: "networkidle2"
+                })
             },
             settings,
             page
