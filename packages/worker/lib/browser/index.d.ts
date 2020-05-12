@@ -1,10 +1,11 @@
 import puppeteer, { Page } from 'puppeteer-core';
 import { Settings } from '../typedefs/common';
-import { PageCallback, MockHandler } from './typedefs';
+import { PageCallback, MockHandler, Stats } from './typedefs';
 declare class CustomBrowser {
     private browser;
     private settings;
     private mockHandler;
+    private pages;
     initialize(settings?: Settings): Promise<void>;
     with(func: PageCallback, settings: Settings, currentPage?: Page): Promise<Page>;
     getPageContent(page: Page, link: string, before?: (page: Page) => Promise<void>): Promise<{
@@ -17,5 +18,6 @@ declare class CustomBrowser {
     resetMockHandler(): void;
     getActivePages(): Promise<number>;
     cleanup(): Promise<void>;
+    getStats(): Stats;
 }
 export default CustomBrowser;

@@ -63,8 +63,10 @@ describe('E2E single tree', () => {
         ])
 
         const result = await environment.parseNode({ node })
+        const stats = environment.getBrowserStats()
         expect(
             hasResult({ page: result.page } as any, 'Hello world')
         ).toBeTruthy()
+        expect(stats.pageCount).toEqual(1)
     })
 })

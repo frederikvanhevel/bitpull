@@ -30,6 +30,7 @@ const getPuppeteerArgs = (settings) => {
 class CustomBrowser {
     constructor() {
         this.settings = {};
+        this.pages = new Set();
     }
     async initialize(settings = {}) {
         this.settings = settings;
@@ -47,6 +48,11 @@ class CustomBrowser {
                 throw new Error('Could not launch browser');
             }
         }, 3, 2000);
+        if (this.browser) {
+            this.browser.on('targetchanged', event => {
+                this.pages.add(event.url());
+            });
+        }
     }
     async with(func, settings, currentPage) {
         if (!this.browser)
@@ -142,6 +148,12 @@ class CustomBrowser {
             tree_kill_1.default(this.browser.process().pid, 'SIGKILL');
         }
         delete this.browser;
+    }
+    getStats() {
+        return {
+            pages: this.pages,
+            pageCount: this.pages.size
+        };
     }
 }
 exports.default = CustomBrowser;

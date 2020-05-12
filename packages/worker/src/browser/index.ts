@@ -11,8 +11,8 @@ import { Settings } from '../typedefs/common'
 import { isTestEnv } from '../utils/common'
 import { stripScriptTags, removeAttribute } from '../utils/scripts'
 import Logger from '../utils/logging/logger'
-import { PageCallback, MockHandler } from './typedefs'
 import { retryBackoff } from '../utils/delay'
+import { PageCallback, MockHandler, Stats } from './typedefs'
 
 const DEFAULT_OPTIONS: ConnectOptions | LaunchOptions = {
     defaultViewport: {
@@ -37,30 +37,41 @@ class CustomBrowser {
     private browser: Browser | undefined
     private settings: Settings = {}
     private mockHandler: MockHandler | undefined
+    private pages = new Set<string>()
 
     async initialize(settings: Settings = {}) {
         this.settings = settings
 
-        await retryBackoff(async () => {
-            try {
-                if (settings.puppeteer?.endpoint) {
-                    this.browser = await puppeteer.connect({
-                        browserWSEndpoint: settings.puppeteer.endpoint,
-                        ignoreHTTPSErrors: true,
-                        ...getPuppeteerArgs(settings),
-                        ...DEFAULT_OPTIONS
-                    })
-                } else {
-                    this.browser = await chromium.puppeteer.launch({
-                        executablePath: await chromium.executablePath,
-                        ...getPuppeteerArgs(settings),
-                        ...DEFAULT_OPTIONS
-                    })
+        await retryBackoff(
+            async () => {
+                try {
+                    if (settings.puppeteer?.endpoint) {
+                        this.browser = await puppeteer.connect({
+                            browserWSEndpoint: settings.puppeteer.endpoint,
+                            ignoreHTTPSErrors: true,
+                            ...getPuppeteerArgs(settings),
+                            ...DEFAULT_OPTIONS
+                        })
+                    } else {
+                        this.browser = await chromium.puppeteer.launch({
+                            executablePath: await chromium.executablePath,
+                            ...getPuppeteerArgs(settings),
+                            ...DEFAULT_OPTIONS
+                        })
+                    }
+                } catch (error) {
+                    throw new Error('Could not launch browser')
                 }
-            } catch (error) {
-                throw new Error('Could not launch browser')
-            }
-        }, 3, 2000)
+            },
+            3,
+            2000
+        )
+
+        if (this.browser) {
+            this.browser.on('targetchanged', event => {
+                this.pages.add(event.url())
+            })
+        }
     }
 
     async with(
@@ -69,7 +80,7 @@ class CustomBrowser {
         currentPage?: Page
     ): Promise<Page> {
         if (!this.browser) await this.initialize(settings)
-    
+
         let page = currentPage
         try {
             if (!page) page = await this.newPage(settings)
@@ -182,6 +193,13 @@ class CustomBrowser {
         }
 
         delete this.browser
+    }
+
+    getStats(): Stats {
+        return {
+            pages: this.pages,
+            pageCount: this.pages.size
+        }
     }
 }
 
