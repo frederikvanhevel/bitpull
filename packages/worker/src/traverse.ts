@@ -168,6 +168,7 @@ class Traverser {
         const originalLogFn = this.options.onLog
         const originalStorageFn = this.options.onStorage
         const { maxErrorsBeforeExit } = this.options.settings
+        const { browser } = this.context
 
         const logs: ParseLog[] = []
         const errors: ErrorLog[] = []
@@ -231,7 +232,9 @@ class Traverser {
                 status = errors.length ? Status.PARTIAL_SUCCESS : Status.SUCCESS
             }
         } catch (error) {
-            if (!this.canceled) Logger.error(new Error('Fatal error during run'), error)
+            if (!this.canceled) {
+                Logger.error(new Error('Fatal error during run'), error)
+            }
             status = Status.ERROR
         } finally {
             this.options.onError = originalErrorFn
@@ -244,7 +247,8 @@ class Traverser {
             status,
             errors,
             logs,
-            files
+            files,
+            stats: browser.getStats()
         }
     }
 

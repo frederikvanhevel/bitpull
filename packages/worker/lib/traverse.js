@@ -114,6 +114,7 @@ class Traverser {
         const originalLogFn = this.options.onLog;
         const originalStorageFn = this.options.onStorage;
         const { maxErrorsBeforeExit } = this.options.settings;
+        const { browser } = this.context;
         const logs = [];
         const errors = [];
         const files = [];
@@ -158,8 +159,9 @@ class Traverser {
             }
         }
         catch (error) {
-            if (!this.canceled)
+            if (!this.canceled) {
                 logger_1.default.error(new Error('Fatal error during run'), error);
+            }
             status = common_1.Status.ERROR;
         }
         finally {
@@ -172,7 +174,8 @@ class Traverser {
             status,
             errors,
             logs,
-            files
+            files,
+            stats: browser.getStats()
         };
     }
     cancel() {

@@ -1,9 +1,11 @@
+import { Page } from 'puppeteer'
 import { NodeError, ParseError } from '../../common/errors'
 import { NodeParser, NodeInput, TraverseOptions } from '../../../typedefs/node'
 import { assert } from '../../../utils/common'
 import { randomizedDelay } from '../../../utils/delay'
 import { FlowError } from '../../../utils/errors'
 import { ClickError } from '../click/errors'
+import { HtmlError } from '../html/errors'
 import { PaginationError } from './errors'
 import {
     PaginationNode,
@@ -11,7 +13,6 @@ import {
     PaginationParseResult
 } from './typedefs'
 import { isNextLinkPagination } from './helper'
-import { HtmlError } from '../html/errors'
 
 const clickNextButton = async (
     input: NodeInput<PaginationNode>,
@@ -64,7 +65,7 @@ const loopNextButton = async (
 
         await clickNextButton(input, nextButtonSelector)
 
-        await func()
+        await func(page)
 
         let currentContent
         try {
@@ -82,44 +83,14 @@ const loopNextButton = async (
     }
 }
 
-// const parseLinkList = async (
-//     input: NodeInput<PaginationNode>,
-//     func: Function,
-//     options: TraverseOptions,
-//     context: Context
-// ) => {
-//     const { node, rootAncestor, parentResult } = input
-//     const parser = getSelectorParser(rootAncestor!)
-//     const pagination = node.pagination as LinkListPagination
-
-//     assert(parser, ParseError.NO_SELECTOR_PARSER_FOUND)
-//     assert(
-//         pagination.linkList && Array.isArray(pagination.linkList),
-//         PaginationError.NO_LINKS_SPECIFIED
-//     )
-//     assert(parentResult.html, ParseError.HTML_MISSING)
-
-//     for (const link of pagination.linkList) {
-//         const url =
-//             pagination.prependUrl || pagination.prependUrl === undefined
-//                 ? getUriOrigin(rootAncestor!.link!) + link
-//                 : link
-
-//         // TODO should use html node directly and get result
-//         const htmlForThatPage = await parseLink(input, url, options, context)
-
-//         await func(htmlForThatPage)
-//     }
-// }
-
 const pagination: NodeParser<PaginationNode, PaginationParseResult> = async (
     input,
     options,
     context
 ) => {
     const { watchedNodeId, onWatch, onLog } = options
-    const { node } = input
-    const { traverser } = context
+    const { node, page } = input
+    const { traverser, browser } = context
     const pagination = node.pagination
 
     assert(node.children && node.children.length, NodeError.CHILD_NODE_MISSING)
@@ -132,26 +103,23 @@ const pagination: NodeParser<PaginationNode, PaginationParseResult> = async (
     assert(node.pagination, PaginationError.PAGINATION_METHOD_MISSING)
 
     const allResults: PaginationParseResult = []
-
-    // parse current page
-    await traverser.parseNode({
-        ...input,
-        node: childNode!,
-        parent: node,
-        branchCallback: (data: any) => {
-            if (onWatch && node.id === watchedNodeId) onWatch(data)
-            allResults.push(data)
-        }
-    })
-
-    const parseChildNodes = async () => {
+    const parseChildNodes = async (page: Page) => {
+        const forkedPage = await browser.forkPage(page, options.settings)
         await traverser.parseNode({
             ...input,
             node: childNode!,
             parent: node,
-            branchCallback: data => allResults.push(data)
+            page: forkedPage,
+            branchCallback: data => {
+                if (onWatch && node.id === watchedNodeId) onWatch(data)
+                allResults.push(data)
+            }
         })
+        await forkedPage.close()
     }
+
+    // parse current page
+    await parseChildNodes(page!)
 
     if (onLog) onLog(node, 'Started pagination')
 
@@ -159,12 +127,6 @@ const pagination: NodeParser<PaginationNode, PaginationParseResult> = async (
     if (isNextLinkPagination(pagination)) {
         await loopNextButton(input, parseChildNodes, options)
     }
-
-    //  else if (isLinkListPagination(pagination)) {
-    //     await parseLinkList(input, parseChildNodes, options, context)
-    // }
-
-    // if (onWatch && node.id === watchedNodeId) onWatch(allResults!)
 
     return { ...input, passedData: allResults! }
 }

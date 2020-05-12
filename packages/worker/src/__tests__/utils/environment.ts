@@ -110,11 +110,18 @@ export class TestEnvironment {
     }
 
     setOptions(options: Partial<TraverseOptions>) {
-        if (!this.traverser)
+        if (!this.traverser) {
             throw new Error('Test traverser was not initialized')
+        }
 
         const mergedOptions = merge(DEFAULT_TRAVERSER_OPTIONS, options)
         this.traverser.setOptions(mergedOptions)
+    }
+
+    getBrowserStats = () => {
+        if (!this.browser) throw new Error('Test browser was not initialized')
+
+        return this.browser.getStats()
     }
 }
 

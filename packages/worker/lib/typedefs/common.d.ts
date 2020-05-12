@@ -1,3 +1,4 @@
+import { Stats } from '../browser/typedefs';
 import { NodeId, NodeType } from './node';
 export declare enum LogType {
     INFO = "INFO",
@@ -101,6 +102,7 @@ export interface ParseResult {
     logs: ParseLog[];
     errors: ErrorLog[];
     files: FileStorageObject[];
+    stats: Stats;
 }
 export interface ErrorMessage {
     code: string;

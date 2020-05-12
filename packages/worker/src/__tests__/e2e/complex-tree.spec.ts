@@ -11,7 +11,9 @@ const createTest = () => {
         children: [
             createNode(NodeType.PAGINATION, {
                 pagination: {
-                    nextLink: '.next'
+                    nextLink: {
+                        value: '.next'
+                    }
                 },
                 goToPerPage: '1',
                 goToOnEnd: '2',
@@ -166,6 +168,7 @@ describe('E2E single tree', () => {
         const { node, fn } = createTest()
 
         await environment.parseNode({ node })
+        const stats = environment.getBrowserStats()
 
         expect(fn).toHaveBeenCalledTimes(1)
         expect(fn).toHaveBeenCalledWith(
@@ -188,9 +191,28 @@ describe('E2E single tree', () => {
                         title: 'Android 10',
                         link: 'https://test.be/item3',
                         price: '$128'
+                    },
+                    {
+                        location: 'Chicago',
+                        title: 'Xperia 3',
+                        link: 'https://test.be/item4',
+                        price: '$111'
+                    },
+                    {
+                        location: 'Tokyo',
+                        title: 'Iphone SE',
+                        link: 'https://test.be/item5',
+                        price: '$799'
+                    },
+                    {
+                        location: 'Oslo',
+                        title: 'Android PI',
+                        link: 'https://test.be/item6',
+                        price: '$330'
                     }
                 ]
             })
         )
+        expect(stats.pageCount).toEqual(8)
     })
 })
