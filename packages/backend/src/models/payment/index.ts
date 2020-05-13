@@ -3,12 +3,21 @@ import { UserDocument } from 'models/user'
 import Config from 'utils/config'
 
 const TRIAL_CREDIT_AMOUNT = Config.TRIAL_CREDIT_AMOUNT
-export const REFERRED_CREDIT_AMOUNT = 1000
-export const MAX_REFERRED_CREDITS = 20000
+export const REFERRED_CREDIT_AMOUNT = 50
+export const MAX_REFERRED_CREDITS = 1000
 
 export enum PaymentPlan {
     METERED = 'METERED',
-    MONTHLY = 'MONTHLY'
+    SMALL = 'SMALL',
+    BUSINESS = 'BUSINESS',
+    PREMIUM = 'PREMIUM'
+}
+
+export const PLAN_CREDIT_AMOUNT: Record<PaymentPlan, number> = {
+    [PaymentPlan.METERED]: TRIAL_CREDIT_AMOUNT,
+    [PaymentPlan.SMALL]: 250,
+    [PaymentPlan.BUSINESS]: 600,
+    [PaymentPlan.PREMIUM]: 1500
 }
 
 export interface Payment {

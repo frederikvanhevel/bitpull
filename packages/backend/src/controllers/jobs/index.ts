@@ -15,14 +15,13 @@ import UserModel, { User } from 'models/user'
 import JobService from 'services/job'
 import { NodeEventType } from 'services/workflow/typedefs'
 import { JobAttributes } from 'services/job/typedefs'
-import Timer from './timer'
+import Segment, { TrackingEvent } from 'components/segment'
 
 const startJobProcessor = () => {
     const handler = async (agendaJob: Agenda.Job, done: Function) => {
         let timeoutHandler
 
         try {
-            const timer = new Timer()
             const { workflowId } = agendaJob.attrs.data as JobAttributes
             const job: Job | null = await JobModel.findOne({
                 agendaJob: agendaJob.attrs._id
@@ -37,6 +36,8 @@ const startJobProcessor = () => {
             if (!user) {
                 throw new Error('User not found')
             }
+
+            Segment.track(TrackingEvent.JOB_RUN, user)
 
             const paymentReady = await PaymentService.hasPaymentMethod(
                 job.owner
@@ -57,8 +58,6 @@ const startJobProcessor = () => {
                 throw new Error('Job timed out')
             }, TIMEOUT)
 
-            timer.start()
-
             const result: ParseResult = await WorkflowService.run(
                 user,
                 workflow.node,
@@ -76,8 +75,6 @@ const startJobProcessor = () => {
                 }
             )
 
-            const durationInSeconds = timer.end()
-
             await LogService.saveJobLog(job.id, workflowId, result)
 
             if (
@@ -88,19 +85,16 @@ const startJobProcessor = () => {
                 throw new Error(`Workflow failed for job ${job._id}`)
             }
 
-            if (durationInSeconds > 0) {
-                await PaymentService.reportUsage(user, durationInSeconds)
-                Logger.info(
-                    `Billed user ${job.owner} for ${durationInSeconds} seconds`
-                )
+            if (result.stats.pageCount > 0) {
+                await PaymentService.reportUsage(user, result.stats)
             }
 
-            await AnalyticsService.save(job, result.status, durationInSeconds)
+            await AnalyticsService.save(job, result.status, result.stats)
             await JobService.reportResult(
                 user,
                 job.id,
                 result.errors.length > 0,
-                durationInSeconds
+                result.stats
             )
 
             done()

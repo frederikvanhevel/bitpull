@@ -151,7 +151,7 @@ class CustomBrowser {
     }
     getStats() {
         return {
-            pages: this.pages,
+            pages: Array.from(this.pages),
             pageCount: this.pages.size
         };
     }

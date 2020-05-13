@@ -87,7 +87,11 @@ describe('Payment service', () => {
     describe('Usage reporting', () => {
         it('should report usage when user has no credits', async () => {
             const payment = PaymentFactory.getSingleRecord()
-            const usage = 30
+            const stats = {
+                duration: 44,
+                pageCount: 30,
+                pages: []
+            }
             const returnedPayment = {
                 ...(payment as PaymentDocument),
                 save: jest.fn()
@@ -96,11 +100,11 @@ describe('Payment service', () => {
             // @ts-ignore
             mockedPaymentModel.findOne.mockReturnValueOnce(returnedPayment)
 
-            await PaymentService.reportUsage(payment.owner, usage)
+            await PaymentService.reportUsage(payment.owner, stats)
 
             expect(mockedStripe.reportUsage).toHaveBeenCalledWith(
                 payment.meteredPlanId,
-                usage
+                stats.pageCount
             )
             expect(returnedPayment.save).not.toHaveBeenCalled()
         })
@@ -108,7 +112,11 @@ describe('Payment service', () => {
         it('should not report usage when user has enough credits', async () => {
             const payment = PaymentFactory.getSingleRecord()
             payment.credits = 100
-            const usage = 30
+            const stats = {
+                duration: 44,
+                pageCount: 30,
+                pages: []
+            }
             const returnedPayment = {
                 ...(payment as PaymentDocument),
                 save: jest.fn()
@@ -117,7 +125,7 @@ describe('Payment service', () => {
             // @ts-ignore
             mockedPaymentModel.findOne.mockReturnValueOnce(returnedPayment)
 
-            await PaymentService.reportUsage(payment.owner, usage)
+            await PaymentService.reportUsage(payment.owner, stats)
 
             expect(mockedStripe.reportUsage).not.toHaveBeenCalled()
             expect(returnedPayment.credits).toEqual(70)
@@ -127,7 +135,11 @@ describe('Payment service', () => {
         it('should report usage when user has some credits but not enough', async () => {
             const payment = PaymentFactory.getSingleRecord()
             payment.credits = 15
-            const usage = 30
+            const stats = {
+                duration: 44,
+                pageCount: 30,
+                pages: []
+            }
             const returnedPayment = {
                 ...(payment as PaymentDocument),
                 save: jest.fn()
@@ -136,7 +148,7 @@ describe('Payment service', () => {
             // @ts-ignore
             mockedPaymentModel.findOne.mockReturnValueOnce(returnedPayment)
 
-            await PaymentService.reportUsage(payment.owner, usage)
+            await PaymentService.reportUsage(payment.owner, stats)
 
             expect(mockedStripe.reportUsage).toHaveBeenCalledWith(
                 payment.meteredPlanId,
@@ -145,14 +157,16 @@ describe('Payment service', () => {
             expect(returnedPayment.credits).toEqual(0)
             expect(returnedPayment.save).toHaveBeenCalled()
             expect(
-                mockedMailService.sendOutOfFreeCreditsEmail
+                mockedMailService.sendOutOfCreditsEmail
             ).toHaveBeenCalledWith(payment.owner)
         })
     })
 
     describe('Check payment status', () => {
-        it('should return true when card is added', async () => {
-            const payment = PaymentFactory.getSingleRecord()
+        it('should return true when card is added and has credits', async () => {
+            const payment = PaymentFactory.getSingleRecord({
+                credits: 30
+            })
             const returnedPayment = {
                 ...(payment as PaymentDocument),
                 lean: () => payment
@@ -165,6 +179,24 @@ describe('Payment service', () => {
                 payment.owner.id
             )
             expect(result).toBeTruthy()
+        })
+
+        it('should return false when card is added but has no credits', async () => {
+            const payment = PaymentFactory.getSingleRecord({
+                credits: 0
+            })
+            const returnedPayment = {
+                ...(payment as PaymentDocument),
+                lean: () => payment
+            }
+
+            // @ts-ignore
+            mockedPaymentModel.findOne.mockReturnValueOnce(returnedPayment)
+
+            const result = await PaymentService.hasPaymentMethod(
+                payment.owner.id
+            )
+            expect(result).toBeFalsy()
         })
 
         it('should return false when payment is disabled', async () => {

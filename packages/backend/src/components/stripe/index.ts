@@ -14,7 +14,9 @@ import {
 
 const PAYMENT_PLAN_MAP: Record<PaymentPlan, StripePaymentPlan> = {
     [PaymentPlan.METERED]: StripePaymentPlan.METERED,
-    [PaymentPlan.MONTHLY]: StripePaymentPlan.MONTHLY
+    [PaymentPlan.SMALL]: StripePaymentPlan.SMALL,
+    [PaymentPlan.BUSINESS]: StripePaymentPlan.BUSINESS,
+    [PaymentPlan.PREMIUM]: StripePaymentPlan.PREMIUM
 }
 const stripeHandler = new stripe(Config.STRIPE_SECRET_KEY, {
     apiVersion: '2020-03-02'
@@ -64,15 +66,28 @@ const updateCustomer = async (
 
 const changePlan = async (payment: Payment, plan: PaymentPlan) => {
     try {
-        if (plan !== PaymentPlan.METERED) {
-            // new recurring plan
-            const result = await stripeHandler.subscriptionItems.create({
-                subscription: payment.subscriptionId,
-                plan: PAYMENT_PLAN_MAP[plan],
-                proration_behavior: 'none'
-            })
+        const currentPlan = payment.plan
+        console.log(currentPlan)
 
-            return result.id
+        if (plan !== PaymentPlan.METERED) {
+            if (currentPlan !== PaymentPlan.METERED) {
+                // update existing recurring plan
+                console.log('EKKK')
+                await stripeHandler.subscriptionItems.update(payment.recurringPlanId!, {
+                    plan: PAYMENT_PLAN_MAP[plan],
+                    proration_behavior: 'always_invoice'
+                })
+                console.log('OEOEOEO')
+                return payment.recurringPlanId
+            } else {
+                // new recurring plan
+                const result = await stripeHandler.subscriptionItems.create({
+                    subscription: payment.subscriptionId,
+                    plan: PAYMENT_PLAN_MAP[plan],
+                    proration_behavior: 'always_invoice'
+                })
+                return result.id
+            }
         }
 
         // remove recurring plan

@@ -12,7 +12,12 @@ describe('Log service', () => {
             status: Status.SUCCESS,
             errors: [],
             logs: [],
-            files: []
+            files: [],
+            stats: {
+                duration: 29,
+                pageCount: 6,
+                pages: []
+            }
         }
 
         await LogService.saveJobLog('jobId', 'workflowId', parseResult)

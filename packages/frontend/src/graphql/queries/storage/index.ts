@@ -6,7 +6,6 @@ export const GET_STORAGE_ENTRY = gql`
             _id
             service
             fileName
-            url
             contentType
             expiryDate
             createdAt

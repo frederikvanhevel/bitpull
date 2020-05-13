@@ -24,6 +24,7 @@ import CustomBrowser from './browser'
 import { NodeError } from './nodes/common/errors'
 import { FlowError } from './utils/errors'
 import Logger from './utils/logging/logger'
+import Timer from './utils/timer'
 
 const DEFAULT_OPTIONS: TraverseOptions = {
     integrations: [],
@@ -222,6 +223,7 @@ class Traverser {
         }
 
         let status = Status.UNDETERMINED
+        const timer = new Timer()
 
         try {
             await this.parseNode({ node })
@@ -243,12 +245,17 @@ class Traverser {
             await this.cleanup()
         }
 
+        const duration = timer.end()
+
         return {
             status,
             errors,
             logs,
             files,
-            stats: browser.getStats()
+            stats: {
+                ...browser.getStats(),
+                duration
+            }
         }
     }
 

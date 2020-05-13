@@ -21,6 +21,7 @@ export interface StorageLink {
     fileName: string
     contentType: string
     createdAt: Date
+    expiryDate?: Date
 }
 
 export interface Storage {

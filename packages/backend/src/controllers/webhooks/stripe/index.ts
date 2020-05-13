@@ -9,7 +9,10 @@ const handler: RequestHandler = async (req, res) => {
     const signature = req.headers['stripe-signature'] as string
 
     try {
+        // for testing
+        // const event = JSON.parse(req.body)
         const event = Stripe.getWebhookEvent(req.body, signature)
+        const customerId = (event.data.object as any).customer
 
         Logger.info(`Received Stripe webhook of type ${event.type}`)
 
@@ -20,18 +23,15 @@ const handler: RequestHandler = async (req, res) => {
                 // downgradePlan(event.data);
                 break
             case WebhookEvent.PAYMENT_FAILED:
-                await PaymentService.disable(
-                    (event.data.object as any).customer
-                )
+                await PaymentService.disable(customerId)
                 break
             case WebhookEvent.PAYMENT_SUCCEEDED:
                 // update billingPeriodEndsAt in user
                 // send email to user that payment succeedeed
+                await PaymentService.refillCredits(customerId)
                 break
             case WebhookEvent.TRIAL_WILL_END:
-                await MailService.sendTrialWillEndEmail(
-                    (event.data.object as any).customer
-                )
+                await MailService.sendTrialWillEndEmail(customerId)
                 break
             default:
                 return res.status(200).end()

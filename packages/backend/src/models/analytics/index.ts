@@ -1,4 +1,5 @@
 import { Document, Schema, Model, model } from 'mongoose'
+import { Status } from '@bitpull/worker'
 import { UserDocument } from '../user'
 import {
     getAnalyticsPerJob,
@@ -9,8 +10,9 @@ import {
 
 export interface Analytics {
     date: Date
-    completed: number
-    failed: number
+    status: Status
+    duration: number
+    pages: number
     job: string
     owner: string | UserDocument['_id']
 }
@@ -41,6 +43,9 @@ const AnalyticsSchema = new Schema({
         required: true
     },
     duration: {
+        type: Number
+    },
+    pages: {
         type: Number
     },
     job: {

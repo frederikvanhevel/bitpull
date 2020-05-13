@@ -540,7 +540,6 @@ export type StorageLink = {
    __typename?: 'StorageLink';
   _id: Scalars['String'];
   service: StorageService;
-  url: Scalars['String'];
   fileName: Scalars['String'];
   contentType: Scalars['String'];
   expiryDate?: Maybe<Scalars['DateTime']>;
@@ -583,7 +582,9 @@ export type TokenInput = {
 
 export enum Plan {
   Metered = 'METERED',
-  Monthly = 'MONTHLY'
+  Small = 'SMALL',
+  Business = 'BUSINESS',
+  Premium = 'PREMIUM'
 }
 
 export type PaymentDetails = {
@@ -626,5 +627,7 @@ export type CatalogItem = {
 export type CatalogItemInput = {
   name: Scalars['String'];
   title: Scalars['String'];
+  description: Scalars['String'];
   node: Scalars['JSONObject'];
+  order: Scalars['Int'];
 };

@@ -1,6 +1,8 @@
 export enum StripePaymentPlan {
     METERED = 'metered',
-    MONTHLY = 'monthly'
+    SMALL = 'small',
+    BUSINESS = 'business',
+    PREMIUM = 'premium'
 }
 
 export interface StripeSubscription {

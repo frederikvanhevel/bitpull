@@ -63,12 +63,18 @@ describe('Analytics service', () => {
 
     it('should save analytics', async () => {
         const job = JobFactory.getSingleRecord()
-        await AnalyticsService.save(job, Status.SUCCESS, 5)
+        const stats = {
+            duration: 49,
+            pageCount: 6,
+            pages: []
+        }
+        await AnalyticsService.save(job, Status.SUCCESS, stats)
 
         expect(mockedAnalyticsModel).toHaveBeenCalledWith({
             job: job._id,
             status: Status.SUCCESS,
-            duration: 5,
+            pages: stats.pageCount,
+            duration: stats.duration,
             owner: job.owner,
             date: new Date('2019-04-07T10:20:30Z')
         })

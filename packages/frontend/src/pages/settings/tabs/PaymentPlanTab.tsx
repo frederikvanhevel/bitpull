@@ -112,13 +112,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     bold: {
         margin: '0 3px'
+    },
+    pages: {
+        marginRight: 4
     }
 }))
 
 const PaymentPlanTab: React.FC = () => {
     const classes = useStyles()
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
-    const [dialogOpen, setDialogOpen] = useState(false)
+    const [chosenPlan, setChosenPlan] = useState<Plan>()
     const { enqueueSnackbar } = useSnackbar()
     const { data, loading, error } = useQuery<getPaymentDetails>(
         GET_PAYMENT_DETAILS,
@@ -219,19 +222,27 @@ const PaymentPlanTab: React.FC = () => {
                                             <span className={classes.currency}>
                                                 $
                                             </span>
-                                            {process.env.METERED_PLAN_PRICE ||
-                                                0.002}
+                                            0.10
                                         </Typography>
                                         <Typography
                                             variant="subtitle1"
                                             className={classes.bottom}
                                         >
-                                            second
+                                            per page
                                         </Typography>
 
                                         <Divider className={classes.divider} />
 
                                         <div className={classes.list}>
+                                            <div className={classes.check}>
+                                                <CheckCircle
+                                                    className={cx(
+                                                        classes.icon,
+                                                        classes.success
+                                                    )}
+                                                />
+                                                Unlimited pages
+                                            </div>
                                             <div className={classes.check}>
                                                 <CheckCircle
                                                     className={cx(
@@ -307,7 +318,7 @@ const PaymentPlanTab: React.FC = () => {
                                                 loading
                                             }
                                             loading={
-                                                plan !== Plan.METERED &&
+                                                plan === Plan.METERED &&
                                                 loadingUpdate
                                             }
                                             onClick={() =>
@@ -325,21 +336,15 @@ const PaymentPlanTab: React.FC = () => {
                                     <Paper
                                         className={cx(classes.wrapper, {
                                             [classes.selected]:
-                                                plan === Plan.MONTHLY
+                                                plan === Plan.SMALL
                                         })}
                                         elevation={2}
                                     >
                                         <Typography
-                                            className={classes.popular}
-                                            variant="caption"
-                                        >
-                                            Popular option
-                                        </Typography>
-                                        <Typography
                                             variant="subtitle1"
                                             className={classes.top}
                                         >
-                                            Monthly
+                                            Small
                                         </Typography>
                                         <Typography
                                             variant="h3"
@@ -348,19 +353,32 @@ const PaymentPlanTab: React.FC = () => {
                                             <span className={classes.currency}>
                                                 $
                                             </span>
-                                            {process.env.MONTLY_PLAN_PRICE ||
-                                                38}
+                                            {19}
                                         </Typography>
                                         <Typography
                                             variant="subtitle1"
                                             className={classes.bottom}
                                         >
-                                            month
+                                            per month
                                         </Typography>
 
                                         <Divider className={classes.divider} />
 
                                         <div className={classes.list}>
+                                            <div className={classes.check}>
+                                                <CheckCircle
+                                                    className={cx(
+                                                        classes.icon,
+                                                        classes.success
+                                                    )}
+                                                />
+                                                <strong
+                                                    className={classes.pages}
+                                                >
+                                                    500
+                                                </strong>{' '}
+                                                pages per month
+                                            </div>
                                             <div className={classes.check}>
                                                 <CheckCircle
                                                     className={cx(
@@ -431,23 +449,171 @@ const PaymentPlanTab: React.FC = () => {
                                             variant="contained"
                                             className={classes.button}
                                             disabled={
-                                                plan === Plan.MONTHLY ||
+                                                plan === Plan.SMALL ||
                                                 loadingUpdate ||
                                                 loading
                                             }
                                             loading={
-                                                plan !== Plan.MONTHLY &&
+                                                plan === Plan.SMALL &&
                                                 loadingUpdate
                                             }
                                             onClick={() => {
                                                 hasCard
                                                     ? changePaymentPlan(
-                                                          Plan.MONTHLY
+                                                          Plan.SMALL
                                                       )
-                                                    : setDialogOpen(true)
+                                                    : setChosenPlan(Plan.SMALL)
                                             }}
                                         >
-                                            {plan === Plan.MONTHLY
+                                            {plan === Plan.SMALL
+                                                ? 'Current plan'
+                                                : 'Choose plan'}
+                                        </LoadingButton>
+                                    </Paper>
+                                </Grid>
+
+                                <Grid item xs={5} md={5} lg={4} xl={3}>
+                                    <Paper
+                                        className={cx(classes.wrapper, {
+                                            [classes.selected]:
+                                                plan === Plan.BUSINESS
+                                        })}
+                                        elevation={2}
+                                    >
+                                        <Typography
+                                            className={classes.popular}
+                                            variant="caption"
+                                        >
+                                            Popular option
+                                        </Typography>
+                                        <Typography
+                                            variant="subtitle1"
+                                            className={classes.top}
+                                        >
+                                            Business
+                                        </Typography>
+                                        <Typography
+                                            variant="h3"
+                                            className={classes.price}
+                                        >
+                                            <span className={classes.currency}>
+                                                $
+                                            </span>
+                                            {49}
+                                        </Typography>
+                                        <Typography
+                                            variant="subtitle1"
+                                            className={classes.bottom}
+                                        >
+                                            per month
+                                        </Typography>
+
+                                        <Divider className={classes.divider} />
+
+                                        <div className={classes.list}>
+                                            <div className={classes.check}>
+                                                <CheckCircle
+                                                    className={cx(
+                                                        classes.icon,
+                                                        classes.success
+                                                    )}
+                                                />
+                                                <strong
+                                                    className={classes.pages}
+                                                >
+                                                    1000
+                                                </strong>{' '}
+                                                pages per month
+                                            </div>
+                                            <div className={classes.check}>
+                                                <CheckCircle
+                                                    className={cx(
+                                                        classes.icon,
+                                                        classes.success
+                                                    )}
+                                                />
+                                                Unlimited workflows
+                                            </div>
+                                            <div className={classes.check}>
+                                                <CheckCircle
+                                                    className={cx(
+                                                        classes.icon,
+                                                        classes.success
+                                                    )}
+                                                />
+                                                Unlimited jobs
+                                            </div>
+                                            <div className={classes.check}>
+                                                <CheckCircle
+                                                    className={cx(
+                                                        classes.icon,
+                                                        classes.success
+                                                    )}
+                                                />
+                                                Scheduling
+                                            </div>
+                                            <div className={classes.check}>
+                                                <CheckCircle
+                                                    className={cx(
+                                                        classes.icon,
+                                                        classes.success
+                                                    )}
+                                                />
+                                                Free storage
+                                            </div>
+                                            <div className={classes.check}>
+                                                <CheckCircle
+                                                    className={cx(
+                                                        classes.icon,
+                                                        classes.success
+                                                    )}
+                                                />
+                                                30 day data retention
+                                            </div>
+                                            <div className={classes.check}>
+                                                <CheckCircle
+                                                    className={cx(
+                                                        classes.icon,
+                                                        classes.success
+                                                    )}
+                                                />
+                                                All integrations
+                                            </div>
+                                            <div className={classes.check}>
+                                                <CheckCircle
+                                                    className={cx(
+                                                        classes.icon,
+                                                        classes.success
+                                                    )}
+                                                />
+                                                Anonymous proxy
+                                            </div>
+                                        </div>
+
+                                        <LoadingButton
+                                            color="primary"
+                                            variant="contained"
+                                            className={classes.button}
+                                            disabled={
+                                                plan === Plan.BUSINESS ||
+                                                loadingUpdate ||
+                                                loading
+                                            }
+                                            loading={
+                                                plan === Plan.BUSINESS &&
+                                                loadingUpdate
+                                            }
+                                            onClick={() => {
+                                                hasCard
+                                                    ? changePaymentPlan(
+                                                          Plan.BUSINESS
+                                                      )
+                                                    : setChosenPlan(
+                                                          Plan.BUSINESS
+                                                      )
+                                            }}
+                                        >
+                                            {plan === Plan.BUSINESS
                                                 ? 'Current plan'
                                                 : 'Choose plan'}
                                         </LoadingButton>
@@ -457,13 +623,13 @@ const PaymentPlanTab: React.FC = () => {
 
                             <PaymentDialog
                                 title="Enter your credit card details"
-                                open={dialogOpen}
+                                open={!!chosenPlan}
                                 canClose
                                 onConfirm={() => {
-                                    changePaymentPlan(Plan.MONTHLY)
-                                    setDialogOpen(false)
+                                    changePaymentPlan(Plan.SMALL)
+                                    setChosenPlan(undefined)
                                 }}
-                                onClose={() => setDialogOpen(false)}
+                                onClose={() => setChosenPlan(undefined)}
                             />
                         </PaddingWrapper>
                     </PaddingWrapper>
