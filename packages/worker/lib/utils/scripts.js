@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.scrollToBottom = exports.removeAttribute = exports.stripScriptTags = void 0;
 exports.stripScriptTags = async (page) => {
     await page.evaluate(`
         var r = document.getElementsByTagName('script');

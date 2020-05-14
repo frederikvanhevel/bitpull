@@ -7,6 +7,7 @@ export const REFERRED_CREDIT_AMOUNT = 50
 export const MAX_REFERRED_CREDITS = 1000
 
 export enum PaymentPlan {
+    FREE = 'FREE',
     METERED = 'METERED',
     SMALL = 'SMALL',
     BUSINESS = 'BUSINESS',
@@ -14,6 +15,7 @@ export enum PaymentPlan {
 }
 
 export const PLAN_CREDIT_AMOUNT: Record<PaymentPlan, number> = {
+    [PaymentPlan.FREE]: TRIAL_CREDIT_AMOUNT,
     [PaymentPlan.METERED]: TRIAL_CREDIT_AMOUNT,
     [PaymentPlan.SMALL]: 250,
     [PaymentPlan.BUSINESS]: 600,

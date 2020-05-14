@@ -3,7 +3,6 @@ import { fork, ChildProcess } from 'child_process'
 import treekill from 'tree-kill'
 import { RunnerTimeoutReachedError } from 'utils/errors'
 import Logger from 'utils/logging/logger'
-import Config from 'utils/config'
 import { Handler, WorkerArgs, WorkerEvent } from './typedefs'
 
 export enum Work {
@@ -12,8 +11,18 @@ export enum Work {
 }
 
 const kill = (proc: ChildProcess) => {
+    console.trace('KILL')
     if (!proc) return
-    treekill(proc.pid, 'SIGTERM')
+    try {
+        proc.disconnect()
+    } catch (error) {
+        // noop
+    }
+    try {
+        treekill(proc.pid, 'SIGTERM')
+    } catch (error) {
+        // noop
+    }
 }
 
 const spawn = (
@@ -30,7 +39,7 @@ const spawn = (
                 Logger.info(`Worker timeout reached`)
                 reject(new RunnerTimeoutReachedError())
                 kill(forked)
-            }, Config.RUNNER_TIMEOUT)
+            }, args.timeout)
 
             forked = fork(join(__dirname, './work', work), [
                 '-r',
@@ -42,7 +51,6 @@ const spawn = (
                     Logger.info('Worker finished, stopping.')
                     clearTimeout(timeout)
                     resolve((message as any).data)
-                    kill(forked)
                 } else onEvent && onEvent(message)
             })
 
@@ -53,8 +61,8 @@ const spawn = (
 
             forked.on('exit', code => {
                 Logger.info(`Worker exited with exit code ${code}`)
+                clearTimeout(timeout)
                 code === 1 ? reject() : resolve()
-                kill(forked)
             })
 
             // forked.on('close', () => resolve())

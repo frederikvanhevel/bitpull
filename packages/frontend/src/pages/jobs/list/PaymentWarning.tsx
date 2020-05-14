@@ -15,15 +15,16 @@ const PaymentWarning: React.FC = () => {
 
     return (
         <NotificationBar type="error" top={64}>
-            You have run out of free credits. You need to add your credit card
-            information to resume your jobs
+            You have reached your plan limit. Upgrade your plan to resume your jobs.
+            {/* You have run out of free credits. You need to add your credit card
+            information to resume your jobs */}
             <Button
                 component={Link}
                 to="/settings/payment"
                 variant="contained"
                 size="small"
             >
-                Add card
+                Upgrade
             </Button>
         </NotificationBar>
     )

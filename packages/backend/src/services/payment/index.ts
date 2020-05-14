@@ -29,7 +29,7 @@ const getDetails = async (user: User) => {
         .lean()
 }
 
-const createSubscription = async (user: User, plan: PaymentPlan) => {
+const createCustomer = async (user: User, plan: PaymentPlan) => {
     const { id, email, firstName, lastName } = user
 
     const details = await Stripe.createCustomer(
@@ -70,8 +70,6 @@ const reportUsage = async (user: User, stats: Stats) => {
     if (!payment) {
         throw new NotFoundError()
     }
-
-    if (payment.plan !== PaymentPlan.METERED) return
 
     let pagesToReport = 0
 
@@ -269,7 +267,7 @@ const refillCredits = async (stripeCustomerId: string) => {
 const PaymentService = {
     getDetails,
     updateUserInfo,
-    createSubscription,
+    createCustomer,
     reportUsage,
     hasPaymentMethod,
     updatePayment,

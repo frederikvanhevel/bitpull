@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.absolutifyHtml = exports.absolutifyUrl = void 0;
 const REPLACE_REGEX = /((href|src|srcset|codebase|cite|background|cite|action|profile|formaction|icon|manifest|archive)=["'])(([.]+\/)|(?:\/)|(?=#))(?!\/)/g;
 const CAPTURE_REGEX = /((href|src|srcset|codebase|cite|background|cite|action|profile|formaction|icon|manifest|archive)=["'])((([.]+\/)|(?:\/?)|(?:#))(?!\/|http|data)[a-zA-Z0-9._-|/]+)/g;
 const iterate = (html, iterator) => {

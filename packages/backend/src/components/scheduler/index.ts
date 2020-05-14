@@ -41,6 +41,10 @@ const runJob = (
     scheduler.on(`fail:${type}`, onFail)
 }
 
+const cancelJob = async (id: string) => {
+    await scheduler.cancel({ _id: mongoose.Types.ObjectId(id) })
+}
+
 const shutdown = async () => {
     if (!scheduler) return
     await scheduler.stop()
@@ -51,6 +55,7 @@ const Scheduler = {
     start,
     scheduleJob,
     runJob,
+    cancelJob,
     shutdown
 }
 

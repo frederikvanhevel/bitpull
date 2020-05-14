@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.RequestMethod = void 0;
 var RequestMethod;
 (function (RequestMethod) {
     RequestMethod["POST"] = "POST";

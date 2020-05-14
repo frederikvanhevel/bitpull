@@ -45,12 +45,12 @@ const getTotalsPerJob = async (
         }))
 }
 
-const save = async (job: Job, status: Status, stats: Stats) => {
+const save = async (job: Job, status: Status, stats?: Stats) => {
     const analyticsEntry = new AnalyticsModel({
         job: job._id,
         status,
-        duration: stats.duration,
-        pages: stats.pageCount,
+        duration: stats?.duration,
+        pages: stats?.pageCount,
         owner: job.owner,
         date: new Date()
     })

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DropboxError = void 0;
 var DropboxError;
 (function (DropboxError) {
     DropboxError["UPLOAD_FAILED"] = "UPLOAD_FAILED";

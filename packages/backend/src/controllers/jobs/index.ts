@@ -23,6 +23,7 @@ const startJobProcessor = () => {
 
         try {
             const { workflowId } = agendaJob.attrs.data as JobAttributes
+            console.log(agendaJob.attrs)
             const job: Job | null = await JobModel.findOne({
                 agendaJob: agendaJob.attrs._id
             })
@@ -75,6 +76,8 @@ const startJobProcessor = () => {
                 }
             )
 
+            console.log(result)
+
             await LogService.saveJobLog(job.id, workflowId, result)
 
             if (
@@ -85,6 +88,8 @@ const startJobProcessor = () => {
                 throw new Error(`Workflow failed for job ${job._id}`)
             }
 
+            console.log(result.stats)
+
             if (result.stats.pageCount > 0) {
                 await PaymentService.reportUsage(user, result.stats)
             }
@@ -94,12 +99,14 @@ const startJobProcessor = () => {
                 user,
                 job.id,
                 result.errors.length > 0,
-                result.stats
+                result.stats.duration
             )
 
             done()
         } catch (error) {
-            done(error)
+            console.log('ERROR')
+            console.log(error)
+            done(error || new Error('Unknown error'))
         } finally {
             timeoutHandler && clearTimeout(timeoutHandler)
         }
@@ -110,15 +117,20 @@ const startJobProcessor = () => {
     }
 
     const onFail = async (error: Error, agendaJob: Agenda.Job) => {
-        const job = await JobModel.findOne({
-            agendaJob: agendaJob.attrs._id
-        })
+        console.log('FAIL')
+        try {
+            const job = await JobModel.findOne({
+                agendaJob: agendaJob.attrs._id
+            })
 
-        if (!job) return
+            if (!job) return
 
-        Logger.error(new Error(`Job with id ${job._id} failed`), error)
+            Logger.error(new Error(`Job with id ${job._id} failed`), error)
 
-        await AnalyticsService.save(job, Status.ERROR)
+            await AnalyticsService.save(job, Status.ERROR)
+        } catch (error) {
+            Logger.error(error)
+        }
     }
 
     Scheduler.runJob(JobType.RUN_WORKFLOW, handler, onSuccess, onFail)
@@ -128,9 +140,13 @@ const startStorageCleanup = () => {
     Scheduler.scheduleJob({
         name: JobType.CLEAN_STORAGE,
         job: async () => {
-            Logger.info('Starting storage cleanup')
-            await StorageService.clean()
-            Logger.info('Storage cleanup finished')
+            try {
+                Logger.info('Starting storage cleanup')
+                await StorageService.clean()
+                Logger.info('Storage cleanup finished')
+            } catch (error) {
+                Logger.error(new Error('Error cleaning storage'), error)
+            }
         },
         repeat: Repetition.DAILY
     })
@@ -140,9 +156,13 @@ const startAnalyticsCleanup = () => {
     Scheduler.scheduleJob({
         name: JobType.CLEAN_ANALYTICS,
         job: async () => {
-            Logger.info('Starting analytics cleanup')
-            await AnalyticsService.clean()
-            Logger.info('Analytics cleanup finished')
+            try {
+                Logger.info('Starting analytics cleanup')
+                await AnalyticsService.clean()
+                Logger.info('Analytics cleanup finished')
+            } catch (error) {
+                Logger.error(new Error('Error cleaning analytics'), error)
+            }
         },
         repeat: Repetition.DAILY
     })

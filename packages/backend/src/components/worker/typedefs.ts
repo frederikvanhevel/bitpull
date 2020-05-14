@@ -6,6 +6,7 @@ export type Handler = (event: NodeEventType, result: any) => void
 export interface WorkerArgs {
     node: FlowNode
     options: TraverseOptions
+    timeout: number
 }
 
 export enum WorkerEvent {

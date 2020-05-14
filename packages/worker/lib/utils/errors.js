@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.FlowError = exports.ErrorMessages = void 0;
 const errors_1 = require("../nodes/common/errors");
 const errors_2 = require("../nodes/processing/csv/errors");
 const errors_3 = require("../nodes/processing/excel/errors");

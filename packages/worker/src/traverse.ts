@@ -178,12 +178,12 @@ class Traverser {
         this.options.onError = (node: FlowNode, error: FlowError) => {
             this.errorCount++
 
-            if (
-                !!maxErrorsBeforeExit &&
-                this.errorCount > maxErrorsBeforeExit
-            ) {
-                throw new FlowError(NodeError.TOO_MANY_ERRORS)
-            }
+            // if (
+            //     !!maxErrorsBeforeExit &&
+            //     this.errorCount > maxErrorsBeforeExit
+            // ) {
+            //     throw new FlowError(NodeError.TOO_MANY_ERRORS)
+            // }
 
             errors.push({
                 nodeId: node.id,
@@ -224,6 +224,7 @@ class Traverser {
 
         let status = Status.UNDETERMINED
         const timer = new Timer()
+        timer.start()
 
         try {
             await this.parseNode({ node })
@@ -246,6 +247,8 @@ class Traverser {
         }
 
         const duration = timer.end()
+
+        console.log(errors)
 
         return {
             status,

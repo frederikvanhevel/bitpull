@@ -20,6 +20,7 @@ import { NodeEventHandler } from './typedefs'
 
 const WORKFLOW_LIMIT =
     Config.NODE_ENV === 'production' ? 50 : Number.POSITIVE_INFINITY
+const DEFAULT_TIMEOUT = 54000 * 1000 // 90mins
 
 const getWorkflow = async (user: User, id: string) => {
     const workflow = await WorkflowModel.findById(id)
@@ -176,7 +177,8 @@ const run = async (
             settings,
             integrations,
             watchedNodeId
-        }
+        },
+        timeout: resourceType === ResourceType.TEST_RUN ? Config.RUNNER_TIMEOUT : DEFAULT_TIMEOUT
     }
 
     Segment.track(TrackingEvent.WORKFLOW_RUN, user, {

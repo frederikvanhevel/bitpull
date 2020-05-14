@@ -1,4 +1,5 @@
 export enum StripePaymentPlan {
+    FREE = 'free',
     METERED = 'metered',
     SMALL = 'small',
     BUSINESS = 'business',

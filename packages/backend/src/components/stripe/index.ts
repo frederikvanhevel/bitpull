@@ -13,6 +13,7 @@ import {
 } from './typedefs'
 
 const PAYMENT_PLAN_MAP: Record<PaymentPlan, StripePaymentPlan> = {
+    [PaymentPlan.FREE]: StripePaymentPlan.FREE,
     [PaymentPlan.METERED]: StripePaymentPlan.METERED,
     [PaymentPlan.SMALL]: StripePaymentPlan.SMALL,
     [PaymentPlan.BUSINESS]: StripePaymentPlan.BUSINESS,
@@ -25,7 +26,6 @@ const stripeHandler = new stripe(Config.STRIPE_SECRET_KEY, {
 const createCustomer = async (
     email: string,
     name: string,
-    plan: PaymentPlan,
     cardToken?: string
 ): Promise<StripeSubscription> => {
     try {
@@ -37,7 +37,7 @@ const createCustomer = async (
 
         const subscription = await stripeHandler.subscriptions.create({
             customer: customer.id,
-            items: [{ plan: StripePaymentPlan.METERED }]
+            items: [{ plan: StripePaymentPlan.FREE }]
         })
 
         return {
@@ -73,21 +73,23 @@ const changePlan = async (payment: Payment, plan: PaymentPlan) => {
             if (currentPlan !== PaymentPlan.METERED) {
                 // update existing recurring plan
                 console.log('EKKK')
-                await stripeHandler.subscriptionItems.update(payment.recurringPlanId!, {
-                    plan: PAYMENT_PLAN_MAP[plan],
-                    proration_behavior: 'always_invoice'
-                })
+                await stripeHandler.subscriptionItems.update(
+                    payment.recurringPlanId!,
+                    {
+                        plan: PAYMENT_PLAN_MAP[plan],
+                        proration_behavior: 'always_invoice'
+                    }
+                )
                 console.log('OEOEOEO')
                 return payment.recurringPlanId
-            } else {
-                // new recurring plan
-                const result = await stripeHandler.subscriptionItems.create({
-                    subscription: payment.subscriptionId,
-                    plan: PAYMENT_PLAN_MAP[plan],
-                    proration_behavior: 'always_invoice'
-                })
-                return result.id
             }
+            // new recurring plan
+            const result = await stripeHandler.subscriptionItems.create({
+                subscription: payment.subscriptionId,
+                plan: PAYMENT_PLAN_MAP[plan],
+                proration_behavior: 'always_invoice'
+            })
+            return result.id
         }
 
         // remove recurring plan

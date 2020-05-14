@@ -120,6 +120,7 @@ class Traverser {
         const errors = [];
         const files = [];
         this.options.onError = (node, error) => {
+            console.log(error);
             this.errorCount++;
             if (!!maxErrorsBeforeExit &&
                 this.errorCount > maxErrorsBeforeExit) {

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.IntegrationError = exports.ParseError = exports.NodeError = exports.FileError = void 0;
 var FileError;
 (function (FileError) {
     FileError["FILE_MISSING"] = "FILE_MISSING";

@@ -8,6 +8,7 @@ process.on('message', async (args: WorkerArgs) => {
     traverser = new Traverser({
         ...args.options,
         onStart: node => {
+            if (!process.connected) return
             process.send!({
                 event: NodeEventType.START,
                 data: {
@@ -17,6 +18,7 @@ process.on('message', async (args: WorkerArgs) => {
             })
         },
         onError: (node, error) => {
+            if (!process.connected) return
             process.send!({
                 event: NodeEventType.ERROR,
                 data: {
@@ -28,6 +30,7 @@ process.on('message', async (args: WorkerArgs) => {
             })
         },
         onComplete: node => {
+            if (!process.connected) return
             process.send!({
                 event: NodeEventType.COMPLETE,
                 data: {
@@ -37,6 +40,7 @@ process.on('message', async (args: WorkerArgs) => {
             })
         },
         onWatch: result => {
+            if (!process.connected) return
             process.send!({
                 event: NodeEventType.WATCH,
                 data: {
@@ -45,6 +49,7 @@ process.on('message', async (args: WorkerArgs) => {
             })
         },
         onStorage: data => {
+            if (!process.connected) return
             process.send!({
                 event: NodeEventType.STORAGE,
                 data
@@ -61,6 +66,7 @@ process.on('message', async (args: WorkerArgs) => {
         })
 
         await traverser.cleanup()
+        process.exit(0)
     } catch (error) {
         await traverser.cleanup()
         // if (!traverser.canceled) throw error
@@ -76,6 +82,11 @@ const cleanup = async () => {
 process.on('SIGINT', cleanup)
 process.on('SIGTERM', cleanup)
 process.on('exit', cleanup)
+process.on('disconnect', async () => {
+    await cleanup()
+    process.exit(0)
+})
 process.on('unhandledRejection', reason => {
+    console.log(reason)
     process.exit(1)
 })

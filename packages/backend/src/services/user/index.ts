@@ -68,10 +68,7 @@ const register = async (
     user.firstName = firstName
     user.lastName = lastName
 
-    const payment = await PaymentService.createSubscription(
-        user,
-        PaymentPlan.METERED
-    )
+    const payment = await PaymentService.createCustomer(user, PaymentPlan.FREE)
 
     user.payment = payment._id
     user.referralId = getReferralId(user.id)
@@ -158,7 +155,7 @@ const forgotPassword = async (email: string) => {
         },
         {
             resetPasswordToken: token,
-            resetPasswordExpires: Date.now() + RESET_PASSWORD_TIME
+            resetPasswordExpires: new Date(Date.now() + RESET_PASSWORD_TIME)
         }
     )
 

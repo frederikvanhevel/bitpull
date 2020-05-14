@@ -8,8 +8,8 @@ import PaymentService from 'services/payment'
 import MailService from 'services/mail'
 import { User } from 'models/user'
 import Segment, { TrackingEvent } from 'components/segment'
-import { ScheduleType, JobAttributes } from './typedefs'
 import { addSeconds } from 'date-fns'
+import { ScheduleType, JobAttributes } from './typedefs'
 
 export const JOB_LIMIT = 50
 
@@ -79,7 +79,7 @@ const removeJob = async (user: User, jobId: string) => {
 
     Segment.track(TrackingEvent.JOB_REMOVE, user)
 
-    await AgendaJobModel.findByIdAndDelete(jobToRemove.agendaJob)
+    await Scheduler.cancelJob(jobToRemove.agendaJob)
     return await jobToRemove.remove()
 }
 

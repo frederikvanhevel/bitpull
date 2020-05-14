@@ -2,8 +2,8 @@ import { Page } from 'puppeteer-core'
 import { ParseError } from '../../common/errors'
 import { assert } from '../../../utils/common'
 import { NodeInput, TraverseOptions, Context } from '../../../typedefs/node'
-import { HtmlNode, LinkedHtmlNode, MultipleHtmlNode } from './typedefs'
 import { FlowError } from '../../../utils/errors'
+import { HtmlNode, LinkedHtmlNode, MultipleHtmlNode } from './typedefs'
 import { HtmlError } from './errors'
 
 export const parseLink = async (
@@ -26,7 +26,7 @@ export const parseLink = async (
                     await page.goto(link, { timeout: 5000 })
                 } catch (error) {
                     await page.goto(link, {
-                        waitUntil: "networkidle2"
+                        waitUntil: 'networkidle2'
                     })
                 }
             },
