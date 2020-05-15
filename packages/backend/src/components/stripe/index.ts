@@ -5,12 +5,7 @@ import { startOfMonth } from 'date-fns'
 import { PaymentPlan, Payment } from 'models/payment'
 import Logger from 'utils/logging/logger'
 import Config from 'utils/config'
-import {
-    StripePaymentPlan,
-    StripeSubscription,
-    Invoice,
-    UsageSummary
-} from './typedefs'
+import { StripePaymentPlan, Invoice, UsageSummary } from './typedefs'
 
 const PAYMENT_PLAN_MAP: Record<PaymentPlan, StripePaymentPlan> = {
     [PaymentPlan.FREE]: StripePaymentPlan.FREE,
@@ -23,33 +18,50 @@ const stripeHandler = new stripe(Config.STRIPE_SECRET_KEY, {
     apiVersion: '2020-03-02'
 })
 
-const createCustomer = async (
-    email: string,
-    name: string,
-    cardToken?: string
-): Promise<StripeSubscription> => {
+const createCustomer = async (email: string, name: string) => {
     try {
         const customer = await stripeHandler.customers.create({
             email,
-            name,
-            source: cardToken
+            name
         })
 
+        return customer.id
+    } catch (error) {
+        Logger.throw(new Error('Could not create customer in stripe'), error)
+    }
+}
+
+const createSubscription = async (customerId: string, plan: PaymentPlan) => {
+    try {
         const subscription = await stripeHandler.subscriptions.create({
-            customer: customer.id,
-            items: [{ plan: StripePaymentPlan.FREE }]
+            customer: customerId,
+            items: [
+                {
+                    plan: PAYMENT_PLAN_MAP[plan]
+                }
+            ]
         })
 
         return {
-            customerId: customer.id,
             subscriptionId: subscription.id,
-            meteredPlanId: subscription.items.data[0].id,
-            trialEndsAt: subscription.trial_end
-                ? fromUnixTime(subscription.trial_end)
-                : undefined
+            planId: subscription.items.data[0].id
         }
     } catch (error) {
-        Logger.throw(new Error('Could not create customer in stripe'), error)
+        Logger.throw(
+            new Error('Could not create subscription in stripe'),
+            error
+        )
+    }
+}
+
+const removeSubscription = async (subscriptionId: string) => {
+    try {
+        await stripeHandler.subscriptions.del(subscriptionId)
+    } catch (error) {
+        Logger.throw(
+            new Error('Could not remove subscription in stripe'),
+            error
+        )
     }
 }
 
@@ -66,40 +78,9 @@ const updateCustomer = async (
 
 const changePlan = async (payment: Payment, plan: PaymentPlan) => {
     try {
-        const currentPlan = payment.plan
-        console.log(currentPlan)
-
-        if (plan !== PaymentPlan.METERED) {
-            if (currentPlan !== PaymentPlan.METERED) {
-                // update existing recurring plan
-                console.log('EKKK')
-                await stripeHandler.subscriptionItems.update(
-                    payment.recurringPlanId!,
-                    {
-                        plan: PAYMENT_PLAN_MAP[plan],
-                        proration_behavior: 'always_invoice'
-                    }
-                )
-                console.log('OEOEOEO')
-                return payment.recurringPlanId
-            }
-            // new recurring plan
-            const result = await stripeHandler.subscriptionItems.create({
-                subscription: payment.subscriptionId,
-                plan: PAYMENT_PLAN_MAP[plan],
-                proration_behavior: 'always_invoice'
-            })
-            return result.id
-        }
-
-        // remove recurring plan
-        await stripeHandler.subscriptions.update(payment.subscriptionId, {
-            items: [
-                {
-                    id: payment.recurringPlanId,
-                    deleted: true
-                }
-            ]
+        await stripeHandler.subscriptionItems.update(payment.planId, {
+            plan: PAYMENT_PLAN_MAP[plan],
+            proration_behavior: 'always_invoice'
         })
     } catch (error) {
         Logger.throw(new Error('Could not change plan in stripe'), error)
@@ -197,6 +178,8 @@ const getUsageSummary = async (
 
 const Stripe = {
     createCustomer,
+    createSubscription,
+    removeSubscription,
     updateCustomer,
     changePlan,
     setCardToken,

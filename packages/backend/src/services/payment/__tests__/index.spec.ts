@@ -103,7 +103,7 @@ describe('Payment service', () => {
             await PaymentService.reportUsage(payment.owner, stats)
 
             expect(mockedStripe.reportUsage).toHaveBeenCalledWith(
-                payment.meteredPlanId,
+                payment.planId,
                 stats.pageCount
             )
             expect(returnedPayment.save).not.toHaveBeenCalled()
@@ -151,7 +151,7 @@ describe('Payment service', () => {
             await PaymentService.reportUsage(payment.owner, stats)
 
             expect(mockedStripe.reportUsage).toHaveBeenCalledWith(
-                payment.meteredPlanId,
+                payment.planId,
                 15
             )
             expect(returnedPayment.credits).toEqual(0)
@@ -358,7 +358,7 @@ describe('Payment service', () => {
         await PaymentService.getUsageSummary(payment.owner)
 
         expect(mockedStripe.getUsageSummary).toHaveBeenCalledWith(
-            payment.meteredPlanId
+            payment.planId
         )
     })
 

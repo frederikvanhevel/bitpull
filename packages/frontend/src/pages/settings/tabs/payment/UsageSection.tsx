@@ -56,27 +56,28 @@ const UsageSection: React.FC = () => {
         return <Typography color="error">Something went wrong</Typography>
     }
 
-    if (!data.getUsageSummary) {
-        return <Typography>No usage recorded for this period</Typography>
-    }
-
-    const { start, total } = data.getUsageSummary
     const credits = data.getPaymentDetails.credits
 
     return (
         <div className={classes.row}>
-            <Typography>
-                Your current usage for this period starting{' '}
-                <strong>{format(new Date(start), 'd MMM yyyy')}</strong>
-            </Typography>
-            <br />
-            <Typography>
-                <strong>{total || 0}</strong> seconds billed this period
-            </Typography>
-            <br />
+            {
+                data.getUsageSummary && 
+                    <>
+                        <Typography>
+                            Your current usage for this period starting{' '}
+                            <strong>{format(new Date(data.getUsageSummary.start), 'd MMM yyyy')}</strong>
+                        </Typography>
+                        <br />
+                        <Typography>
+                            <strong>{data.getUsageSummary.total || 0}</strong> pages billed this period
+                        </Typography>
+                        <br />
+                    </>
+            }
+            
             <div className={classes.inline}>
                 <Typography>
-                    <strong>{credits || 0}</strong> free credits remaining
+                    <strong>{credits || 0}</strong> pages remaining in plan
                 </Typography>
                 <Button color="primary" component={Link} to="/referral">
                     Earn more

@@ -17,9 +17,9 @@ export enum PaymentPlan {
 export const PLAN_CREDIT_AMOUNT: Record<PaymentPlan, number> = {
     [PaymentPlan.FREE]: TRIAL_CREDIT_AMOUNT,
     [PaymentPlan.METERED]: TRIAL_CREDIT_AMOUNT,
-    [PaymentPlan.SMALL]: 250,
-    [PaymentPlan.BUSINESS]: 600,
-    [PaymentPlan.PREMIUM]: 1500
+    [PaymentPlan.SMALL]: 500,
+    [PaymentPlan.BUSINESS]: 1000,
+    [PaymentPlan.PREMIUM]: 2500
 }
 
 export interface Payment {
@@ -29,8 +29,7 @@ export interface Payment {
     plan: PaymentPlan
     customerId: string
     subscriptionId: string
-    meteredPlanId: string
-    recurringPlanId?: string
+    planId: string
     sourceId?: string
     sourceLast4?: string
     sourceBrand?: string
@@ -52,8 +51,7 @@ const PaymentSchema = new Schema({
     plan: { type: String, required: true },
     customerId: { type: String, required: true },
     subscriptionId: { type: String, required: true },
-    meteredPlanId: { type: String, required: true },
-    recurringPlanId: { type: String },
+    planId: { type: String },
     sourceId: { type: String },
     sourceLast4: { type: String },
     sourceBrand: { type: String },

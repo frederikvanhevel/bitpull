@@ -25,6 +25,7 @@ export const TokenInput = gql`
 
 export const PaymentDetails = gql`
     enum Plan {
+        FREE
         METERED
         SMALL
         BUSINESS

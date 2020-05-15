@@ -32,14 +32,16 @@ const getDetails = async (user: User) => {
 const createCustomer = async (user: User, plan: PaymentPlan) => {
     const { id, email, firstName, lastName } = user
 
-    const details = await Stripe.createCustomer(
+    const customerId = await Stripe.createCustomer(
         email,
-        `${firstName} ${lastName}`,
-        plan
+        `${firstName} ${lastName}`
     )
+
+    const details = await Stripe.createSubscription(customerId, plan)
 
     const payment = new PaymentModel({
         ...details,
+        customerId,
         plan,
         owner: id
     })
@@ -91,7 +93,7 @@ const reportUsage = async (user: User, stats: Stats) => {
     }
 
     if (pagesToReport > 0 && payment.plan === PaymentPlan.METERED) {
-        await Stripe.reportUsage(payment.meteredPlanId, pagesToReport)
+        await Stripe.reportUsage(payment.planId, pagesToReport)
     }
 
     Logger.info(`Billed user ${user.id} for ${stats.pageCount} pages`)
@@ -178,7 +180,9 @@ const getUsageSummary = async (user: User) => {
         throw new NotFoundError()
     }
 
-    return await Stripe.getUsageSummary(payment.meteredPlanId)
+    if (payment.plan !== PaymentPlan.METERED) return
+
+    return await Stripe.getUsageSummary(payment.planId)
 }
 
 const addReferralCredits = async (user: User) => {
@@ -220,12 +224,22 @@ const changePlan = async (user: User, plan: PaymentPlan) => {
 
     if (payment.plan === plan) return
 
-    const planId = await Stripe.changePlan(payment, plan)
+    if (payment.plan === PaymentPlan.METERED || plan === PaymentPlan.METERED) {
+        await Stripe.removeSubscription(payment.subscriptionId)
+        const { subscriptionId, planId } = await Stripe.createSubscription(
+            payment.customerId,
+            plan
+        )
+
+        payment.subscriptionId = subscriptionId
+        payment.planId = planId
+    } else {
+        await Stripe.changePlan(payment, plan)
+    }
 
     payment.plan = plan
-    payment.recurringPlanId = planId
 
-    if (plan !== PaymentPlan.METERED) {
+    if (plan !== PaymentPlan.FREE && plan !== PaymentPlan.METERED) {
         payment.credits = PLAN_CREDIT_AMOUNT[plan]
     }
 

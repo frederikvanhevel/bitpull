@@ -21,7 +21,7 @@ export const PaymentFactory = new InstanceFactory<Payment>(
             disabled: false,
             credits: 0,
             earnedCredits: 0,
-            meteredPlanId: faker.random.uuid()
+            planId: faker.random.uuid()
         }
     }
 )

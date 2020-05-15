@@ -116,9 +116,9 @@ const oAuth = async (
             await ReferralService.addEntry(created, referralId)
         }
 
-        const payment = await PaymentService.createSubscription(
+        const payment = await PaymentService.createCustomer(
             created,
-            PaymentPlan.METERED
+            PaymentPlan.FREE
         )
 
         created.payment = payment._id
