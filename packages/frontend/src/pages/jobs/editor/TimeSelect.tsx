@@ -34,9 +34,9 @@ const Defaults: Record<ScheduleType, any> = {
 }
 
 const IntervalLabels: Record<string, string> = {
-    '5 minutes': 'Every 5 minutes',
-    '10 minutes': 'Every 10 minutes',
-    '15 minutes': 'Every 15 minutes',
+    // '5 minutes': 'Every 5 minutes',
+    // '10 minutes': 'Every 10 minutes',
+    // '15 minutes': 'Every 15 minutes',
     '30 minutes': 'Every 30 minutes',
     '1 hours': 'Every hour',
     '3 hours': 'Every 3 hours',

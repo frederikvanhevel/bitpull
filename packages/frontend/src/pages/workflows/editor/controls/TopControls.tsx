@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/styles'
-import { Theme, TextField, IconButton, Button } from '@material-ui/core'
+import { Theme, TextField, Button } from '@material-ui/core'
 import Toolbar from 'components/navigation/Toolbar'
 import { AppState } from 'redux/store'
 import { useSelector, useDispatch } from 'react-redux'
@@ -63,23 +63,26 @@ const Controls: React.FC = () => {
                 />
             </div>
             <div className={classes.buttonWrapper}>
-                {workflow && workflow.id !== 'new' && (
+                {/* {workflow && workflow.id !== 'new' && (
                     <IconButton
                         component={Link}
                         to={`/jobs/new?workflow=${workflow.id}`}
                     >
                         <AddScheduleIcon />
                     </IconButton>
-                )}
+                )} */}
 
-                <Button
-                    variant="outlined"
-                    size="small"
-                    component={Link}
-                    to="/workflows"
-                >
-                    Back to overview
-                </Button>
+                {workflow && workflow.id !== 'new' && (
+                    <Button
+                        variant="outlined"
+                        size="small"
+                        component={Link}
+                        to={`/jobs/new?workflow=${workflow.id}`}
+                        startIcon={<AddScheduleIcon />}
+                    >
+                        Schedule job
+                    </Button>
+                )}
 
                 <Button
                     variant="contained"
