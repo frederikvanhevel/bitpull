@@ -40,6 +40,7 @@ export enum OAuthProvider {
 
 export enum Plan {
   BUSINESS = "BUSINESS",
+  FREE = "FREE",
   METERED = "METERED",
   PREMIUM = "PREMIUM",
   SMALL = "SMALL",

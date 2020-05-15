@@ -2,6 +2,7 @@ import { GraphQLFieldResolver } from 'graphql'
 import { TokenInput } from 'typedefs/graphql'
 import PaymentService from 'services/payment'
 import Logger from 'utils/logging/logger'
+import { PaymentPlan } from 'models/payment'
 import { AuthenticationContext } from '../directives/auth'
 
 export const hasPaymentMethod: GraphQLFieldResolver<
@@ -86,5 +87,17 @@ export const changePlan: GraphQLFieldResolver<
         return true
     } catch (error) {
         Logger.throw(new Error('Could not change plan'), error, context.user)
+    }
+}
+
+export const cancelPlan: GraphQLFieldResolver<
+    any,
+    AuthenticationContext
+> = async (root, args, context) => {
+    try {
+        await PaymentService.changePlan(context.user, PaymentPlan.FREE)
+        return true
+    } catch (error) {
+        Logger.throw(new Error('Could not cancel plan'), error, context.user)
     }
 }

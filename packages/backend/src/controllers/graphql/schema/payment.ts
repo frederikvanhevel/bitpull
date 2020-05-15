@@ -6,7 +6,8 @@ import {
     getPaymentDetails,
     getInvoices,
     getUsageSummary,
-    changePlan
+    changePlan,
+    cancelPlan
 } from '../resolvers/payment'
 import {
     TokenInput,
@@ -29,6 +30,7 @@ const query = gql`
     type Mutation {
         updatePayment(input: TokenInput!): Boolean!
         changePlan(plan: Plan!): Boolean!
+        cancelPlan: Boolean!
     }
 `
 const resolvers: IResolvers = {
@@ -40,7 +42,8 @@ const resolvers: IResolvers = {
     },
     Mutation: {
         updatePayment,
-        changePlan
+        changePlan,
+        cancelPlan
     }
 }
 

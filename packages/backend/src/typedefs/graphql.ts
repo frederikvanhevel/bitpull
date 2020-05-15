@@ -106,6 +106,7 @@ export type Mutation = {
   feedback: Scalars['Boolean'];
   updatePayment: Scalars['Boolean'];
   changePlan: Scalars['Boolean'];
+  cancelPlan: Scalars['Boolean'];
   addCatalogItem: CatalogItem;
   pickCatalogItem: Workflow;
 };
@@ -581,6 +582,7 @@ export type TokenInput = {
 };
 
 export enum Plan {
+  Free = 'FREE',
   Metered = 'METERED',
   Small = 'SMALL',
   Business = 'BUSINESS',
