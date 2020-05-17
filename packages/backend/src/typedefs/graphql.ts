@@ -28,7 +28,7 @@ export type Query = {
   getStorageEntry: Array<StorageLink>;
   getStorageEntries: Array<Storage>;
   dummy?: Maybe<Scalars['String']>;
-  hasPaymentMethod: Scalars['Boolean'];
+  hasCreditsRemaining: Scalars['Boolean'];
   getPaymentDetails: PaymentDetails;
   getInvoices: Array<Invoice>;
   getUsageSummary?: Maybe<UsageSummary>;

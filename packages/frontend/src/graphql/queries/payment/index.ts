@@ -1,8 +1,8 @@
 import { gql } from 'apollo-boost'
 
-export const HAS_PAYMENT_METHOD = gql`
-    query hasPaymentMethod {
-        hasPaymentMethod
+export const HAS_REMAINING_CREDITS = gql`
+    query hasCreditsRemaining {
+        hasCreditsRemaining
     }
 `
 

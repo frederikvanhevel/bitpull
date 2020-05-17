@@ -9,8 +9,8 @@ import { resumeJob } from 'mutations/job/typedefs/resumeJob'
 import { RESUME_JOB, PAUSE_JOB } from 'mutations/job'
 import { pauseJob } from 'mutations/job/typedefs/pauseJob'
 import { GET_JOBS, Job } from 'queries/job'
-import { HAS_PAYMENT_METHOD } from 'queries/payment'
-import { hasPaymentMethod } from 'queries/user/typedefs/hasPaymentMethod'
+import { HAS_REMAINING_CREDITS } from 'queries/payment'
+import { hasCreditsRemaining } from 'queries/payment/typedefs/hasCreditsRemaining'
 
 interface Props {
     job: Job
@@ -20,10 +20,10 @@ interface Props {
 
 const OptionsMenu: React.FC<Props> = ({ job, showLog, removeJob }) => {
     // TODO only load data when menu is open
-    const { data } = useQuery<hasPaymentMethod>(HAS_PAYMENT_METHOD, {
+    const { data } = useQuery<hasCreditsRemaining>(HAS_REMAINING_CREDITS, {
         fetchPolicy: 'cache-and-network'
     })
-    const paymentReady = data && data.hasPaymentMethod === true
+    const paymentReady = data && data.hasCreditsRemaining === true
     const [resume] = useMutation<resumeJob>(RESUME_JOB, {
         variables: { id: job.id },
         refetchQueries: [

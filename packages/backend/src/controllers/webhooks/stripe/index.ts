@@ -3,6 +3,7 @@ import Stripe from 'components/stripe'
 import Logger from 'utils/logging/logger'
 import PaymentService from 'services/payment'
 import MailService from 'services/mail'
+import { PaymentPlan } from 'models/payment'
 import { WebhookEvent } from './typedefs'
 
 const handler: RequestHandler = async (req, res) => {
@@ -20,8 +21,19 @@ const handler: RequestHandler = async (req, res) => {
         switch (event.type) {
             case WebhookEvent.SUBSCRIPTION_DELETED:
                 // payment failed a couple of times, change plan of user and close down jobs etc
-                // downgradePlan(event.data);
                 break
+            case WebhookEvent.SUBSCRIPTION_UPDATED: {
+                // subscription became inactive, downgrade plan
+                const status = (event.data.object as any).status
+                if (status !== 'active') {
+                    const user = await PaymentService.getUserByCustomerId(
+                        customerId
+                    )
+                    await PaymentService.disable(customerId)
+                    await PaymentService.changePlan(user, PaymentPlan.FREE)
+                }
+                break
+            }
             case WebhookEvent.PAYMENT_FAILED:
                 await PaymentService.disable(customerId)
                 break

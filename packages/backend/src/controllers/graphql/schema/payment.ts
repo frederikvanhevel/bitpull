@@ -1,7 +1,7 @@
 import { makeExecutableSchema, IResolvers } from 'graphql-tools'
 import { gql } from 'apollo-server'
 import {
-    hasPaymentMethod,
+    hasCreditsRemaining,
     updatePayment,
     getPaymentDetails,
     getInvoices,
@@ -21,7 +21,7 @@ const query = gql`
     directive @isAuthenticated on FIELD_DEFINITION
 
     type Query {
-        hasPaymentMethod: Boolean! @isAuthenticated
+        hasCreditsRemaining: Boolean! @isAuthenticated
         getPaymentDetails: PaymentDetails! @isAuthenticated
         getInvoices: [Invoice!]! @isAuthenticated
         getUsageSummary: UsageSummary @isAuthenticated
@@ -35,7 +35,7 @@ const query = gql`
 `
 const resolvers: IResolvers = {
     Query: {
-        hasPaymentMethod,
+        hasCreditsRemaining,
         getPaymentDetails,
         getInvoices,
         getUsageSummary

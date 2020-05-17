@@ -34,7 +34,6 @@ export interface Payment {
     sourceLast4?: string
     sourceBrand?: string
     trialEndsAt?: Date
-    disabled: boolean
     credits: number
     earnedCredits: number
 }
@@ -56,7 +55,6 @@ const PaymentSchema = new Schema({
     sourceLast4: { type: String },
     sourceBrand: { type: String },
     trialEndsAt: { type: Date },
-    disabled: { type: Boolean, default: false },
     credits: {
         type: Number,
         default: TRIAL_CREDIT_AMOUNT

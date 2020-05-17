@@ -248,8 +248,6 @@ class Traverser {
 
         const duration = timer.end()
 
-        console.log(errors)
-
         return {
             status,
             errors,

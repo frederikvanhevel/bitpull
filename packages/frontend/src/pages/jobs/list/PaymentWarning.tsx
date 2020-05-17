@@ -1,17 +1,17 @@
 import React from 'react'
 import { Button } from '@material-ui/core'
 import { useQuery } from '@apollo/react-hooks'
-import { hasPaymentMethod } from 'queries/user/typedefs/hasPaymentMethod'
-import { HAS_PAYMENT_METHOD } from 'queries/payment'
+import { HAS_REMAINING_CREDITS } from 'queries/payment'
 import { Link } from 'react-router-dom'
 import NotificationBar from 'components/ui/NotificationBar'
+import { hasCreditsRemaining } from 'queries/payment/typedefs/hasCreditsRemaining'
 
 const PaymentWarning: React.FC = () => {
-    const { data, loading } = useQuery<hasPaymentMethod>(HAS_PAYMENT_METHOD, {
+    const { data, loading } = useQuery<hasCreditsRemaining>(HAS_REMAINING_CREDITS, {
         fetchPolicy: 'cache-and-network'
     })
 
-    if (loading || data?.hasPaymentMethod === true) return null
+    if (loading || data?.hasCreditsRemaining === true) return null
 
     return (
         <NotificationBar type="error" top={64}>
@@ -20,7 +20,7 @@ const PaymentWarning: React.FC = () => {
             information to resume your jobs */}
             <Button
                 component={Link}
-                to="/settings/payment"
+                to="/settings/plan"
                 variant="contained"
                 size="small"
             >

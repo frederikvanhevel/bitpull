@@ -62,7 +62,11 @@ const spawn = (
             forked.on('exit', code => {
                 Logger.info(`Worker exited with exit code ${code}`)
                 clearTimeout(timeout)
-                code === 1 ? reject() : resolve()
+
+                if (code !== 0) {
+                    reject()
+                }
+                // code === 1 ? reject() : resolve()
             })
 
             // forked.on('close', () => resolve())

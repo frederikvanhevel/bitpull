@@ -60,13 +60,18 @@ process.on('message', async (args: WorkerArgs) => {
     try {
         const result = await traverser.run(args.node)
 
-        process.send!({
+        const sent = process.send!({
             event: WorkerEvent.FINISHED,
             data: result
         })
 
+        if (!sent) {
+            console.log('Couldnt send result to parent process')
+        }
+
         await traverser.cleanup()
-        process.exit(0)
+        // eslint-disable-next-line no-process-exit
+        // process.exit(0)
     } catch (error) {
         await traverser.cleanup()
         // if (!traverser.canceled) throw error
@@ -84,9 +89,11 @@ process.on('SIGTERM', cleanup)
 process.on('exit', cleanup)
 process.on('disconnect', async () => {
     await cleanup()
+    // eslint-disable-next-line no-process-exit
     process.exit(0)
 })
 process.on('unhandledRejection', reason => {
     console.log(reason)
+    // eslint-disable-next-line no-process-exit
     process.exit(1)
 })

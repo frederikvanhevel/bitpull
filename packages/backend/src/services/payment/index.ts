@@ -99,12 +99,14 @@ const reportUsage = async (user: User, stats: Stats) => {
     Logger.info(`Billed user ${user.id} for ${stats.pageCount} pages`)
 }
 
-const hasPaymentMethod = async (userId: string | UserDocument['_id']) => {
+const hasCreditsRemaining = async (userId: string | UserDocument['_id']) => {
     const payment = await PaymentModel.findOne({
         owner: userId
     }).lean()
 
-    if (!payment || payment.disabled) return false
+    if (!payment) return false
+
+    if (payment.plan === PaymentPlan.METERED) return true
 
     return payment.credits > 0
 }
@@ -144,7 +146,12 @@ const disable = async (stripeCustomerId: string) => {
         throw new NotFoundError()
     }
 
-    payment.disabled = true
+    if (
+        payment.plan !== PaymentPlan.FREE &&
+        payment.plan !== PaymentPlan.METERED
+    ) {
+        payment.credits = 0
+    }
 
     await payment.save()
 
@@ -224,6 +231,10 @@ const changePlan = async (user: User, plan: PaymentPlan) => {
 
     if (payment.plan === plan) return
 
+    if (plan !== PaymentPlan.FREE && !payment.sourceId) {
+        throw new Error('User has no payment card')
+    }
+
     if (payment.plan === PaymentPlan.METERED || plan === PaymentPlan.METERED) {
         await Stripe.removeSubscription(payment.subscriptionId)
         const { subscriptionId, planId } = await Stripe.createSubscription(
@@ -257,8 +268,6 @@ const refillCredits = async (stripeCustomerId: string) => {
         customerId: stripeCustomerId
     })
 
-    console.log(payment)
-
     if (!payment) {
         throw new NotFoundError()
     }
@@ -278,19 +287,38 @@ const refillCredits = async (stripeCustomerId: string) => {
     Segment.track(TrackingEvent.PAYMENT_CREDITS_REFILLED, user)
 }
 
+const getUserByCustomerId = async (stripeCustomerId: string) => {
+    const payment = await PaymentModel.findOne({
+        customerId: stripeCustomerId
+    })
+
+    if (!payment) {
+        throw new NotFoundError()
+    }
+
+    const user = await UserModel.findById(payment.owner)
+
+    if (!user) {
+        throw new NotFoundError()
+    }
+
+    return user
+}
+
 const PaymentService = {
     getDetails,
     updateUserInfo,
     createCustomer,
     reportUsage,
-    hasPaymentMethod,
+    hasCreditsRemaining,
     updatePayment,
     disable,
     getInvoices,
     getUsageSummary,
     addReferralCredits,
     changePlan,
-    refillCredits
+    refillCredits,
+    getUserByCustomerId
 }
 
 export default PaymentService

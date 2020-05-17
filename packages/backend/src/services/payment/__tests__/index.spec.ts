@@ -175,7 +175,7 @@ describe('Payment service', () => {
             // @ts-ignore
             mockedPaymentModel.findOne.mockReturnValueOnce(returnedPayment)
 
-            const result = await PaymentService.hasPaymentMethod(
+            const result = await PaymentService.hasCreditsRemaining(
                 payment.owner.id
             )
             expect(result).toBeTruthy()
@@ -193,7 +193,7 @@ describe('Payment service', () => {
             // @ts-ignore
             mockedPaymentModel.findOne.mockReturnValueOnce(returnedPayment)
 
-            const result = await PaymentService.hasPaymentMethod(
+            const result = await PaymentService.hasCreditsRemaining(
                 payment.owner.id
             )
             expect(result).toBeFalsy()
@@ -210,7 +210,7 @@ describe('Payment service', () => {
             // @ts-ignore
             mockedPaymentModel.findOne.mockReturnValueOnce(returnedPayment)
 
-            const result = await PaymentService.hasPaymentMethod(
+            const result = await PaymentService.hasCreditsRemaining(
                 payment.owner.id
             )
             expect(result).toBeFalsy()
@@ -228,7 +228,7 @@ describe('Payment service', () => {
             // @ts-ignore
             mockedPaymentModel.findOne.mockReturnValueOnce(returnedPayment)
 
-            const result = await PaymentService.hasPaymentMethod(
+            const result = await PaymentService.hasCreditsRemaining(
                 payment.owner.id
             )
             expect(result).toBeTruthy()

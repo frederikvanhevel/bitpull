@@ -26,6 +26,10 @@ const htmlLinked: NodeParser<LinkedHtmlNode> = async (
         getUriOrigin(rootAncestor.parsedLink!)
     )
 
+    if (!link) {
+        throw new FlowError(ParseError.LINKED_FIELD_NOT_FOUND)
+    }
+
     assert(link, ParseError.LINK_MISSING)
 
     try {

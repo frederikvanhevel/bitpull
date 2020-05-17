@@ -103,6 +103,7 @@ export const ErrorMessages: Record<string, string> = {
     // Html error
     [HtmlError.NAVIGATION_FAILED]: 'Could not navigate to page',
     [HtmlError.LINKED_FIELD_MISSING]: 'Linked field is not defined',
+    [HtmlError.LINKED_FIELD_NOT_FOUND]: 'Could not find linked url',
     [HtmlError.LINKS_MISSING]: 'No links are defined',
     [HtmlError.INVALID_URL]: 'The given url is invalid',
 

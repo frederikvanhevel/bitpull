@@ -1,63 +1,20 @@
 import Agenda from 'agenda'
-import Scheduler, { TIMEOUT } from 'components/scheduler'
+import Scheduler from 'components/scheduler'
 import { JobType, Repetition } from 'components/scheduler/typedefs'
 import Logger from 'utils/logging/logger'
 import AnalyticsService from 'services/analytics'
-import WorkflowModel from 'models/workflow'
-import { Status, ParseResult } from '@bitpull/worker'
-import JobModel, { Job } from 'models/job'
+import { ParseResult } from '@bitpull/worker'
 import StorageService from 'services/storage'
 import { ResourceType } from 'models/storage'
 import WorkflowService from 'services/workflow'
-import PaymentService from 'services/payment'
-import LogService from 'services/log'
-import UserModel, { User } from 'models/user'
 import JobService from 'services/job'
 import { NodeEventType } from 'services/workflow/typedefs'
-import { JobAttributes } from 'services/job/typedefs'
-import Segment, { TrackingEvent } from 'components/segment'
 
 const startJobProcessor = () => {
     const handler = async (agendaJob: Agenda.Job, done: Function) => {
-        let timeoutHandler
-
         try {
-            const { workflowId } = agendaJob.attrs.data as JobAttributes
-            console.log(agendaJob.attrs)
-            const job: Job | null = await JobModel.findOne({
-                agendaJob: agendaJob.attrs._id
-            })
-
-            if (!job) {
-                throw new Error('Job not found')
-            }
-
-            const user: User | null = await UserModel.findById(job.owner).lean()
-
-            if (!user) {
-                throw new Error('User not found')
-            }
-
-            Segment.track(TrackingEvent.JOB_RUN, user)
-
-            const paymentReady = await PaymentService.hasPaymentMethod(
-                job.owner
-            )
-
-            if (!paymentReady) {
-                agendaJob.disable()
-                throw new Error('User has no payment details')
-            }
-
-            const workflow = await WorkflowModel.findById(workflowId).lean()
-
-            if (!workflow) {
-                throw new Error('Workflow not found')
-            }
-
-            timeoutHandler = setTimeout(() => {
-                throw new Error('Job timed out')
-            }, TIMEOUT)
+            const jobArgs = await JobService.preRun(agendaJob)
+            const { user, job, workflow } = jobArgs
 
             const result: ParseResult = await WorkflowService.run(
                 user,
@@ -76,39 +33,11 @@ const startJobProcessor = () => {
                 }
             )
 
-            console.log(result)
-
-            await LogService.saveJobLog(job.id, workflowId, result)
-
-            if (
-                result.status === Status.ERROR ||
-                result.errors.length === result.logs.length - 1
-            ) {
-                Logger.warn(`Job failed: ${JSON.stringify(result.errors)}`)
-                throw new Error(`Workflow failed for job ${job._id}`)
-            }
-
-            console.log(result.stats)
-
-            if (result.stats.pageCount > 0) {
-                await PaymentService.reportUsage(user, result.stats)
-            }
-
-            await AnalyticsService.save(job, result.status, result.stats)
-            await JobService.reportResult(
-                user,
-                job.id,
-                result.errors.length > 0,
-                result.stats.duration
-            )
+            await JobService.postRun(jobArgs, result)
 
             done()
         } catch (error) {
-            console.log('ERROR')
-            console.log(error)
             done(error || new Error('Unknown error'))
-        } finally {
-            timeoutHandler && clearTimeout(timeoutHandler)
         }
     }
 
@@ -117,17 +46,8 @@ const startJobProcessor = () => {
     }
 
     const onFail = async (error: Error, agendaJob: Agenda.Job) => {
-        console.log('FAIL')
         try {
-            const job = await JobModel.findOne({
-                agendaJob: agendaJob.attrs._id
-            })
-
-            if (!job) return
-
-            Logger.error(new Error(`Job with id ${job._id} failed`), error)
-
-            await AnalyticsService.save(job, Status.ERROR)
+            await JobService.postRunFail(agendaJob, error)
         } catch (error) {
             Logger.error(error)
         }
