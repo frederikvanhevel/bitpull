@@ -1,17 +1,12 @@
 import request from 'request'
 import { Router } from 'express'
 import StorageService from 'services/storage'
-import { User } from 'models/user'
 
 const LOCALHOST_REGEX = /https?:\/\/localhost/
 const apiRouter = Router()
 
 apiRouter.get('/proxy', async (req, res) => {
     const { url } = req.query
-
-    if (!req.user) {
-        return res.status(401).send({ status: 'Unauthenticated' })
-    }
 
     // prevent localhost
     if (typeof url !== 'string' || LOCALHOST_REGEX.test(url)) {

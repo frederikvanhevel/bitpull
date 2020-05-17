@@ -24,7 +24,6 @@ const UrlInputDialog: React.FC<Props> = ({
     onClose
 }) => {
     const classes = useStyles()
-    console.log(links.join('\n'))
     const { register, errors } = useForm({
         defaultValues: {
             links: links.join('\n')
