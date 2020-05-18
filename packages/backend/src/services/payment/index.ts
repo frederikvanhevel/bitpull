@@ -22,7 +22,6 @@ const getDetails = async (user: User) => {
             sourceLast4: 1,
             sourceBrand: 1,
             trialEndsAt: 1,
-            disabled: 1,
             credits: 1,
             earnedCredits: 1
         })

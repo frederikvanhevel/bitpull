@@ -13,7 +13,6 @@ export const GET_PAYMENT_DETAILS = gql`
             sourceLast4
             sourceBrand
             trialEndsAt
-            disabled
             credits
             earnedCredits
         }

@@ -36,7 +36,6 @@ export const PaymentDetails = gql`
         sourceLast4: String
         sourceBrand: String
         trialEndsAt: DateTime
-        disabled: Boolean!
         credits: Int!
         earnedCredits: Int!
     }

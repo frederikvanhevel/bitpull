@@ -15,7 +15,6 @@ export interface getPaymentDetails_getPaymentDetails {
   sourceLast4: string | null;
   sourceBrand: string | null;
   trialEndsAt: any | null;
-  disabled: boolean;
   credits: number;
   earnedCredits: number;
 }

@@ -595,7 +595,6 @@ export type PaymentDetails = {
   sourceLast4?: Maybe<Scalars['String']>;
   sourceBrand?: Maybe<Scalars['String']>;
   trialEndsAt?: Maybe<Scalars['DateTime']>;
-  disabled: Scalars['Boolean'];
   credits: Scalars['Int'];
   earnedCredits: Scalars['Int'];
 };
