@@ -166,11 +166,11 @@ workflows:
   version: 2
   pull-request:
     jobs:
-      - node-tests
+      # - node-tests
       - setup-infra:
           context: BITPULL_DEVELOPMENT
-          requires:
-            - node-tests
+          # requires:
+          #   - node-tests
       - ops-deployment:
           context: BITPULL_DEVELOPMENT
           requires:
