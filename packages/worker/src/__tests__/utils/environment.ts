@@ -133,6 +133,12 @@ export const hasDefaultResult = async (
     return content.replace(/\s/g, '') === DEFAULT_MOCKED_HTML.replace(/\s/g, '')
 }
 
+export const htmlHasResult = (html: string, result: string) => {
+    return (
+        html.replace(/\s/g, '') === getMockedHtml(result).replace(/\s/g, '')
+    )
+}
+
 export const hasResult = async (
     input: NodeInput<FlowNode, any, any>,
     result: string

@@ -10,8 +10,6 @@ class Store {
             await Database.connect()
             const migrations = await MigrationModel.findOne({})
 
-            // console.log('load', migrations)
-
             if (!migrations) {
                 Logger.info(
                     'Cannot read migrations from database. If this is the first time you run migrations, then this is normal.'
@@ -28,11 +26,8 @@ class Store {
     }
 
     async save(set: any, fn: Function) {
-        console.log('SAVE')
         try {
             await Database.connect()
-
-            // console.log('save', set.migrations)
 
             const result = await MigrationModel.updateOne(
                 {},

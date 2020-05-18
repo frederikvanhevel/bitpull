@@ -41,6 +41,7 @@ const getTotalsPerJob = async (
         .filter(analytics => !!analytics.job)
         .map(analytics => ({
             ...analytics,
+            // @ts-ignore
             job: { id: analytics.job._id, ...analytics.job }
         }))
 }

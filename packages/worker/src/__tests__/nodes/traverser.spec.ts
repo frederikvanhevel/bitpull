@@ -30,7 +30,12 @@ describe('Traverser', () => {
                     message: 'Got content of http://test.be'
                 }
             ],
-            files: []
+            files: [],
+            stats: {
+                duration: 0,
+                pageCount: 1,
+                pages: ['http://test.be/']
+            }
         })
 
         await environment.cleanup()
@@ -75,7 +80,12 @@ describe('Traverser', () => {
                     message: 'Selector fields are missing'
                 }
             ],
-            files: []
+            files: [],
+            stats: {
+                duration: 0,
+                pageCount: 1,
+                pages: ['http://test.be/']
+            }
         })
 
         await environment.cleanup()
@@ -132,7 +142,12 @@ describe('Traverser', () => {
                     message: 'Selector fields are missing'
                 }
             ],
-            files: []
+            files: [],
+            stats: {
+                duration: 0,
+                pageCount: 1,
+                pages: ['http://test.be/']
+            }
         })
 
         await environment.cleanup()

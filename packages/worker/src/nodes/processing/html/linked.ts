@@ -27,7 +27,7 @@ const htmlLinked: NodeParser<LinkedHtmlNode> = async (
     )
 
     if (!link) {
-        throw new FlowError(ParseError.LINKED_FIELD_NOT_FOUND)
+        throw new FlowError(HtmlError.LINKED_FIELD_NOT_FOUND)
     }
 
     assert(link, ParseError.LINK_MISSING)

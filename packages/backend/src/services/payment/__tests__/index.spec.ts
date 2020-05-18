@@ -44,18 +44,27 @@ describe('Payment service', () => {
         expect(result).toEqual(payment)
     })
 
-    it('should create a subscription', async () => {
+    it('should create a customer in stripe', async () => {
         const user = UserFactory.getSingleRecord()
-        await PaymentService.createSubscription(user, PaymentPlan.METERED)
+
+        mockedStripe.createCustomer.mockResolvedValue('123')
+        mockedStripe.createSubscription.mockResolvedValue({
+            subscriptionId: '1',
+            planId: '2'
+        })
+
+        await PaymentService.createCustomer(user, PaymentPlan.FREE)
 
         expect(mockedStripe.createCustomer).toHaveBeenCalledWith(
             user.email,
-            `${user.firstName} ${user.lastName}`,
-            'METERED'
+            `${user.firstName} ${user.lastName}`
         )
         expect(mockedPaymentModel).toHaveBeenCalledWith({
+            customerId: '123',
             owner: user.id,
-            plan: 'METERED'
+            plan: PaymentPlan.FREE,
+            subscriptionId: '1',
+            planId: '2'
         })
         // @ts-ignore
         expect(mockedPaymentModel.prototype.save).toHaveBeenCalled()
@@ -86,7 +95,9 @@ describe('Payment service', () => {
 
     describe('Usage reporting', () => {
         it('should report usage when user has no credits', async () => {
-            const payment = PaymentFactory.getSingleRecord()
+            const payment = PaymentFactory.getSingleRecord({
+                plan: PaymentPlan.METERED
+            })
             const stats = {
                 duration: 44,
                 pageCount: 30,
@@ -110,7 +121,9 @@ describe('Payment service', () => {
         })
 
         it('should not report usage when user has enough credits', async () => {
-            const payment = PaymentFactory.getSingleRecord()
+            const payment = PaymentFactory.getSingleRecord({
+                plan: PaymentPlan.METERED
+            })
             payment.credits = 100
             const stats = {
                 duration: 44,
@@ -133,7 +146,9 @@ describe('Payment service', () => {
         })
 
         it('should report usage when user has some credits but not enough', async () => {
-            const payment = PaymentFactory.getSingleRecord()
+            const payment = PaymentFactory.getSingleRecord({
+                plan: PaymentPlan.METERED
+            })
             payment.credits = 15
             const stats = {
                 duration: 44,
@@ -199,9 +214,9 @@ describe('Payment service', () => {
             expect(result).toBeFalsy()
         })
 
-        it('should return false when payment is disabled', async () => {
+        it('should return false when user has not enough credits', async () => {
             const payment = PaymentFactory.getSingleRecord()
-            payment.disabled = true
+            payment.credits = 0
             const returnedPayment = {
                 ...(payment as PaymentDocument),
                 lean: () => payment
@@ -321,7 +336,7 @@ describe('Payment service', () => {
 
         await PaymentService.disable(payment.customerId)
 
-        expect(returnedPayment.disabled).toBeTruthy()
+        expect(returnedPayment.credits).toEqual(0)
         expect(returnedPayment.save).toHaveBeenCalled()
         expect(mockedMailService.sendPaymentFailedEmail).toHaveBeenCalledWith(
             payment.owner.email
@@ -346,7 +361,9 @@ describe('Payment service', () => {
     })
 
     it('should get usage summary', async () => {
-        const payment = PaymentFactory.getSingleRecord()
+        const payment = PaymentFactory.getSingleRecord({
+            plan: PaymentPlan.METERED
+        })
         const returnedPayment = {
             ...(payment as PaymentDocument),
             lean: () => payment
@@ -362,7 +379,7 @@ describe('Payment service', () => {
         )
     })
 
-    describe('Referrals', () => {
+    describe.only('Referrals', () => {
         it('should add referral credits if under total referred amount', async () => {
             const payment = PaymentFactory.getSingleRecord()
             const returnedPayment = {
@@ -384,7 +401,7 @@ describe('Payment service', () => {
 
         it('should partially add referral credits if over total referred amount', async () => {
             const payment = PaymentFactory.getSingleRecord()
-            payment.earnedCredits = MAX_REFERRED_CREDITS - 100
+            payment.earnedCredits = MAX_REFERRED_CREDITS - 10
             const returnedPayment = {
                 ...(payment as PaymentDocument),
                 save: jest.fn()
@@ -396,13 +413,13 @@ describe('Payment service', () => {
             await PaymentService.addReferralCredits(payment.owner)
 
             expect(returnedPayment.earnedCredits).toEqual(MAX_REFERRED_CREDITS)
-            expect(returnedPayment.credits).toEqual(100)
+            expect(returnedPayment.credits).toEqual(10)
             expect(returnedPayment.save).toHaveBeenCalled()
         })
 
         it('should not add referral credits if completely over total referred amount', async () => {
             const payment = PaymentFactory.getSingleRecord()
-            payment.earnedCredits = MAX_REFERRED_CREDITS - 100
+            payment.earnedCredits = MAX_REFERRED_CREDITS - 10
             const returnedPayment = {
                 ...(payment as PaymentDocument),
                 save: jest.fn()
@@ -414,7 +431,7 @@ describe('Payment service', () => {
             await PaymentService.addReferralCredits(payment.owner)
 
             expect(returnedPayment.earnedCredits).toEqual(MAX_REFERRED_CREDITS)
-            expect(returnedPayment.credits).toEqual(100)
+            expect(returnedPayment.credits).toEqual(10)
             expect(returnedPayment.save).toHaveBeenCalled()
         })
     })
@@ -430,11 +447,11 @@ describe('Payment service', () => {
         mockedPaymentModel.findOne.mockReturnValueOnce(returnedPayment)
 
         // @ts-ignore
-        await PaymentService.changePlan(payment.owner, PaymentPlan.MONTHLY)
+        await PaymentService.changePlan(payment.owner, PaymentPlan.BUSINESS)
 
         expect(mockedStripe.changePlan).toHaveBeenCalledWith(
             returnedPayment,
-            PaymentPlan.MONTHLY
+            PaymentPlan.BUSINESS
         )
     })
 })

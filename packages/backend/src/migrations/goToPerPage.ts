@@ -1,5 +1,4 @@
 import { Types } from 'mongoose'
-import WorkflowModel from 'models/workflow'
 import { FlowNode, NodeType } from '@bitpull/worker'
 import CatalogModel from 'models/catalog'
 
