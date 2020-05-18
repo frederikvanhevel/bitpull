@@ -46,3 +46,9 @@ export const changePaymentPlan = (plan: Plan) => {
         }
     })
 }
+
+export const CANCEL_PLAN = gql`
+    mutation cancelPlan {
+        cancelPlan
+    }
+`

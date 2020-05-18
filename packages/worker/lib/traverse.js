@@ -10,8 +10,8 @@ const helper_1 = require("./utils/helper");
 const common_1 = require("./typedefs/common");
 const browser_1 = __importDefault(require("./browser"));
 const errors_1 = require("./nodes/common/errors");
-const errors_2 = require("./utils/errors");
 const logger_1 = __importDefault(require("./utils/logging/logger"));
+const timer_1 = __importDefault(require("./utils/timer"));
 const DEFAULT_OPTIONS = {
     integrations: [],
     settings: {
@@ -114,15 +114,18 @@ class Traverser {
         const originalLogFn = this.options.onLog;
         const originalStorageFn = this.options.onStorage;
         const { maxErrorsBeforeExit } = this.options.settings;
+        const { browser } = this.context;
         const logs = [];
         const errors = [];
         const files = [];
         this.options.onError = (node, error) => {
             this.errorCount++;
-            if (!!maxErrorsBeforeExit &&
-                this.errorCount > maxErrorsBeforeExit) {
-                throw new errors_2.FlowError(errors_1.NodeError.TOO_MANY_ERRORS);
-            }
+            // if (
+            //     !!maxErrorsBeforeExit &&
+            //     this.errorCount > maxErrorsBeforeExit
+            // ) {
+            //     throw new FlowError(NodeError.TOO_MANY_ERRORS)
+            // }
             errors.push({
                 nodeId: node.id,
                 nodeType: node.type,
@@ -148,6 +151,8 @@ class Traverser {
             originalStorageFn && originalStorageFn(data);
         };
         let status = common_1.Status.UNDETERMINED;
+        const timer = new timer_1.default();
+        timer.start();
         try {
             await this.parseNode({ node });
             if (errors.length === logs.length) {
@@ -158,8 +163,9 @@ class Traverser {
             }
         }
         catch (error) {
-            if (!this.canceled)
+            if (!this.canceled) {
                 logger_1.default.error(new Error('Fatal error during run'), error);
+            }
             status = common_1.Status.ERROR;
         }
         finally {
@@ -168,11 +174,13 @@ class Traverser {
             this.options.onStorage = originalStorageFn;
             await this.cleanup();
         }
+        const duration = timer.end();
         return {
             status,
             errors,
             logs,
-            files
+            files,
+            stats: Object.assign(Object.assign({}, browser.getStats()), { duration })
         };
     }
     cancel() {

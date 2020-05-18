@@ -15,11 +15,16 @@ const connect = async () => {
     }
 }
 
+const disconnect = async () => {
+    await mongoose.disconnect()
+}
+
 const isHealthy = () =>
     mongoose.connection.readyState === mongoose.STATES.connected
 
 const Database = {
     connect,
+    disconnect,
     isHealthy
 }
 

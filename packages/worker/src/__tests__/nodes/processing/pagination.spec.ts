@@ -2,7 +2,7 @@ import { HtmlNode } from '../../../nodes/processing/html/typedefs'
 import { NodeType, NodeInput } from '../../../typedefs/node'
 import { FunctionNode } from '../../../nodes/export/function/typedefs'
 import { PaginationNode } from '../../../nodes/processing/pagination/typedefs'
-import { TestEnvironment, hasResult } from '../../utils/environment'
+import { TestEnvironment, hasResult, htmlHasResult } from '../../utils/environment'
 import { createNode, createInput } from '../../utils/factory'
 
 jest.setTimeout(10000)
@@ -42,7 +42,7 @@ describe('Pagination node', () => {
 
     it('should go to each link', async () => {
         const fn = jest.fn()
-        let lastInput: NodeInput<HtmlNode>
+        let lastContent: string
         const root = createNode<HtmlNode>(NodeType.HTML)
         const node = createNode<PaginationNode>(NodeType.PAGINATION, {
             pagination: {
@@ -54,9 +54,9 @@ describe('Pagination node', () => {
             children: [
                 createNode<FunctionNode>(NodeType.FUNCTION, {
                     id: '1',
-                    function: (input: any) => {
+                    function: async (input: any) => {
                         fn()
-                        lastInput = input
+                        lastContent = await input.page.content()
                     }
                 })
             ]
@@ -75,7 +75,7 @@ describe('Pagination node', () => {
 
         await environment.parseNode(input)
 
-        expect(await hasResult(lastInput!, 'Hello world two')).toBeTruthy()
+        expect(htmlHasResult(lastContent!, 'Hello world two')).toBeTruthy()
         expect(fn).toHaveBeenCalledTimes(2)
     })
 

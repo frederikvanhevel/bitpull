@@ -39,8 +39,11 @@ export enum OAuthProvider {
 }
 
 export enum Plan {
+  BUSINESS = "BUSINESS",
+  FREE = "FREE",
   METERED = "METERED",
-  MONTHLY = "MONTHLY",
+  PREMIUM = "PREMIUM",
+  SMALL = "SMALL",
 }
 
 export enum ResourceType {

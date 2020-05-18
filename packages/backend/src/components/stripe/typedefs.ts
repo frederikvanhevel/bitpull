@@ -1,12 +1,15 @@
 export enum StripePaymentPlan {
+    FREE = 'free',
     METERED = 'metered',
-    MONTHLY = 'monthly'
+    SMALL = 'small',
+    BUSINESS = 'business',
+    PREMIUM = 'premium'
 }
 
 export interface StripeSubscription {
     customerId: string
     subscriptionId: string
-    meteredPlanId: string
+    planId: string
     sourceId?: string
     sourceLast4?: string
     sourceBrand?: string

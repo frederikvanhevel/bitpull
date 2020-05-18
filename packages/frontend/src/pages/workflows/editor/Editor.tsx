@@ -58,6 +58,7 @@ const Editor: React.FC = () => {
         if (!selectedNode) return
 
         const newNode = {
+            // @ts-ignore
             id: selectedNode.id,
             parent: selectedNode.parent,
             ...node

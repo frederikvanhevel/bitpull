@@ -115,7 +115,7 @@ const pagination: NodeParser<PaginationNode, PaginationParseResult> = async (
                 allResults.push(data)
             }
         })
-        // await forkedPage.close()
+        await forkedPage.close()
     }
 
     // parse current page

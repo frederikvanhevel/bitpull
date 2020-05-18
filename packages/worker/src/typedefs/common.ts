@@ -116,9 +116,16 @@ export interface ParseResult {
     logs: ParseLog[]
     errors: ErrorLog[]
     files: FileStorageObject[]
+    stats: Stats
 }
 
 export interface ErrorMessage {
     code: string
     message: string
+}
+
+export interface Stats {
+    pages: string[]
+    pageCount: number
+    duration: number
 }

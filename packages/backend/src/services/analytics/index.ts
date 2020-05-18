@@ -2,7 +2,7 @@ import subMonths from 'date-fns/subMonths'
 import subWeeks from 'date-fns/subWeeks'
 import AnalyticsModel from 'models/analytics'
 import { Job } from 'models/job'
-import { Status } from '@bitpull/worker'
+import { Status, Stats } from '@bitpull/worker'
 import { User } from 'models/user'
 import { AnalyticsPeriod } from './typedefs'
 
@@ -41,15 +41,17 @@ const getTotalsPerJob = async (
         .filter(analytics => !!analytics.job)
         .map(analytics => ({
             ...analytics,
+            // @ts-ignore
             job: { id: analytics.job._id, ...analytics.job }
         }))
 }
 
-const save = async (job: Job, status: Status, duration?: number) => {
+const save = async (job: Job, status: Status, stats?: Stats) => {
     const analyticsEntry = new AnalyticsModel({
         job: job._id,
         status,
-        duration,
+        duration: stats?.duration,
+        pages: stats?.pageCount,
         owner: job.owner,
         date: new Date()
     })

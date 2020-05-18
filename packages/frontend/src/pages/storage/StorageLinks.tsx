@@ -162,7 +162,8 @@ const StorageLinks: React.FC<Props> = ({ entry, count }) => {
                                 >
                                     {Icon ? <Icon /> : null}
                                     <Link
-                                        href={item.url}
+                                        href={`${process.env.BACKEND}/api/storage/${item._id}`}
+                                        download={item.fileName}
                                         target={
                                             item.service !==
                                             StorageService.NATIVE

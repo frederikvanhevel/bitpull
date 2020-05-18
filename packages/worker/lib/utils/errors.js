@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.FlowError = exports.ErrorMessages = void 0;
 const errors_1 = require("../nodes/common/errors");
 const errors_2 = require("../nodes/processing/csv/errors");
 const errors_3 = require("../nodes/processing/excel/errors");
@@ -86,6 +87,7 @@ exports.ErrorMessages = {
     // Html error
     [errors_13.HtmlError.NAVIGATION_FAILED]: 'Could not navigate to page',
     [errors_13.HtmlError.LINKED_FIELD_MISSING]: 'Linked field is not defined',
+    [errors_13.HtmlError.LINKED_FIELD_NOT_FOUND]: 'Could not find linked url',
     [errors_13.HtmlError.LINKS_MISSING]: 'No links are defined',
     [errors_13.HtmlError.INVALID_URL]: 'The given url is invalid',
     // Pagination error

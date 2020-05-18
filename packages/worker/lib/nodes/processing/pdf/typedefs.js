@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PdfFormat = void 0;
 var PdfFormat;
 (function (PdfFormat) {
     PdfFormat["LETTER"] = "Letter";

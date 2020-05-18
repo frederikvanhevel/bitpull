@@ -28,7 +28,7 @@ export type Query = {
   getStorageEntry: Array<StorageLink>;
   getStorageEntries: Array<Storage>;
   dummy?: Maybe<Scalars['String']>;
-  hasPaymentMethod: Scalars['Boolean'];
+  hasCreditsRemaining: Scalars['Boolean'];
   getPaymentDetails: PaymentDetails;
   getInvoices: Array<Invoice>;
   getUsageSummary?: Maybe<UsageSummary>;
@@ -106,6 +106,7 @@ export type Mutation = {
   feedback: Scalars['Boolean'];
   updatePayment: Scalars['Boolean'];
   changePlan: Scalars['Boolean'];
+  cancelPlan: Scalars['Boolean'];
   addCatalogItem: CatalogItem;
   pickCatalogItem: Workflow;
 };
@@ -540,7 +541,6 @@ export type StorageLink = {
    __typename?: 'StorageLink';
   _id: Scalars['String'];
   service: StorageService;
-  url: Scalars['String'];
   fileName: Scalars['String'];
   contentType: Scalars['String'];
   expiryDate?: Maybe<Scalars['DateTime']>;
@@ -582,8 +582,11 @@ export type TokenInput = {
 };
 
 export enum Plan {
+  Free = 'FREE',
   Metered = 'METERED',
-  Monthly = 'MONTHLY'
+  Small = 'SMALL',
+  Business = 'BUSINESS',
+  Premium = 'PREMIUM'
 }
 
 export type PaymentDetails = {
@@ -626,5 +629,7 @@ export type CatalogItem = {
 export type CatalogItemInput = {
   name: Scalars['String'];
   title: Scalars['String'];
+  description: Scalars['String'];
   node: Scalars['JSONObject'];
+  order: Scalars['Int'];
 };

@@ -37,7 +37,7 @@ jobs:
             - node_modules
 
       - run:
-          name: jest tests
+          name: Unit tests
           command: |
             mkdir -p test-results/jest
             yarn run test
@@ -108,6 +108,26 @@ jobs:
             docker build -t "gcr.io/$GOOGLE_PROJECT_ID/backend:$CIRCLE_SHA1" -t "gcr.io/$GOOGLE_PROJECT_ID/backend:latest" -f packages/backend/Dockerfile .
             docker push "gcr.io/$GOOGLE_PROJECT_ID/backend:$CIRCLE_SHA1"
 
+  migrate:
+    docker:
+      - image: circleci/node:12
+      
+    steps:
+      - checkout
+      - restore_cache:
+          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+
+      - restore_cache:
+          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+
+      - run: yarn install
+      - run: npx lerna bootstrap
+      - run:
+          name: Database migration
+          working_directory: packages/backend
+          command: |
+            yarn run db:migrate
+
   build-frontend:
     docker:
       - image: google/cloud-sdk
@@ -146,25 +166,28 @@ workflows:
   version: 2
   pull-request:
     jobs:
-      # - node-tests
+      - node-tests
       - setup-infra:
           context: BITPULL_DEVELOPMENT
-          # requires:
-          #   - node-tests
-      # - node-tests
+          requires:
+            - node-tests
       - ops-deployment:
           context: BITPULL_DEVELOPMENT
           requires:
             - setup-infra
-      - build-backend:
+      - migrate:
           context: BITPULL_DEVELOPMENT
           requires:
             - ops-deployment
+      - build-backend:
+          context: BITPULL_DEVELOPMENT
+          requires:
+            - migrate
             # - node-tests
       - build-frontend:
           context: BITPULL_DEVELOPMENT
           requires:
-            - ops-deployment
+            - migrate
           #   - node-tests
       - push-and-deploy:
           context: BITPULL_DEVELOPMENT

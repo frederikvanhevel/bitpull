@@ -21,7 +21,8 @@ import {
     ParseLog,
     ErrorLog,
     FileStorageObject,
-    ParseResult
+    ParseResult,
+    Stats
 } from './typedefs/common'
 import { HTMLSelector } from './nodes/processing/selectors'
 import { CollectNode, CollectField } from './nodes/processing/collect/typedefs'
@@ -106,7 +107,8 @@ export type {
     ParseLog,
     ErrorLog,
     FileStorageObject,
-    ParseResult
+    ParseResult,
+    Stats
 }
 
 export default Traverser

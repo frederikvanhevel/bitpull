@@ -1,5 +1,6 @@
 import Agenda from 'agenda'
 import mongoose from 'mongoose'
+import { DEFAULT_TIMEOUT } from 'services/workflow'
 import { JobProcessorDefinition, JobType } from './typedefs'
 
 let scheduler: Agenda
@@ -21,8 +22,11 @@ const start = async () => {
 
 const scheduleJob = (definition: JobProcessorDefinition) => {
     const { name, job, repeat, onSuccess, onFail } = definition
+    const options = {
+        lockLifetime: DEFAULT_TIMEOUT
+    }
 
-    scheduler.define<JobProcessorDefinition>(name, job)
+    scheduler.define<JobProcessorDefinition>(name, options, job)
 
     if (repeat) scheduler.every<JobProcessorDefinition>(repeat, name)
     if (onSuccess) scheduler.on(`success:${name}`, onSuccess)
@@ -41,6 +45,10 @@ const runJob = (
     scheduler.on(`fail:${type}`, onFail)
 }
 
+const cancelJob = async (id: string) => {
+    await scheduler.cancel({ _id: mongoose.Types.ObjectId(id) })
+}
+
 const shutdown = async () => {
     if (!scheduler) return
     await scheduler.stop()
@@ -51,6 +59,7 @@ const Scheduler = {
     start,
     scheduleJob,
     runJob,
+    cancelJob,
     shutdown
 }
 

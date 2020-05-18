@@ -12,7 +12,7 @@ import { isTestEnv } from '../utils/common'
 import { stripScriptTags, removeAttribute } from '../utils/scripts'
 import Logger from '../utils/logging/logger'
 import { retryBackoff } from '../utils/delay'
-import { PageCallback, MockHandler, Stats } from './typedefs'
+import { PageCallback, MockHandler } from './typedefs'
 
 const DEFAULT_OPTIONS: ConnectOptions | LaunchOptions = {
     defaultViewport: {
@@ -195,9 +195,9 @@ class CustomBrowser {
         delete this.browser
     }
 
-    getStats(): Stats {
+    getStats() {
         return {
-            pages: this.pages,
+            pages: Array.from(this.pages),
             pageCount: this.pages.size
         }
     }

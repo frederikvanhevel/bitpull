@@ -1,12 +1,13 @@
 import { makeExecutableSchema, IResolvers } from 'graphql-tools'
 import { gql } from 'apollo-server'
 import {
-    hasPaymentMethod,
+    hasCreditsRemaining,
     updatePayment,
     getPaymentDetails,
     getInvoices,
     getUsageSummary,
-    changePlan
+    changePlan,
+    cancelPlan
 } from '../resolvers/payment'
 import {
     TokenInput,
@@ -20,7 +21,7 @@ const query = gql`
     directive @isAuthenticated on FIELD_DEFINITION
 
     type Query {
-        hasPaymentMethod: Boolean! @isAuthenticated
+        hasCreditsRemaining: Boolean! @isAuthenticated
         getPaymentDetails: PaymentDetails! @isAuthenticated
         getInvoices: [Invoice!]! @isAuthenticated
         getUsageSummary: UsageSummary @isAuthenticated
@@ -29,18 +30,20 @@ const query = gql`
     type Mutation {
         updatePayment(input: TokenInput!): Boolean!
         changePlan(plan: Plan!): Boolean!
+        cancelPlan: Boolean!
     }
 `
 const resolvers: IResolvers = {
     Query: {
-        hasPaymentMethod,
+        hasCreditsRemaining,
         getPaymentDetails,
         getInvoices,
         getUsageSummary
     },
     Mutation: {
         updatePayment,
-        changePlan
+        changePlan,
+        cancelPlan
     }
 }
 

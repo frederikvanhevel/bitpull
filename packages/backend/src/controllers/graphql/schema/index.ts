@@ -30,8 +30,11 @@ export default mergeSchemas({
         catalogSchema
     ],
     schemaDirectives: {
+        // @ts-ignore
         isAuthenticated: IsAuthenticatedDirective,
+        // @ts-ignore
         isSuperuser: IsSuperuserDirective,
+        // @ts-ignore
         RateLimit: RateLimitDirective
     }
 })

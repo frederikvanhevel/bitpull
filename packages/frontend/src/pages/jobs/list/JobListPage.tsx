@@ -80,11 +80,11 @@ const JobListPage: React.FC = () => {
         return null
     }
 
-    useEffect(() => {
-        if (error) stopPolling()
-    }, [error])
+    // useEffect(() => {
+    //     if (error) stopPolling()
+    // }, [error])
 
-    if (error) return <ErrorScreen />
+    // if (error) return <ErrorScreen />
     if (!data && loading) return <Loader />
 
     return (

@@ -15,7 +15,6 @@ export const Storage = gql`
     type StorageLink {
         _id: String!
         service: StorageService!
-        url: String!
         fileName: String!
         contentType: String!
         expiryDate: DateTime

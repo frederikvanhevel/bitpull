@@ -5,10 +5,10 @@ import { getFieldsFromHtml } from '../selectors'
 import { hasChildOfTypes } from '../../../utils/helper'
 import { HtmlNode } from '../html/typedefs'
 import { NodeError } from '../../../nodes/common/errors'
+import { FlowError } from '../../../utils/errors'
 import { mergeData } from './helper'
 import { CollectError } from './errors'
 import { CollectNode, CollectParseResult } from './typedefs'
-import { FlowError } from '../../../utils/errors'
 
 const collect: NodeParser<CollectNode, CollectParseResult> = async (
     input,

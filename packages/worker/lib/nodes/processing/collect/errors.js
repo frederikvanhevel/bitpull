@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.CollectError = void 0;
 var CollectError;
 (function (CollectError) {
     CollectError["FIELDS_MISSING"] = "FIELDS_MISSING";

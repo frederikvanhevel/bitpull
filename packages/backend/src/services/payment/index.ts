@@ -1,9 +1,9 @@
-// import isFuture from 'date-fns/isFuture'
 import Stripe from 'components/stripe'
 import PaymentModel, {
     REFERRED_CREDIT_AMOUNT,
     MAX_REFERRED_CREDITS,
-    PaymentPlan
+    PaymentPlan,
+    PLAN_CREDIT_AMOUNT
 } from 'models/payment'
 import { Token } from 'typedefs/graphql'
 import { NotFoundError } from 'utils/errors'
@@ -11,6 +11,8 @@ import UserModel, { User, UserDocument } from 'models/user'
 import MailService from 'services/mail'
 import Segment, { TrackingEvent } from 'components/segment'
 import ReferralService from 'services/referral'
+import { Stats } from '@bitpull/worker'
+import Logger from 'utils/logging/logger'
 
 const getDetails = async (user: User) => {
     return await PaymentModel.findOne({ owner: user._id })
@@ -27,17 +29,19 @@ const getDetails = async (user: User) => {
         .lean()
 }
 
-const createSubscription = async (user: User, plan: PaymentPlan) => {
+const createCustomer = async (user: User, plan: PaymentPlan) => {
     const { id, email, firstName, lastName } = user
 
-    const details = await Stripe.createCustomer(
+    const customerId = await Stripe.createCustomer(
         email,
-        `${firstName} ${lastName}`,
-        plan
+        `${firstName} ${lastName}`
     )
+
+    const details = await Stripe.createSubscription(customerId, plan)
 
     const payment = new PaymentModel({
         ...details,
+        customerId,
         plan,
         owner: id
     })
@@ -60,7 +64,7 @@ const updateUserInfo = async (
     await Stripe.updateCustomer(payment.customerId, data)
 }
 
-const reportUsage = async (user: User, seconds: number) => {
+const reportUsage = async (user: User, stats: Stats) => {
     const payment = await PaymentModel.findOne({
         owner: user._id
     })
@@ -69,40 +73,42 @@ const reportUsage = async (user: User, seconds: number) => {
         throw new NotFoundError()
     }
 
-    if (payment.plan !== PaymentPlan.METERED) return
-
-    let secondsToReport = 0
+    let pagesToReport = 0
 
     if (payment.credits > 0) {
-        const diff = payment.credits - seconds
+        const diff = payment.credits - stats.pageCount
 
         if (diff < 0) {
             payment.credits = 0
-            secondsToReport = Math.abs(diff)
+            pagesToReport = Math.abs(diff)
 
-            await MailService.sendOutOfFreeCreditsEmail(user)
+            await MailService.sendOutOfCreditsEmail(user)
         } else {
             payment.credits = diff
         }
 
         await payment.save()
     } else {
-        secondsToReport = seconds
+        pagesToReport = stats.pageCount
     }
 
-    if (secondsToReport > 0) {
-        await Stripe.reportUsage(payment.meteredPlanId, secondsToReport)
+    if (pagesToReport > 0 && payment.plan === PaymentPlan.METERED) {
+        await Stripe.reportUsage(payment.planId, pagesToReport)
     }
+
+    Logger.info(`Billed user ${user.id} for ${stats.pageCount} pages`)
 }
 
-const hasPaymentMethod = async (userId: string | UserDocument['_id']) => {
+const hasCreditsRemaining = async (userId: string | UserDocument['_id']) => {
     const payment = await PaymentModel.findOne({
         owner: userId
     }).lean()
 
-    if (!payment || payment.disabled) return false
+    if (!payment) return false
 
-    return !!payment.sourceId || payment.credits > 0
+    if (payment.plan === PaymentPlan.METERED) return true
+
+    return payment.credits > 0
 }
 
 const updatePayment = async (user: User, token: Token) => {
@@ -140,7 +146,12 @@ const disable = async (stripeCustomerId: string) => {
         throw new NotFoundError()
     }
 
-    payment.disabled = true
+    if (
+        payment.plan !== PaymentPlan.FREE &&
+        payment.plan !== PaymentPlan.METERED
+    ) {
+        payment.credits = 0
+    }
 
     await payment.save()
 
@@ -150,7 +161,7 @@ const disable = async (stripeCustomerId: string) => {
         throw new NotFoundError()
     }
 
-    Segment.track(TrackingEvent.PAYMENT_DISABLE, user)
+    Segment.track(TrackingEvent.PAYMENT_DISABLED, user)
 
     MailService.sendPaymentFailedEmail(user.email)
 }
@@ -176,7 +187,9 @@ const getUsageSummary = async (user: User) => {
         throw new NotFoundError()
     }
 
-    return await Stripe.getUsageSummary(payment.meteredPlanId)
+    if (payment.plan !== PaymentPlan.METERED) return
+
+    return await Stripe.getUsageSummary(payment.planId)
 }
 
 const addReferralCredits = async (user: User) => {
@@ -218,10 +231,28 @@ const changePlan = async (user: User, plan: PaymentPlan) => {
 
     if (payment.plan === plan) return
 
-    const planId = await Stripe.changePlan(payment, plan)
+    if (plan !== PaymentPlan.FREE && !payment.sourceId) {
+        throw new Error('User has no payment card')
+    }
+
+    if (payment.plan === PaymentPlan.METERED || plan === PaymentPlan.METERED) {
+        await Stripe.removeSubscription(payment.subscriptionId)
+        const { subscriptionId, planId } = await Stripe.createSubscription(
+            payment.customerId,
+            plan
+        )
+
+        payment.subscriptionId = subscriptionId
+        payment.planId = planId
+    } else {
+        await Stripe.changePlan(payment, plan)
+    }
 
     payment.plan = plan
-    payment.recurringPlanId = planId
+
+    if (plan !== PaymentPlan.FREE && plan !== PaymentPlan.METERED) {
+        payment.credits = PLAN_CREDIT_AMOUNT[plan]
+    }
 
     Segment.track(TrackingEvent.PAYMENT_CHANGE_PLAN, user, {
         properties: {
@@ -232,18 +263,62 @@ const changePlan = async (user: User, plan: PaymentPlan) => {
     await payment.save()
 }
 
+const refillCredits = async (stripeCustomerId: string) => {
+    const payment = await PaymentModel.findOne({
+        customerId: stripeCustomerId
+    })
+
+    if (!payment) {
+        throw new NotFoundError()
+    }
+
+    if (payment.plan === PaymentPlan.METERED) return
+
+    payment.credits = PLAN_CREDIT_AMOUNT[payment.plan]
+
+    await payment.save()
+
+    const user = await UserModel.findById(payment.owner)
+
+    if (!user) {
+        throw new NotFoundError()
+    }
+
+    Segment.track(TrackingEvent.PAYMENT_CREDITS_REFILLED, user)
+}
+
+const getUserByCustomerId = async (stripeCustomerId: string) => {
+    const payment = await PaymentModel.findOne({
+        customerId: stripeCustomerId
+    })
+
+    if (!payment) {
+        throw new NotFoundError()
+    }
+
+    const user = await UserModel.findById(payment.owner)
+
+    if (!user) {
+        throw new NotFoundError()
+    }
+
+    return user
+}
+
 const PaymentService = {
     getDetails,
     updateUserInfo,
-    createSubscription,
+    createCustomer,
     reportUsage,
-    hasPaymentMethod,
+    hasCreditsRemaining,
     updatePayment,
     disable,
     getInvoices,
     getUsageSummary,
     addReferralCredits,
-    changePlan
+    changePlan,
+    refillCredits,
+    getUserByCustomerId
 }
 
 export default PaymentService

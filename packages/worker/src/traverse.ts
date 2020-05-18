@@ -24,6 +24,7 @@ import CustomBrowser from './browser'
 import { NodeError } from './nodes/common/errors'
 import { FlowError } from './utils/errors'
 import Logger from './utils/logging/logger'
+import Timer from './utils/timer'
 
 const DEFAULT_OPTIONS: TraverseOptions = {
     integrations: [],
@@ -168,6 +169,7 @@ class Traverser {
         const originalLogFn = this.options.onLog
         const originalStorageFn = this.options.onStorage
         const { maxErrorsBeforeExit } = this.options.settings
+        const { browser } = this.context
 
         const logs: ParseLog[] = []
         const errors: ErrorLog[] = []
@@ -176,12 +178,12 @@ class Traverser {
         this.options.onError = (node: FlowNode, error: FlowError) => {
             this.errorCount++
 
-            if (
-                !!maxErrorsBeforeExit &&
-                this.errorCount > maxErrorsBeforeExit
-            ) {
-                throw new FlowError(NodeError.TOO_MANY_ERRORS)
-            }
+            // if (
+            //     !!maxErrorsBeforeExit &&
+            //     this.errorCount > maxErrorsBeforeExit
+            // ) {
+            //     throw new FlowError(NodeError.TOO_MANY_ERRORS)
+            // }
 
             errors.push({
                 nodeId: node.id,
@@ -221,6 +223,8 @@ class Traverser {
         }
 
         let status = Status.UNDETERMINED
+        const timer = new Timer()
+        timer.start()
 
         try {
             await this.parseNode({ node })
@@ -231,7 +235,9 @@ class Traverser {
                 status = errors.length ? Status.PARTIAL_SUCCESS : Status.SUCCESS
             }
         } catch (error) {
-            if (!this.canceled) Logger.error(new Error('Fatal error during run'), error)
+            if (!this.canceled) {
+                Logger.error(new Error('Fatal error during run'), error)
+            }
             status = Status.ERROR
         } finally {
             this.options.onError = originalErrorFn
@@ -240,11 +246,17 @@ class Traverser {
             await this.cleanup()
         }
 
+        const duration = timer.end()
+
         return {
             status,
             errors,
             logs,
-            files
+            files,
+            stats: {
+                ...browser.getStats(),
+                duration
+            }
         }
     }
 

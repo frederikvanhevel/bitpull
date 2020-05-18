@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.StorageError = void 0;
 var StorageError;
 (function (StorageError) {
     StorageError["STORAGE_OPTIONS_MISSING"] = "STORAGE_OPTIONS_MISSING";

@@ -246,35 +246,88 @@ const start = async () => {
     // }
 
     const node = {
-        id: 'b8f00f63-a81c-40b5-9490-507dc111a8bb',
-        type: 'HTML_MULTIPLE',
-        links: [
-            'https://www.nytimes.com/',
-            'https://www.nytimes.com/',
-            'https://www.nytimes.com/'
-            // 'https://www.nytimes.com/2020/04/28/us/coronavirus-updates.html'
-        ],
-        goToPerPage: '183675a1-a29e-478a-afaa-2cfadbbab278',
-        goToOnEnd: '0d653518-f677-4ed7-a327-96789d775b9d',
+        id: '0be085ab-35d6-4527-98a1-37f274872157',
+        type: 'HTML',
+        link: 'https://www.ebay.com/sch/i.html?_nkw=sony+headphones',
         children: [
             {
-                id: '183675a1-a29e-478a-afaa-2cfadbbab278',
-                type: 'COLLECT',
-                fields: [
-                    {
-                        id: 'b0971d9b-ceda-406f-8cc0-087146e83acc',
-                        label: 'headline',
-                        selector: {
-                            value: '.balancedHeadline',
-                            attribute: 'text'
-                        }
+                id: '261c7ef8-2aba-4c60-b618-73a1d63952ca',
+                type: 'PAGINATION',
+                pagination: {
+                    nextLink: {
+                        value: '.pagination__next'
                     }
-                ]
-            },
-            {
-                id: '0d653518-f677-4ed7-a327-96789d775b9d',
-                type: 'FUNCTION',
-                function: (data: any) => console.log('RESULT', data)
+                },
+                goToPerPage: 'b677d005-fbdc-4b14-af30-983a9cd2c15a',
+                children: [
+                    {
+                        id: 'b677d005-fbdc-4b14-af30-983a9cd2c15a',
+                        type: 'COLLECT',
+                        fields: [
+                            {
+                                id: '4ca2b59c-ef0a-42bc-b9a2-39a91c8669e1',
+                                label: 'link',
+                                selector: {
+                                    value: '.s-item__title--has-tags',
+                                    attribute: 'href'
+                                }
+                            },
+                            {
+                                id: 'a45958fa-e7f0-4b75-9506-d156b3d6b434',
+                                label: 'title',
+                                selector: {
+                                    value: '.s-item__title--has-tags',
+                                    attribute: 'text'
+                                }
+                            },
+                            {
+                                id: '18ee2039-93eb-481d-9e7a-095489f8b3ca',
+                                label: 'price',
+                                selector: {
+                                    value: '.s-item__price',
+                                    attribute: 'text'
+                                }
+                            }
+                        ],
+                        children: [
+                            {
+                                id: 'b9426164-0381-4958-a6ee-4bff02bdfa71',
+                                type: 'HTML_LINKED',
+                                linkedField: 'link',
+                                children: [
+                                    {
+                                        id:
+                                            'b902406a-8dbd-43db-b496-7b69a3b00225',
+                                        type: 'COLLECT',
+                                        fields: [
+                                            {
+                                                id:
+                                                    '80e96cd4-d92c-4f46-bad2-5d60a43a6c98',
+                                                label: 'condition',
+                                                selector: {
+                                                    value: '#vi-itm-cond',
+                                                    attribute: 'text'
+                                                }
+                                            }
+                                        ],
+                                        append: true
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'dec92d46-c023-48c0-ac0c-31ac4441ce8e',
+                        type: 'CSV',
+                        children: [
+                            {
+                                id: '6d5569c6-8812-4bcd-82c3-8924a95e15df',
+                                type: 'STORAGE'
+                            }
+                        ]
+                    }
+                ],
+                goToOnEnd: 'dec92d46-c023-48c0-ac0c-31ac4441ce8e'
             }
         ]
     }

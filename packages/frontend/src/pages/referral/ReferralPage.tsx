@@ -79,7 +79,7 @@ const ReferralPage: React.FC = () => {
 
             <Toolbar>
                 <Typography variant="body2">
-                    Refer a friend and earn bonus credits to run your jobs for
+                    Refer a friend and earn bonus pages to run your jobs for
                     free
                 </Typography>
             </Toolbar>
@@ -95,7 +95,7 @@ const ReferralPage: React.FC = () => {
                                 className={classes.credits}
                             >
                                 Your referral bonus:{' '}
-                                <strong>{earnedCredits}</strong> credits
+                                <strong>{earnedCredits}</strong> pages
                             </Typography>
 
                             <ProgressBar

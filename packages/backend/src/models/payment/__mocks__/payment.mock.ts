@@ -12,16 +12,15 @@ export const PaymentFactory = new InstanceFactory<Payment>(
             id: id.toHexString(),
             _id: id,
             owner: UserFactory.getSingleRecord(),
-            plan: PaymentPlan.METERED,
+            plan: PaymentPlan.FREE,
             customerId: faker.random.uuid(),
             subscriptionId: faker.random.uuid(),
             sourceId: faker.random.uuid(),
             sourceLast4: faker.random.alphaNumeric(4),
             sourceBrand: faker.random.word(),
-            disabled: false,
             credits: 0,
             earnedCredits: 0,
-            meteredPlanId: faker.random.uuid()
+            planId: faker.random.uuid()
         }
     }
 )

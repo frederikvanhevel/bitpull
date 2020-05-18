@@ -1,1 +1,1 @@
-{"version":3,"file":"errors.js","sourceRoot":"","sources":["../../../../src/nodes/export/dropbox/errors.ts"],"names":[],"mappings":";;AAAA,IAAY,YAEX;AAFD,WAAY,YAAY;IACpB,+CAA+B,CAAA;AACnC,CAAC,EAFW,YAAY,GAAZ,oBAAY,KAAZ,oBAAY,QAEvB"}
+{"version":3,"file":"errors.js","sourceRoot":"","sources":["../../../../src/nodes/export/dropbox/errors.ts"],"names":[],"mappings":";;;AAAA,IAAY,YAEX;AAFD,WAAY,YAAY;IACpB,+CAA+B,CAAA;AACnC,CAAC,EAFW,YAAY,GAAZ,oBAAY,KAAZ,oBAAY,QAEvB"}

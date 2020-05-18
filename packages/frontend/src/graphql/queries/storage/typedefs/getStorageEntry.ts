@@ -14,7 +14,6 @@ export interface getStorageEntry_getStorageEntry {
   _id: string;
   service: StorageService;
   fileName: string;
-  url: string;
   contentType: string;
   expiryDate: any | null;
   createdAt: any;

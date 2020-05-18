@@ -46,8 +46,8 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const defaultTime: Time = {
-    type: ScheduleType.INTERVAL,
-    value: '30 minutes'
+    type: ScheduleType.IMMEDIATELY,
+    value: undefined
 }
 
 const CreateJobPage: React.FC = () => {

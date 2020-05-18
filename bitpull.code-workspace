@@ -18,6 +18,7 @@
 		// 	}
 		// ],
 		"eslint.format.enable": true,
-		"eslint.packageManager": "yarn"
+		"eslint.packageManager": "yarn",
+		"typescript.tsdk": "node_modules/typescript/lib"
 	}
 }

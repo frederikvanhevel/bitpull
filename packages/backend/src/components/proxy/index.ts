@@ -11,7 +11,7 @@ const prepareForSelector = async (node: FlowNode) => {
         options: {
             settings: {
                 puppeteer: {
-                    endpoint: Config.PUPPETEER_ENDPOINT
+                    endpoint: Config.PUPPETEER_ENDPOINT!
                 },
                 proxyEndpoint: proxy,
                 encryption: {
@@ -20,7 +20,8 @@ const prepareForSelector = async (node: FlowNode) => {
                 },
                 exitOnError: true
             }
-        }
+        },
+        timeout: 300000
     })
 
     if (!result) {

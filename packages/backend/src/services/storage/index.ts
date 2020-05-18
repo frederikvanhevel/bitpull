@@ -43,7 +43,7 @@ const save = async (owner: string, payload: Resource) => {
                 }
             },
             $inc: { count: 1 },
-            updatedAt: Date.now()
+            updatedAt: new Date()
         },
         { upsert: true, new: true }
     ).lean()
@@ -85,6 +85,17 @@ const getEntry = async (
     if (!result.length) throw new NotFoundError()
 
     return result[0].links
+}
+
+const getStorageLink = async (linkId: string) => {
+    const entry = await StorageModel.findOne(
+        { 'links._id': Types.ObjectId(linkId) },
+        { 'links.$': 1 }
+    )
+
+    if (!entry || !entry.links.length) throw new NotFoundError()
+
+    return entry.links[0]
 }
 
 const getEntries = async (
@@ -147,6 +158,7 @@ const StorageService = {
     save,
     getEntry,
     getEntries,
+    getStorageLink,
     clean
 }
 

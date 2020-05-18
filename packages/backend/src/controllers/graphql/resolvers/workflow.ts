@@ -24,6 +24,7 @@ import {
 import Worker from 'components/worker'
 import { limitFollowedLinks } from 'services/workflow/helper'
 import Config from 'utils/config'
+import Segment, { TrackingEvent } from 'components/segment'
 import { AuthenticationContext } from '../directives/auth'
 import { pubsub } from '../schema'
 import { SubscriptionEvent } from '../typedefs/workflow'
@@ -133,6 +134,12 @@ export const runWorkflow: GraphQLFieldResolver<
     }
 
     try {
+        Segment.track(TrackingEvent.WORKFLOW_RUN, context.user, {
+            properties: {
+                name: args.name
+            }
+        })
+
         if (context.req) {
             context.req.setTimeout(Config.RUNNER_TIMEOUT)
             context.req.on('close', kill)

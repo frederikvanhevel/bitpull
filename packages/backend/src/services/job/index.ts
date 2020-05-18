@@ -6,10 +6,16 @@ import LogModel from 'models/log'
 import { JobType } from 'components/scheduler/typedefs'
 import PaymentService from 'services/payment'
 import MailService from 'services/mail'
-import { User } from 'models/user'
+import UserModel, { User } from 'models/user'
 import Segment, { TrackingEvent } from 'components/segment'
-import { ScheduleType, JobAttributes } from './typedefs'
 import { addSeconds } from 'date-fns'
+import Agenda from 'agenda'
+import WorkflowModel from 'models/workflow'
+import LogService from 'services/log'
+import { ParseResult, Status } from '@bitpull/worker'
+import Logger from 'utils/logging/logger'
+import AnalyticsService from 'services/analytics'
+import { ScheduleType, JobAttributes, JobArgs } from './typedefs'
 
 export const JOB_LIMIT = 50
 
@@ -79,7 +85,7 @@ const removeJob = async (user: User, jobId: string) => {
 
     Segment.track(TrackingEvent.JOB_REMOVE, user)
 
-    await AgendaJobModel.findByIdAndDelete(jobToRemove.agendaJob)
+    await Scheduler.cancelJob(jobToRemove.agendaJob)
     return await jobToRemove.remove()
 }
 
@@ -103,13 +109,13 @@ const pauseJob = async (user: User, jobId: string) => {
 
 const resumeJob = async (user: User, jobId: string) => {
     const jobToUpdate = await JobModel.findById(jobId)
-    const paymentReady = await PaymentService.hasPaymentMethod(user._id)
+    const hasCredits = await PaymentService.hasCreditsRemaining(user._id)
 
     if (!jobToUpdate) {
         throw new NotFoundError()
     }
 
-    if (!jobToUpdate.owner.equals(user.id) || !paymentReady) {
+    if (!jobToUpdate.owner.equals(user.id) || !hasCredits) {
         throw new NotAllowedError()
     }
 
@@ -158,6 +164,84 @@ const checkIfJobNameExists = async (user: User, name: string) => {
     return !!job
 }
 
+const preRun = async (agendaJob: Agenda.Job): Promise<JobArgs> => {
+    const { workflowId } = agendaJob.attrs.data as JobAttributes
+
+    const job: Job | null = await JobModel.findOne({
+        agendaJob: agendaJob.attrs._id
+    })
+
+    if (!job) {
+        throw new Error('Job not found')
+    }
+
+    const user: User | null = await UserModel.findById(job.owner).lean()
+
+    if (!user) {
+        throw new Error('User not found')
+    }
+
+    Segment.track(TrackingEvent.JOB_RUN, user)
+
+    const hasCredits = await PaymentService.hasCreditsRemaining(job.owner)
+
+    if (!hasCredits) {
+        agendaJob.disable()
+        throw new Error('User has no remaining credits')
+    }
+
+    const workflow = await WorkflowModel.findById(workflowId)
+
+    if (!workflow) {
+        throw new Error('Workflow not found')
+    }
+
+    return {
+        user,
+        job,
+        workflow
+    }
+}
+
+const postRun = async (jobArgs: JobArgs, result: ParseResult) => {
+    const { user, job, workflow } = jobArgs
+
+    await LogService.saveJobLog(job.id, workflow.id, result)
+
+    if (
+        result.status === Status.ERROR ||
+        result.errors.length === result.logs.length - 1
+    ) {
+        Logger.warn(`Job failed: ${JSON.stringify(result.errors)}`)
+        throw new Error(`Workflow failed for job ${job._id}`)
+    }
+
+    if (result.stats.pageCount > 0) {
+        await PaymentService.reportUsage(user, result.stats)
+    }
+
+    await AnalyticsService.save(job, result.status, result.stats)
+
+    await reportResult(
+        user,
+        job.id,
+        result.errors.length > 0,
+        result.stats.duration
+    )
+}
+
+const postRunFail = async (agendaJob: Agenda.Job, error: Error) => {
+    const job = await JobModel.findOne({
+        agendaJob: agendaJob.attrs._id
+    })
+
+    if (!job) return
+
+    Logger.error(new Error(`Job with id ${job._id} failed`), error)
+
+    await AnalyticsService.save(job, Status.ERROR)
+}
+
 const JobService = {
     getJobs,
     createJob,
@@ -166,7 +250,10 @@ const JobService = {
     resumeJob,
     getJobLogs,
     reportResult,
-    checkIfJobNameExists
+    checkIfJobNameExists,
+    preRun,
+    postRun,
+    postRunFail
 }
 
 export default JobService

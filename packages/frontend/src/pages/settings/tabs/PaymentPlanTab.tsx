@@ -1,22 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import {
-    Grid,
-    Typography,
-    makeStyles,
-    Theme,
-    Divider,
-    Paper
-} from '@material-ui/core'
+import { Grid, makeStyles, Theme, Button } from '@material-ui/core'
 import { useSnackbar } from 'notistack'
-import cx from 'classnames'
 import PaddingWrapper from 'components/navigation/PaddingWrapper'
-import { CheckCircle, RemoveCircle } from '@material-ui/icons'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import { getPaymentDetails } from 'queries/payment/typedefs/getPaymentDetails'
 import { GET_PAYMENT_DETAILS } from 'queries/payment'
 import { Plan } from 'typedefs/graphql'
-import { CHANGE_PLAN } from 'mutations/payment'
-import LoadingButton from 'components/ui/buttons/LoadingButton'
+import { CHANGE_PLAN, CANCEL_PLAN } from 'mutations/payment'
 import {
     changePlan,
     changePlanVariables
@@ -26,111 +16,105 @@ import { StripeProvider, Elements } from 'react-stripe-elements'
 import ErrorScreen from 'components/ui/ErrorScreen'
 import NotificationBar from 'components/ui/NotificationBar'
 import ConfirmDialog from 'components/ui/dialogs/ConfirmDialog'
+import { cancelPlan } from 'mutations/payment/typedefs/cancelPlan'
+import PaymentPlan from './plan/PaymentPlan'
+
+const PLANS = [
+    {
+        plan: Plan.METERED,
+        description: {
+            title: 'Usage based',
+            price: 0.1,
+            quantity: 'per page',
+            features: [
+                'Unlimited workflows',
+                'Unlimited jobs',
+                'Scheduling',
+                'Free storage',
+                '30 day data retention',
+                'All integrations'
+            ],
+            missingFeatures: ['IP rotation']
+        }
+    },
+    {
+        plan: Plan.SMALL,
+        description: {
+            title: 'Small',
+            popular: true,
+            price: 19,
+            quantity: 'per month',
+            pages: 500,
+            features: [
+                'Unlimited workflows',
+                'Unlimited jobs',
+                'Scheduling',
+                'Free storage',
+                '30 day data retention',
+                'All integrations',
+                'IP rotation'
+            ],
+            missingFeatures: []
+        }
+    },
+    {
+        plan: Plan.BUSINESS,
+        description: {
+            title: 'Business',
+            price: 49,
+            quantity: 'per month',
+            pages: 1000,
+            features: [
+                'Unlimited workflows',
+                'Unlimited jobs',
+                'Scheduling',
+                'Free storage',
+                '30 day data retention',
+                'All integrations',
+                'IP rotation'
+            ],
+            missingFeatures: []
+        }
+    }
+]
 
 const useStyles = makeStyles((theme: Theme) => ({
     grid: {
         justifyContent: 'center'
     },
-    wrapper: {
+    cancelWrapper: {
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: 'column',
-        position: 'relative',
-        padding: theme.spacing(5, 3),
-        marginRight: theme.spacing(6),
-        borderRadius: 10,
-        transition: 'transform .2s ease'
-    },
-    selected: {
-        transform: 'scale(1.05)'
-    },
-    popular: {
-        position: 'absolute',
-        top: 0,
-        background: '#3ecf8e',
-        color: 'white',
-        fontWeight: 600,
-        textTransform: 'uppercase',
-        padding: theme.spacing(0, 1),
-        borderBottomLeftRadius: 5,
-        borderBottomRightRadius: 5
-    },
-    top: {
-        marginBottom: theme.spacing(2),
-        fontWeight: 600
-    },
-    currency: {
-        fontSize: 20,
-        verticalAlign: 'top',
-        position: 'relative',
-        top: 8
-    },
-    price: {
-        fontWeight: 'bold',
-        color: '#47495a'
-    },
-    bottom: {
-        marginTop: theme.spacing(2),
-        color: theme.palette.grey[600],
-        fontWeight: 600
-    },
-    divider: {
-        width: '100%',
-        marginTop: theme.spacing(4),
-        marginBottom: theme.spacing(2)
-    },
-    list: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'start',
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2)
-    },
-    check: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: theme.spacing(1),
-        marginBottom: theme.spacing(1)
-    },
-    icon: {
-        marginRight: theme.spacing(1)
-    },
-    success: {
-        '& > path': {
-            fill: '#3ecf8e'
-        }
-    },
-    error: {
-        '& > path': {
-            fill: '#ff7677'
-        }
-    },
-    button: {
-        marginTop: theme.spacing(2)
+        marginTop: theme.spacing(4)
     },
     bold: {
         margin: '0 3px'
+    },
+    cancel: {
+        color: theme.palette.error.light
     }
 }))
 
 const PaymentPlanTab: React.FC = () => {
     const classes = useStyles()
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
-    const [dialogOpen, setDialogOpen] = useState(false)
+    const [paymentDialogOpen, setPaymentDialogOpen] = useState(false)
+    const [chosenPlan, setChosenPlan] = useState<Plan>()
     const { enqueueSnackbar } = useSnackbar()
-    const { data, loading, error } = useQuery<getPaymentDetails>(
+    const { data, error, refetch } = useQuery<getPaymentDetails>(
         GET_PAYMENT_DETAILS,
         {
             fetchPolicy: 'cache-and-network'
         }
     )
-
     const [
         update,
         { loading: loadingUpdate, error: updateError }
     ] = useMutation<changePlan, changePlanVariables>(CHANGE_PLAN)
+    const [
+        cancel,
+        { loading: loadingCancel, error: cancelError }
+    ] = useMutation<cancelPlan>(CANCEL_PLAN)
 
     const changePaymentPlan = (plan: Plan) => {
         update({
@@ -176,6 +160,17 @@ const PaymentPlanTab: React.FC = () => {
         }
     }, [updateError])
 
+    useEffect(() => {
+        if (cancelError) {
+            enqueueSnackbar(
+                'There was an error cancelling your plan. Please try again later.',
+                {
+                    variant: 'error'
+                }
+            )
+        }
+    }, [cancelError])
+
     if (error) return <ErrorScreen />
 
     return (
@@ -186,8 +181,8 @@ const PaymentPlanTab: React.FC = () => {
                         <NotificationBar type="success">
                             You still have{' '}
                             <strong className={classes.bold}>{credits}</strong>{' '}
-                            free credits remaining. We will not bill you until
-                            you run out of credits.
+                            free pages remaining. We will not bill you until you
+                            run out of pages.
                         </NotificationBar>
                     )}
 
@@ -198,284 +193,90 @@ const PaymentPlanTab: React.FC = () => {
                                 spacing={3}
                                 className={classes.grid}
                             >
-                                <Grid item xs={5} md={5} lg={4} xl={3}>
-                                    <Paper
-                                        className={cx(classes.wrapper, {
-                                            [classes.selected]:
-                                                plan === Plan.METERED
-                                        })}
-                                        elevation={2}
-                                    >
-                                        <Typography
-                                            variant="subtitle1"
-                                            className={classes.top}
-                                        >
-                                            Usage Based
-                                        </Typography>
-                                        <Typography
-                                            variant="h3"
-                                            className={classes.price}
-                                        >
-                                            <span className={classes.currency}>
-                                                $
-                                            </span>
-                                            {process.env.METERED_PLAN_PRICE ||
-                                                0.002}
-                                        </Typography>
-                                        <Typography
-                                            variant="subtitle1"
-                                            className={classes.bottom}
-                                        >
-                                            second
-                                        </Typography>
+                                {PLANS.map(p => (
+                                    <PaymentPlan
+                                        plan={p.plan}
+                                        currentPlan={plan!}
+                                        description={p.description}
+                                        loading={
+                                            loadingUpdate &&
+                                            chosenPlan === p.plan
+                                        }
+                                        onChoose={newPlan => {
+                                            setChosenPlan(newPlan)
 
-                                        <Divider className={classes.divider} />
-
-                                        <div className={classes.list}>
-                                            <div className={classes.check}>
-                                                <CheckCircle
-                                                    className={cx(
-                                                        classes.icon,
-                                                        classes.success
-                                                    )}
-                                                />
-                                                Unlimited workflows
-                                            </div>
-                                            <div className={classes.check}>
-                                                <CheckCircle
-                                                    className={cx(
-                                                        classes.icon,
-                                                        classes.success
-                                                    )}
-                                                />
-                                                Unlimited jobs
-                                            </div>
-                                            <div className={classes.check}>
-                                                <CheckCircle
-                                                    className={cx(
-                                                        classes.icon,
-                                                        classes.success
-                                                    )}
-                                                />
-                                                Scheduling
-                                            </div>
-                                            <div className={classes.check}>
-                                                <CheckCircle
-                                                    className={cx(
-                                                        classes.icon,
-                                                        classes.success
-                                                    )}
-                                                />
-                                                Free storage
-                                            </div>
-                                            <div className={classes.check}>
-                                                <CheckCircle
-                                                    className={cx(
-                                                        classes.icon,
-                                                        classes.success
-                                                    )}
-                                                />
-                                                30 day data retention
-                                            </div>
-                                            <div className={classes.check}>
-                                                <CheckCircle
-                                                    className={cx(
-                                                        classes.icon,
-                                                        classes.success
-                                                    )}
-                                                />
-                                                All integrations
-                                            </div>
-                                            <div className={classes.check}>
-                                                <RemoveCircle
-                                                    className={cx(
-                                                        classes.icon,
-                                                        classes.error
-                                                    )}
-                                                />
-                                                Anonymous proxy
-                                            </div>
-                                        </div>
-
-                                        <LoadingButton
-                                            color="primary"
-                                            variant="contained"
-                                            className={classes.button}
-                                            disabled={
-                                                plan === Plan.METERED ||
-                                                loadingUpdate ||
-                                                loading
-                                            }
-                                            loading={
-                                                plan !== Plan.METERED &&
-                                                loadingUpdate
-                                            }
-                                            onClick={() =>
-                                                setConfirmDialogOpen(true)
-                                            }
-                                        >
-                                            {plan === Plan.METERED
-                                                ? 'Current plan'
-                                                : 'Choose plan'}
-                                        </LoadingButton>
-                                    </Paper>
-                                </Grid>
-
-                                <Grid item xs={5} md={5} lg={4} xl={3}>
-                                    <Paper
-                                        className={cx(classes.wrapper, {
-                                            [classes.selected]:
-                                                plan === Plan.MONTHLY
-                                        })}
-                                        elevation={2}
-                                    >
-                                        <Typography
-                                            className={classes.popular}
-                                            variant="caption"
-                                        >
-                                            Popular option
-                                        </Typography>
-                                        <Typography
-                                            variant="subtitle1"
-                                            className={classes.top}
-                                        >
-                                            Monthly
-                                        </Typography>
-                                        <Typography
-                                            variant="h3"
-                                            className={classes.price}
-                                        >
-                                            <span className={classes.currency}>
-                                                $
-                                            </span>
-                                            {process.env.MONTLY_PLAN_PRICE ||
-                                                38}
-                                        </Typography>
-                                        <Typography
-                                            variant="subtitle1"
-                                            className={classes.bottom}
-                                        >
-                                            month
-                                        </Typography>
-
-                                        <Divider className={classes.divider} />
-
-                                        <div className={classes.list}>
-                                            <div className={classes.check}>
-                                                <CheckCircle
-                                                    className={cx(
-                                                        classes.icon,
-                                                        classes.success
-                                                    )}
-                                                />
-                                                Unlimited workflows
-                                            </div>
-                                            <div className={classes.check}>
-                                                <CheckCircle
-                                                    className={cx(
-                                                        classes.icon,
-                                                        classes.success
-                                                    )}
-                                                />
-                                                Unlimited jobs
-                                            </div>
-                                            <div className={classes.check}>
-                                                <CheckCircle
-                                                    className={cx(
-                                                        classes.icon,
-                                                        classes.success
-                                                    )}
-                                                />
-                                                Scheduling
-                                            </div>
-                                            <div className={classes.check}>
-                                                <CheckCircle
-                                                    className={cx(
-                                                        classes.icon,
-                                                        classes.success
-                                                    )}
-                                                />
-                                                Free storage
-                                            </div>
-                                            <div className={classes.check}>
-                                                <CheckCircle
-                                                    className={cx(
-                                                        classes.icon,
-                                                        classes.success
-                                                    )}
-                                                />
-                                                30 day data retention
-                                            </div>
-                                            <div className={classes.check}>
-                                                <CheckCircle
-                                                    className={cx(
-                                                        classes.icon,
-                                                        classes.success
-                                                    )}
-                                                />
-                                                All integrations
-                                            </div>
-                                            <div className={classes.check}>
-                                                <CheckCircle
-                                                    className={cx(
-                                                        classes.icon,
-                                                        classes.success
-                                                    )}
-                                                />
-                                                Anonymous proxy
-                                            </div>
-                                        </div>
-
-                                        <LoadingButton
-                                            color="primary"
-                                            variant="contained"
-                                            className={classes.button}
-                                            disabled={
-                                                plan === Plan.MONTHLY ||
-                                                loadingUpdate ||
-                                                loading
-                                            }
-                                            loading={
-                                                plan !== Plan.MONTHLY &&
-                                                loadingUpdate
-                                            }
-                                            onClick={() => {
+                                            if (
+                                                (plan === Plan.METERED ||
+                                                    plan === Plan.FREE) &&
                                                 hasCard
-                                                    ? changePaymentPlan(
-                                                          Plan.MONTHLY
-                                                      )
-                                                    : setDialogOpen(true)
-                                            }}
-                                        >
-                                            {plan === Plan.MONTHLY
-                                                ? 'Current plan'
-                                                : 'Choose plan'}
-                                        </LoadingButton>
-                                    </Paper>
-                                </Grid>
+                                            ) {
+                                                changePaymentPlan(newPlan)
+                                            } else if (hasCard) {
+                                                setConfirmDialogOpen(true)
+                                            } else {
+                                                setPaymentDialogOpen(true)
+                                            }
+                                        }}
+                                    />
+                                ))}
+
+                                {plan !== Plan.FREE && (
+                                    <Grid item xs={12} md={12} lg={12} xl={12}>
+                                        <div className={classes.cancelWrapper}>
+                                            <Button
+                                                size="small"
+                                                className={classes.cancel}
+                                                disabled={loadingCancel}
+                                                onClick={() => {
+                                                    setChosenPlan(undefined)
+                                                    setConfirmDialogOpen(true)
+                                                }}
+                                            >
+                                                Cancel {plan} plan
+                                            </Button>
+                                        </div>
+                                    </Grid>
+                                )}
                             </Grid>
 
                             <PaymentDialog
                                 title="Enter your credit card details"
-                                open={dialogOpen}
+                                open={paymentDialogOpen}
                                 canClose
                                 onConfirm={() => {
-                                    changePaymentPlan(Plan.MONTHLY)
-                                    setDialogOpen(false)
+                                    changePaymentPlan(chosenPlan!)
+                                    setChosenPlan(undefined)
+                                    setPaymentDialogOpen(false)
                                 }}
-                                onClose={() => setDialogOpen(false)}
+                                onClose={() => {
+                                    setChosenPlan(undefined)
+                                    setPaymentDialogOpen(false)
+                                }}
                             />
                         </PaddingWrapper>
                     </PaddingWrapper>
 
                     <ConfirmDialog
-                        title="Are you sure you want to change plan?"
-                        onClose={() => setConfirmDialogOpen(false)}
-                        onConfirm={() => {
-                            setConfirmDialogOpen(false)
-                            changePaymentPlan(Plan.METERED)
-                        }}
+                        title={`Are you sure you want to ${
+                            chosenPlan ? 'change' : 'cancel'
+                        } your plan?`}
                         open={confirmDialogOpen}
+                        loading={chosenPlan ? loadingUpdate : loadingCancel}
+                        disabled={chosenPlan ? loadingUpdate : loadingCancel}
+                        onConfirm={async () => {
+                            if (chosenPlan) {
+                                changePaymentPlan(chosenPlan)
+                            } else {
+                                await cancel()
+                                await refetch()
+                            }
+
+                            setConfirmDialogOpen(false)
+                        }}
+                        onClose={() => {
+                            setConfirmDialogOpen(false)
+                            setChosenPlan(undefined)
+                        }}
                     >
                         You will still be charged for this month.
                     </ConfirmDialog>

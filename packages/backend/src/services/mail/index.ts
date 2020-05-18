@@ -77,7 +77,7 @@ const sendTrialWillEndEmail = async (customerId: string) => {
     })
 }
 
-const sendOutOfFreeCreditsEmail = async (user: User) => {
+const sendOutOfCreditsEmail = async (user: User) => {
     const payment = await PaymentModel.findOne({
         owner: user._id
     })
@@ -92,7 +92,7 @@ const sendOutOfFreeCreditsEmail = async (user: User) => {
 
     Email.send({
         to: user.email,
-        template: Template.OUT_OF_FREE_CREDITS,
+        template: Template.OUT_OF_CREDITS,
         params: {
             link
         }
@@ -137,7 +137,7 @@ const MailService = {
     sendJobHasErrorsEmail,
     sendPaymentFailedEmail,
     sendTrialWillEndEmail,
-    sendOutOfFreeCreditsEmail,
+    sendOutOfCreditsEmail,
     sendReferralAwardEmail,
     sendFeedbackEmail
 }

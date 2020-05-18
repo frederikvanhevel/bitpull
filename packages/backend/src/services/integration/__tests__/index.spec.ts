@@ -1,5 +1,5 @@
 import { mocked } from 'ts-jest/utils'
-import IntegrationModel from 'models/integration'
+import IntegrationModel, { Integration } from 'models/integration'
 import { IntegrationFactory } from 'models/integration/__mocks__/integration.mock'
 import { UserFactory } from 'models/user/__mocks__/user.mock'
 import Google from 'components/integrations/google'
@@ -47,7 +47,7 @@ describe('Integration service', () => {
 
         await IntegrationService.updateIntegration(user, '123', {
             active: false
-        })
+        } as Integration)
 
         expect(mockedIntegrationModel.findOneAndUpdate).toHaveBeenCalledWith(
             { _id: '123', owner: user._id },
@@ -81,16 +81,16 @@ describe('Integration service', () => {
         const items = [
             IntegrationFactory.getSingleRecord({
                 type: IntegrationType.SLACK
-            }),
+            } as Integration),
             IntegrationFactory.getSingleRecord({
                 type: IntegrationType.DROPBOX
-            }),
+            } as Integration),
             IntegrationFactory.getSingleRecord({
                 type: IntegrationType.GOOGLE_DRIVE
-            }),
+            } as Integration),
             IntegrationFactory.getSingleRecord({
                 type: IntegrationType.ONEDRIVE
-            })
+            } as Integration)
         ]
 
         mockedIntegrationModel.find.mockReturnValueOnce({

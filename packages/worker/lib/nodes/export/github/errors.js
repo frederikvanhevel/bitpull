@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.GithubError = void 0;
 var GithubError;
 (function (GithubError) {
     GithubError["REPOSITORY_MISSING"] = "REPOSITORY_MISSING";

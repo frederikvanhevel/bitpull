@@ -1,23 +1,27 @@
 import React from 'react'
 import ScheduleIcon from '@material-ui/icons/Schedule'
-import AddIcon from '@material-ui/icons/Add'
+// import AddIcon from '@material-ui/icons/Add'
 import { makeStyles } from '@material-ui/styles'
 
 const useStyles = makeStyles({
     wrapper: {
         position: 'relative',
-        width: 24,
-        height: 24
+        width: 20,
+        height: 20,
+        '& svg': {
+            width: 20,
+            height: 20
+        }
     },
     scheduleIcon: {
         position: 'absolute'
-    },
-    addIcon: {
-        position: 'relative',
-        top: 10,
-        left: 12,
-        transform: 'scale(.6)'
     }
+    // addIcon: {
+    //     position: 'relative',
+    //     top: 10,
+    //     left: 12,
+    //     transform: 'scale(.6)'
+    // }
 })
 
 const AddScheduleIcon: React.FC = () => {
@@ -26,7 +30,7 @@ const AddScheduleIcon: React.FC = () => {
     return (
         <div className={classes.wrapper}>
             <ScheduleIcon className={classes.scheduleIcon} />
-            <AddIcon className={classes.addIcon} />
+            {/* <AddIcon className={classes.addIcon} /> */}
         </div>
     )
 }

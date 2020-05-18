@@ -25,8 +25,11 @@ export const TokenInput = gql`
 
 export const PaymentDetails = gql`
     enum Plan {
+        FREE
         METERED
-        MONTHLY
+        SMALL
+        BUSINESS
+        PREMIUM
     }
     type PaymentDetails {
         plan: Plan!

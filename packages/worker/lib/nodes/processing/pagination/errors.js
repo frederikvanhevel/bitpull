@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PaginationError = void 0;
 var PaginationError;
 (function (PaginationError) {
     PaginationError["GOTOPERPAGE_NODE_MISSING"] = "GOTOPERPAGE_NODE_MISSING";
