@@ -60,14 +60,11 @@ process.on('message', async (args: WorkerArgs) => {
     try {
         const result = await traverser.run(args.node)
 
-        const sent = process.send!({
+        process.send!({
             event: WorkerEvent.FINISHED,
             data: result
         })
 
-        if (!sent) {
-            console.log('Couldnt send result to parent process')
-        }
 
         await traverser.cleanup()
         // eslint-disable-next-line no-process-exit

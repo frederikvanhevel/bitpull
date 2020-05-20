@@ -140,25 +140,25 @@ export const NODE_PROPERTIES: Record<NodeType, NodeProperty> = {
     },
     [NodeType.EXCEL]: {
         icon: ExcelIcon,
-        label: 'Save to Excel doc',
+        label: 'Convert to Excel doc',
         shortLabel: 'Excel',
         editor: Excel
     },
     [NodeType.CSV]: {
         icon: CsvIcon,
-        label: 'Save to CSV file',
+        label: 'Convert to CSV file',
         shortLabel: 'Csv',
         editor: Csv
     },
     [NodeType.JSON]: {
         icon: JsonIcon,
-        label: 'Save to JSON file',
+        label: 'Convert to JSON file',
         shortLabel: 'JSON file',
         editor: Json
     },
     [NodeType.PDF]: {
         icon: PdfIcon,
-        label: 'Save to PDF file',
+        label: 'Convert to PDF file',
         shortLabel: 'PDF file',
         editor: Pdf
     },

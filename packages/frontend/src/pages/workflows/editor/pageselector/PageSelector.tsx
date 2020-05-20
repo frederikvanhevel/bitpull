@@ -9,7 +9,7 @@ interface Props {
     open: boolean
     node: Node
     initialSelector?: string
-    onSelect: (selector: string | undefined) => void
+    onSelect: (payload: SelectorPayload | undefined) => void
     onClose: () => void
 }
 
@@ -48,7 +48,7 @@ const PageSelector: React.FC<Props> = ({ open, node, onSelect, onClose }) => {
         <Slide direction="up" in={open} mountOnEnter unmountOnExit>
             <div className={classes.wrapper}>
                 <SelectorTopControls
-                    onConfirm={() => onSelect(selectorPayload?.prediction)}
+                    onConfirm={() => onSelect(selectorPayload)}
                     payload={selectorPayload}
                     onClear={() => setSelectorPayload(undefined)}
                     onClose={onClose}

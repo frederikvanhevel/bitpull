@@ -75,8 +75,8 @@ const SelectorButton: React.FC<Props> = ({
                     open={pageSelectOpen}
                     node={node}
                     initialSelector={selector.value}
-                    onSelect={chosenSelector => {
-                        onUpdateSelector('value', chosenSelector)
+                    onSelect={payload => {
+                        onUpdateSelector('value', payload?.prediction)
                         setPageSelectOpen(false)
                     }}
                     onClose={() => setPageSelectOpen(false)}

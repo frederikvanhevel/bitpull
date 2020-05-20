@@ -95,7 +95,7 @@ const reportUsage = async (user: User, stats: Stats) => {
         await Stripe.reportUsage(payment.planId, pagesToReport)
     }
 
-    Logger.info(`Billed user ${user.id} for ${stats.pageCount} pages`)
+    Logger.info(`Billed user ${user._id} for ${stats.pageCount} pages`)
 }
 
 const hasCreditsRemaining = async (userId: string | UserDocument['_id']) => {

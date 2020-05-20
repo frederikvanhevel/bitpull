@@ -130,10 +130,10 @@ const SelectorInput: React.FC<Props> = ({
                     open={pageSelectOpen}
                     node={node}
                     initialSelector={selector.value}
-                    onSelect={chosenSelector => {
-                        onUpdateSelector('value', chosenSelector)
+                    onSelect={payload => {
+                        onUpdateSelector('value', payload?.prediction)
                         reset({
-                            value: chosenSelector
+                            value: payload?.prediction
                         })
                         setPageSelectOpen(false)
                     }}

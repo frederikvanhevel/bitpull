@@ -11,7 +11,6 @@ export enum Work {
 }
 
 const kill = (proc: ChildProcess) => {
-    console.trace('KILL')
     if (!proc) return
     try {
         proc.disconnect()
