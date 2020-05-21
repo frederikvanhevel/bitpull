@@ -19,6 +19,7 @@ const startJobProcessor = () => {
             const result: ParseResult = await WorkflowService.run(
                 user,
                 workflow.node,
+                job.id,
                 job.name,
                 ResourceType.JOB,
                 (event, data) => {

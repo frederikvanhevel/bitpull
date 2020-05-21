@@ -1,5 +1,4 @@
-import { createReadStream } from 'fs'
-import AWS from 'aws-sdk'
+import Storage from '../../../nodes/common/storage'
 import { FlowError } from '../../../utils/errors'
 import { FileError, NodeError } from '../../common/errors'
 import { NodeParser, UploadedFile, NodeInput } from '../../../typedefs/node'
@@ -60,18 +59,11 @@ const storage: NodeParser<StorageNode> = async (
 
     let result
     try {
-        const params: AWS.S3.PutObjectRequest = {
-            Bucket: storage.credentials.bucket,
-            Key: passedData.fileName,
-            Body: createReadStream(passedData.path)
-        }
-
-        const s3 = new AWS.S3({
-            accessKeyId: storage.credentials.accessKeyId,
-            secretAccessKey: storage.credentials.secretAccessKey
-        })
-
-        result = await s3.upload(params).promise()
+        result = await Storage.store(
+            storage,
+            passedData.fileName,
+            passedData.path
+        )
     } catch (error) {
         throw new FlowError(StorageError.STORAGE_FAILED, error)
     }

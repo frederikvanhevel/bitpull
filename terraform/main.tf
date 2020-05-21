@@ -55,7 +55,7 @@ resource "google_container_node_pool" "primary_nodes" {
   name       = "automanaged-node-pool"
   location   = var.GCLOUD_CLUSTER_REGION
   cluster    = var.GCLOUD_CLUSTER_NAME
-  node_count = 3
+  node_count = 1
   autoscaling {
     min_node_count = 1
     max_node_count = 2
@@ -66,8 +66,8 @@ resource "google_container_node_pool" "primary_nodes" {
   }
 
   node_config {
-    preemptible  = true
-    machine_type = "n1-standard-1"
+    preemptible  = false
+    machine_type = "n1-standard-2"
     disk_size_gb = 20
 
     metadata = {

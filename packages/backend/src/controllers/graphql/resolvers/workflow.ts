@@ -28,6 +28,7 @@ import Segment, { TrackingEvent } from 'components/segment'
 import { AuthenticationContext } from '../directives/auth'
 import { pubsub } from '../schema'
 import { SubscriptionEvent } from '../typedefs/workflow'
+import { Types } from 'mongoose'
 
 export const getWorkflow: GraphQLFieldResolver<
     any,
@@ -166,9 +167,11 @@ export const runWorkflow: GraphQLFieldResolver<
             }
         }
 
+        const id = new Types.ObjectId()
         const result = await WorkflowService.run(
             context.user,
             limitFollowedLinks(args.node),
+            id.toHexString(),
             args.name,
             ResourceType.TEST_RUN,
             handler,

@@ -56,6 +56,12 @@ export interface EncryptionSettings {
     key: string
 }
 
+export interface StorageSettings {
+    provider: StorageProvider
+    credentials?: AmazonS3Credentials
+    changesOnly?: boolean
+}
+
 export interface Settings {
     puppeteer?: {
         endpoint: string
@@ -63,10 +69,7 @@ export interface Settings {
         authorization?: string
     }
     proxyEndpoint?: string
-    storage?: {
-        provider: StorageProvider
-        credentials?: AmazonS3Credentials
-    }
+    storage?: StorageSettings
     email?: {
         apiKey: string
         template: string
@@ -79,6 +82,7 @@ export interface Settings {
     encryption?: EncryptionSettings
     debug?: boolean
     metaData?: {
+        id: string
         isJob: boolean
         name: string
     }

@@ -132,6 +132,7 @@ const hasIntegrations = (node: FlowNode): boolean => {
 const run = async (
     user: User,
     node: FlowNode,
+    id: string,
     name: string,
     resourceType: ResourceType,
     handler?: NodeEventHandler,
@@ -165,8 +166,9 @@ const run = async (
             key: Config.ENCRYPTION_KEY
         },
         metaData: {
+            id,
+            name,
             isJob: resourceType === ResourceType.JOB,
-            name
         },
         traceId: getTraceId()
     }

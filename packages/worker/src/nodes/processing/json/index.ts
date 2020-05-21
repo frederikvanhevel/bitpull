@@ -8,18 +8,17 @@ import {
 import { assert } from '../../../utils/common'
 import { hasChildExportNodes } from '../../../utils/helper'
 import { NodeError } from '../../../nodes/common/errors'
+import Storage from '../../../nodes/common/storage'
 import { JsonNode } from './typedefs'
 
 const json: NodeParser<JsonNode, FileWriteResult> = async (input, options) => {
-    const { onLog } = options
+    const { onLog, settings } = options
     const { node, passedData } = input
 
     assert(hasChildExportNodes(node), NodeError.EXPORT_NODE_MISSING)
 
-    const path = await writeFile(
-        JSON.stringify(passedData, null, 4),
-        FileType.JSON
-    )
+    const data = await Storage.getChangedData(settings, node.id, passedData)
+    const path = await writeFile(JSON.stringify(data, null, 4), FileType.JSON)
 
     if (onLog) onLog(node, 'Succesfully converted to json file')
 
