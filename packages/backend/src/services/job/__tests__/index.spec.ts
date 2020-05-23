@@ -87,6 +87,7 @@ describe('Job service', () => {
                     name,
                     workflow,
                     agendaJob: id,
+                    options: {},
                     owner: user._id,
                     updatedAt: expect.anything()
                 },
@@ -139,6 +140,7 @@ describe('Job service', () => {
                 {
                     name,
                     workflow,
+                    options: {},
                     agendaJob: id,
                     owner: user._id,
                     updatedAt: expect.anything()

@@ -4,6 +4,10 @@ import { AgendaJob } from 'models/agenda-job'
 import { WorkflowDocument } from 'models/workflow'
 import { getLatestJobs } from './statics'
 
+export interface JobOptions {
+    changesOnly?: boolean
+}
+
 export interface Job {
     _id: Types.ObjectId
     id: string
@@ -11,6 +15,7 @@ export interface Job {
     workflow: string | WorkflowDocument['_id']
     hasErrors: boolean
     agendaJob: string | AgendaJob['_id']
+    options?: JobOptions
     owner: string | UserDocument['_id']
     updatedAt: Date
     createdAt: Date
@@ -41,6 +46,11 @@ const JobSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: 'AgendaJob',
             required: true
+        },
+        options: {
+            changesOnly: {
+                type: Boolean
+            }
         },
         owner: {
             type: Schema.Types.ObjectId,

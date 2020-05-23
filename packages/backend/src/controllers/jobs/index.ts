@@ -31,7 +31,8 @@ const startJobProcessor = () => {
                             data: data as any
                         }).catch(Logger.error)
                     }
-                }
+                },
+                job.options?.changesOnly
             )
 
             await JobService.postRun(jobArgs, result)

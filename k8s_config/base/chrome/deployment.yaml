@@ -16,13 +16,13 @@ spec:
       labels:
         app: chrome
     spec:
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchLabels:
-                  app: chrome
-              topologyKey: kubernetes.io/hostname
+      # affinity:
+      #   podAntiAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       - labelSelector:
+      #           matchLabels:
+      #             app: chrome
+      #         topologyKey: kubernetes.io/hostname
       containers:
         - image: browserless/chrome:latest
           name: chrome

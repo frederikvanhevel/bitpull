@@ -125,3 +125,8 @@ export const findPerPageNode = (node: FlowNode, type?: NodeType) => {
 
     return child
 }
+
+export const hasResult = (data: any) => {
+    if (Array.isArray(data)) return !!data.length
+    return !!Object.keys(data).length
+}

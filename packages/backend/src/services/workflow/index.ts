@@ -136,6 +136,7 @@ const run = async (
     name: string,
     resourceType: ResourceType,
     handler?: NodeEventHandler,
+    changesOnly?: boolean,
     watchedNodeId?: string
 ) => {
     let integrations: Integration[] = []
@@ -154,7 +155,8 @@ const run = async (
                 bucket: Config.AWS_S3_BUCKET,
                 accessKeyId: Config.AWS_ACCESS_KEY_ID,
                 secretAccessKey: Config.AWS_SECRET_ACCESS_KEY
-            }
+            },
+            changesOnly
         },
         email: {
             apiKey: Config.SENDGRID_API_KEY,

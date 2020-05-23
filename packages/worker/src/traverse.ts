@@ -32,8 +32,7 @@ const DEFAULT_OPTIONS: TraverseOptions = {
         storage: {
             provider: StorageProvider.NONE
         },
-        exitOnError: false,
-        maxErrorsBeforeExit: 10
+        exitOnError: false
     }
 }
 
@@ -41,7 +40,6 @@ class Traverser {
     private options: TraverseOptions
     private context: Context
     public canceled: boolean = false
-    private errorCount: number = 0
 
     constructor(
         options: Partial<TraverseOptions> = DEFAULT_OPTIONS,
@@ -99,7 +97,7 @@ class Traverser {
         }
 
         if (!node.children || !node.children.length) {
-            // if we are at the end of a pagination tree return the data to it
+            // if we are at the end of a branch tree return the data to it
             if (branchCallback) branchCallback(nodeResult!.passedData)
         }
 
@@ -130,9 +128,13 @@ class Traverser {
 
             const { node } = nodeResult
 
-            if (!isBranchNode(node) && node.children?.length) {
+            if (
+                !isBranchNode(node) &&
+                node.children?.length &&
+                !node.skipChildren
+            ) {
                 await Promise.all(
-                    node.children.map(async child =>
+                    node.children.map(child =>
                         this.parseNode({
                             ...input,
                             ...nodeResult,
@@ -168,7 +170,6 @@ class Traverser {
         const originalErrorFn = this.options.onError
         const originalLogFn = this.options.onLog
         const originalStorageFn = this.options.onStorage
-        const { maxErrorsBeforeExit } = this.options.settings
         const { browser } = this.context
 
         const logs: ParseLog[] = []
@@ -176,15 +177,6 @@ class Traverser {
         const files: FileStorageObject[] = []
 
         this.options.onError = (node: FlowNode, error: FlowError) => {
-            this.errorCount++
-
-            // if (
-            //     !!maxErrorsBeforeExit &&
-            //     this.errorCount > maxErrorsBeforeExit
-            // ) {
-            //     throw new FlowError(NodeError.TOO_MANY_ERRORS)
-            // }
-
             errors.push({
                 nodeId: node.id,
                 nodeType: node.type,

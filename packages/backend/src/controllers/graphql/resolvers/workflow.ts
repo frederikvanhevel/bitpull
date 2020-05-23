@@ -175,6 +175,7 @@ export const runWorkflow: GraphQLFieldResolver<
             args.name,
             ResourceType.TEST_RUN,
             handler,
+            false,
             args.watchedNodeId!
         )
 

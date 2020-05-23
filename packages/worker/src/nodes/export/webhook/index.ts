@@ -4,25 +4,26 @@ import request from 'request-promise-native'
 import { FlowError } from '../../../utils/errors'
 import { FileError } from '../../common/errors'
 import { assert } from '../../../utils/common'
-import { NodeParser, NodeInput } from '../../../typedefs/node'
+import { NodeParser } from '../../../typedefs/node'
 import { isFileNode } from '../../../utils/helper'
 import { FileWriteResult } from '../../../utils/file'
+import Storage from '../../../nodes/common/storage'
 import { WebhookNode } from './typedefs'
 import { WebhookError } from './errors'
 
-const webhook: NodeParser<WebhookNode> = async (
-    input: NodeInput<WebhookNode, FileWriteResult>,
-    options
-) => {
-    const { onLog } = options
+const webhook: NodeParser<WebhookNode> = async (input, options) => {
+    const { onLog, settings } = options
     const { node, parent, passedData } = input
 
     assert(node.path, WebhookError.REQUEST_PATH_MISSING)
-    assert(passedData, FileError.FILE_MISSING)
 
     // TODO might want to send extra meta data here
     let requestOptions: CoreOptions = {}
     if (parent && isFileNode(parent.type)) {
+        const fileData = passedData as FileWriteResult
+
+        assert(fileData && fileData.path, FileError.FILE_MISSING)
+
         requestOptions = {
             // headers: {
             //     'Content-Transfer-Encoding': passedData.encoding
@@ -30,20 +31,22 @@ const webhook: NodeParser<WebhookNode> = async (
             formData: {
                 file: {
                     value: createReadStream(passedData.path, {
-                        encoding: passedData.encoding
+                        encoding: fileData.encoding
                     }),
                     options: {
-                        filename: passedData.fileName,
-                        contentType: passedData.contentType
+                        filename: fileData.fileName,
+                        contentType: fileData.contentType
                     }
                 },
-                filename: passedData.fileName
+                filename: fileData.fileName
             }
         }
     } else {
+        const data = await Storage.getChangedData(settings, node.id, passedData)
+
         requestOptions = {
             body: {
-                data: passedData
+                data
             },
             json: true
         }

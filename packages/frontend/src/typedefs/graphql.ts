@@ -85,6 +85,11 @@ export interface JobInput {
   workflowId: string;
   type: ScheduleType;
   schedule?: string | null;
+  options?: JobOptions | null;
+}
+
+export interface JobOptions {
+  changesOnly?: boolean | null;
 }
 
 export interface LoginUserInput {

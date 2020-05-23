@@ -76,7 +76,6 @@ export interface Settings {
         to: string
     }
     exitOnError?: boolean
-    maxErrorsBeforeExit?: number
     useSinglePage?: boolean
     traceId?: string
     encryption?: EncryptionSettings

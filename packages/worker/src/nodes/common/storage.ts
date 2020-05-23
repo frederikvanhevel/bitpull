@@ -1,5 +1,6 @@
 import { createReadStream } from 'fs'
 import AWS from 'aws-sdk'
+import hash from 'object-hash'
 import { StorageSettings, Settings } from '../../typedefs/common'
 import { assert } from '../../utils/common'
 import Logger from '../../utils/logging/logger'
@@ -36,11 +37,14 @@ const storeHistory = async (
     assert(settings && settings.credentials)
 
     const { credentials } = settings
+    const hashed = Array.isArray(data)
+        ? data.map(item => hash(item))
+        : hash(data)
 
     const params: AWS.S3.PutObjectRequest = {
         Bucket: credentials.bucket,
         Key: key,
-        Body: JSON.stringify(data),
+        Body: JSON.stringify(hashed),
         ContentType: 'application/json; charset=utf-8'
     }
 
@@ -56,13 +60,14 @@ const getChangedData = async (
     settings: Settings,
     nodeId: string,
     data: object | object[]
-) => {
+): Promise<object | object[]> => {
     try {
         const { storage, metaData } = settings
+
+        if (!storage?.changesOnly) return data
+
         assert(storage && storage.credentials)
         assert(metaData && metaData.id)
-
-        if (!storage.changesOnly) return data
 
         const { credentials } = storage
         const key = `${metaData.id}:${nodeId}`
@@ -83,8 +88,11 @@ const getChangedData = async (
 
             return compare(JSON.parse(history.Body.toString()), data)
         } catch (error) {
-            await storeHistory(storage, key, data)
             return data
+        } finally {
+            try {
+                await storeHistory(storage, key, data)
+            } catch (error) {} // eslint-disable-line no-empty
         }
     } catch (error) {
         Logger.error(new Error('Could not compare data'), error)

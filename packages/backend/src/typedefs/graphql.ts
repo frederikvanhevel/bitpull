@@ -501,6 +501,10 @@ export type GithubRepository = {
   owner: Scalars['String'];
 };
 
+export type JobOptions = {
+  changesOnly?: Maybe<Scalars['Boolean']>;
+};
+
 export enum ScheduleType {
   Immediately = 'IMMEDIATELY',
   Once = 'ONCE',
@@ -513,6 +517,7 @@ export type JobInput = {
   workflowId: Scalars['String'];
   type: ScheduleType;
   schedule?: Maybe<Scalars['String']>;
+  options?: Maybe<JobOptions>;
 };
 
 export type Log = {

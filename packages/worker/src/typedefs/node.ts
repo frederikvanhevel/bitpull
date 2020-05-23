@@ -38,6 +38,7 @@ export interface FlowNode {
     id: NodeId
     type: NodeType
     disabled?: boolean
+    skipChildren?: boolean
     children?: FlowNode[]
 }
 

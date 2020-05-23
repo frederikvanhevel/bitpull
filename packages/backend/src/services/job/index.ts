@@ -1,4 +1,4 @@
-import JobModel, { Job } from 'models/job'
+import JobModel, { Job, JobOptions } from 'models/job'
 import Scheduler from 'components/scheduler'
 import { NotFoundError, NotAllowedError, LimitReachedError } from 'utils/errors'
 import AgendaJobModel from 'models/agenda-job'
@@ -28,7 +28,8 @@ const createJob = async (
     name: string,
     workflowId: string,
     type: ScheduleType,
-    schedule: any
+    schedule: any,
+    options: JobOptions = {}
 ) => {
     const count = await JobModel.countDocuments({
         owner: user._id
@@ -58,6 +59,7 @@ const createJob = async (
         name,
         workflow: workflowId,
         agendaJob: savedJob.attrs._id,
+        options,
         owner: user._id,
         updatedAt: new Date()
     } as Job

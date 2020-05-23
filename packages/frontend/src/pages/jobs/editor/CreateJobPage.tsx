@@ -26,6 +26,11 @@ import { CREATE_JOB } from 'mutations/job'
 import LoadingButton from 'components/ui/buttons/LoadingButton'
 import { getError } from 'utils/errors'
 import PageTitle from 'components/navigation/PageTitle'
+import ExpandableOptionRow from 'components/ui/expandable/ExpandableOptionRow'
+
+interface JobOptions {
+    changesOnly?: boolean
+}
 
 const useStyles = makeStyles(theme => ({
     select: {
@@ -42,6 +47,9 @@ const useStyles = makeStyles(theme => ({
     },
     hidden: {
         display: 'none'
+    },
+    expand: {
+        width: 322
     }
 }))
 
@@ -59,6 +67,7 @@ const CreateJobPage: React.FC = () => {
     const [workflow, setWorkflow] = useState(query.workflow as string)
     const [time, setTime] = useState<Time>(defaultTime)
     const [name, setName] = useState<string>('')
+    const [options, setOptions] = useState<JobOptions>({})
     const [saveJob, { data, loading, error }] = useMutation<
         createJob,
         createJobVariables
@@ -68,7 +77,8 @@ const CreateJobPage: React.FC = () => {
                 name,
                 workflowId: workflow,
                 type: time.type,
-                schedule: time.value
+                schedule: time.value,
+                options
             }
         }
     })
@@ -132,6 +142,27 @@ const CreateJobPage: React.FC = () => {
                                 <TimeSelect time={time} onChange={setTime} />
                             </StepContent>
                         </Step>
+
+                        {
+                            time.type === ScheduleType.INTERVAL && <Step active={true}>
+                                <StepLabel>Set job options</StepLabel>
+                                <StepContent>
+                                    <ExpandableOptionRow
+                                        className={classes.expand}
+                                        title="Only save changed data"
+                                        active={!!options.changesOnly}
+                                        onChange={e => setOptions({
+                                            ...options,
+                                            changesOnly: e.target.checked
+                                        })}
+                                    >
+                                        <Typography variant="caption">
+                                            Only changes from previous runs will be saved. This is useful when you're only interested in updated data.
+                                        </Typography>
+                                    </ExpandableOptionRow>
+                                </StepContent>
+                            </Step>
+                        }
 
                         <Step active={true}>
                             <StepLabel>Name & save your job</StepLabel>

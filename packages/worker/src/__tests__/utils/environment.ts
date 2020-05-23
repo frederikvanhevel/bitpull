@@ -118,7 +118,7 @@ export class TestEnvironment {
         this.traverser.setOptions(mergedOptions)
     }
 
-    getBrowserStats = () => {
+    getBrowserStats() {
         if (!this.browser) throw new Error('Test browser was not initialized')
 
         return this.browser.getStats()
@@ -134,9 +134,7 @@ export const hasDefaultResult = async (
 }
 
 export const htmlHasResult = (html: string, result: string) => {
-    return (
-        html.replace(/\s/g, '') === getMockedHtml(result).replace(/\s/g, '')
-    )
+    return html.replace(/\s/g, '') === getMockedHtml(result).replace(/\s/g, '')
 }
 
 export const hasResult = async (

@@ -41,6 +41,9 @@ export const Job = gql`
 `
 
 export const JobInput = gql`
+    input JobOptions {
+        changesOnly: Boolean
+    }
     enum ScheduleType {
         IMMEDIATELY
         ONCE
@@ -52,5 +55,6 @@ export const JobInput = gql`
         workflowId: String!
         type: ScheduleType!
         schedule: String
+        options: JobOptions
     }
 `

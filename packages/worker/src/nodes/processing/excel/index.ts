@@ -9,8 +9,9 @@ import {
 } from '../../../utils/file'
 import { FlowError } from '../../../utils/errors'
 import { assert } from '../../../utils/common'
-import { hasChildExportNodes } from '../../../utils/helper'
+import { hasChildExportNodes, hasResult } from '../../../utils/helper'
 import { NodeError } from '../../../nodes/common/errors'
+import Storage from '../../../nodes/common/storage'
 import { ExeclError } from './errors'
 import { ExcelNode } from './typedefs'
 import { transformToExcelFormat } from './helper'
@@ -19,14 +20,22 @@ const excel: NodeParser<ExcelNode, FileWriteResult> = async (
     input,
     options
 ) => {
-    const { onLog } = options
+    const { onLog, settings } = options
     const { node, passedData } = input
 
     assert(hasChildExportNodes(node), NodeError.EXPORT_NODE_MISSING)
 
+    const data = await Storage.getChangedData(settings, node.id, passedData)
+
+    if (!data || !hasResult(data)) {
+        if (onLog) onLog(node, 'Nothing to save, skipping next step')
+        node.skipChildren = true
+        return input
+    }
+
     let path
     try {
-        const transformed = transformToExcelFormat(passedData)
+        const transformed = transformToExcelFormat(data)
         const excelData = await json2xls(transformed)
         path = await writeFile(excelData, FileType.EXCEL, FileEncoding.BINARY)
     } catch (error) {

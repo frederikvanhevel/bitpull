@@ -1,6 +1,6 @@
 import { GraphQLFieldResolver } from 'graphql'
 import JobService from 'services/job'
-import { Job } from 'models/job'
+import { Job, JobOptions } from 'models/job'
 import { ScheduleType } from 'services/job/typedefs'
 import Logger from 'utils/logging/logger'
 import { AuthenticationContext } from '../directives/auth'
@@ -26,6 +26,7 @@ export const createJob: GraphQLFieldResolver<
             workflowId: string
             type: ScheduleType
             schedule: any
+            options: JobOptions
         }
     }
 > = async (root, args, context) => {
@@ -44,7 +45,8 @@ export const createJob: GraphQLFieldResolver<
             args.input.name,
             args.input.workflowId,
             args.input.type,
-            args.input.schedule
+            args.input.schedule,
+            args.input.options
         )
     } catch (error) {
         Logger.throw(new Error('Could not create job'), error, context.user)
