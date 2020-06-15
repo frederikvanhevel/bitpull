@@ -66,7 +66,7 @@ resource "google_container_node_pool" "primary_nodes" {
   }
 
   node_config {
-    preemptible  = false
+    preemptible  = true
     machine_type = "n1-standard-2"
     disk_size_gb = 20
 
