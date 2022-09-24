@@ -36,7 +36,7 @@ export class IsSuperuserDirective extends SchemaDirectiveVisitor {
                 throw new AuthenticationError(`Unauthenticated`)
             }
 
-            if (context.user.email !== 'defreek@gmail.com') {
+            if (context.user.email !== 'xxxxx) {
                 throw new AuthenticationError(`Not permitted`)
             }
 
